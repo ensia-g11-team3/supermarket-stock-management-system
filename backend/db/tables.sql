@@ -49,10 +49,10 @@ CREATE TABLE transactions (
 
 -- Transaction Items table
 CREATE TABLE transaction_items (
-    item_id INT AUTO_INCREMENT PRIMARY KEY,
     transaction_id INT NOT NULL,
     product_id INT NOT NULL,
     quantity INT NOT NULL,
+    PRIMARY KEY (order_id, product_id),
     CONSTRAINT fk_items_transaction FOREIGN KEY (transaction_id) REFERENCES transactions(transaction_id),
     CONSTRAINT fk_items_product FOREIGN KEY (product_id) REFERENCES products(product_id)
 );
