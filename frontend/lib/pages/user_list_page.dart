@@ -181,12 +181,24 @@ class _UserListPageState extends State<UserListPage> {
             ],
           ),
           actions: [
+<<<<<<< HEAD:frontend/lib/pages/user_list_page.dart
             PrimaryButton(
               onPressed: () => Navigator.of(context).pop(),
               variant: ButtonVariant.secondary,
               child: const Text('Cancel'),
             ),
             PrimaryButton(
+=======
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              style: TextButton.styleFrom(
+                foregroundColor: AppTheme.textSecondary,
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              ),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+>>>>>>> fe9e5f7dc61c62af93ba8d0fc66a943fe8ec9f33:frontend/lib/screens/user_list_page.dart
               onPressed: () {
                 setState(() {
                   _users.removeWhere((u) => u['id'] == user['id']);
@@ -200,7 +212,18 @@ class _UserListPageState extends State<UserListPage> {
                   ),
                 );
               },
+<<<<<<< HEAD:frontend/lib/pages/user_list_page.dart
               variant: ButtonVariant.danger,
+=======
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+>>>>>>> fe9e5f7dc61c62af93ba8d0fc66a943fe8ec9f33:frontend/lib/screens/user_list_page.dart
               child: const Text('Delete User'),
             ),
           ],
@@ -619,4 +642,8 @@ class _TableCell extends StatelessWidget {
       ),
     );
   }
+<<<<<<< HEAD:frontend/lib/pages/user_list_page.dart
 }
+=======
+}
+>>>>>>> fe9e5f7dc61c62af93ba8d0fc66a943fe8ec9f33:frontend/lib/screens/user_list_page.dart
