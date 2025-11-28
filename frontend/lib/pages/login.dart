@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import '../widgets/primary_button.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  final ValueChanged<String> onLogin;
+  
+  const LoginPage({
+    super.key,
+    required this.onLogin,
+  });
+  
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
@@ -87,14 +94,14 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     SizedBox(height: 24),
                     Center(
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF3B82F6),
-                          padding: EdgeInsets.symmetric(horizontal: 48, vertical: 14),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                        ),
-                        child: Text('Sign In', style: TextStyle(fontSize: 16, color: Colors.white)),
+                      child: PrimaryButton(
+                        onPressed: () {
+                          if (_userCtrl.text.isNotEmpty) {
+                            widget.onLogin(_userCtrl.text);
+                          }
+                        },
+                        size: ButtonSize.lg,
+                        child: const Text('Sign In'),
                       ),
                     ),
                   ],
