@@ -1,6 +1,6 @@
 # app.py
 from flask import Flask
-from routes.save_transactions import transactions_bp  # import blueprint
+from backend.routes.pos_transaction import transactions_bp  # import blueprint
 
 app = Flask(__name__)
 
