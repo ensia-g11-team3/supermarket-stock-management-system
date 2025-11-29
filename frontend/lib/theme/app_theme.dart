@@ -1,58 +1,66 @@
 import 'package:flutter/material.dart';
+import '../assets/colors.dart';
+import '../assets/fonts.dart';
 
 class AppTheme {
-  // Color scheme matching the Stockify design
-  static const Color primaryBlue = Color(0xFF0567F7);
-  static const Color brownGold = Color(0xFFB58150);
-  static const Color sidebarBackground = Color(0xFF8B6F47);
-  static const Color sidebarSelected = Color(0xFFD4C4A8);
-  static const Color cardBackground = Colors.white;
-  static const Color borderColor = Color(0xFFE5E5E5);
-  static const Color textPrimary = Color(0xFF030213);
-  static const Color textSecondary = Color(0xFF717182);
-  static const Color inputBackground = Color(0xFFF3F3F5);
+  // Color scheme - using predefined colors from assets
+  static const Color primaryBlue = AppColors.primaryBlue;
+  static const Color brownGold = AppColors.brownGold;
+  static const Color sidebarBackground = AppColors.sidebarBackground;
+  static const Color sidebarSelected = AppColors.sidebarSelected;
+  static const Color cardBackground = AppColors.cardBackground;
+  static const Color borderColor = AppColors.borderColor;
+  static const Color textPrimary = AppColors.textPrimary;
+  static const Color textSecondary = AppColors.textSecondary;
+  static const Color inputBackground = AppColors.inputBackground;
+
+  // Centralized font configuration
+  static TextStyle get baseTextStyle => AppFonts.baseTextStyle;
 
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
+      fontFamily: AppFonts.fontFamily,
+      textTheme: AppFonts.textTheme,
       colorScheme: ColorScheme.light(
-        primary: primaryBlue,
-        secondary: brownGold,
-        surface: cardBackground,
-        error: const Color(0xFFD4183D),
+        primary: AppColors.primaryBlue,
+        secondary: AppColors.brownGold,
+        surface: AppColors.cardBackground,
+        error: AppColors.error,
       ),
-      scaffoldBackgroundColor: Colors.white,
-      appBarTheme: const AppBarTheme(
-        backgroundColor: Colors.white,
+      scaffoldBackgroundColor: AppColors.scaffoldBackground,
+      appBarTheme: AppBarTheme(
+        backgroundColor: AppColors.cardBackground,
         elevation: 0,
-        iconTheme: IconThemeData(color: textPrimary),
-        titleTextStyle: TextStyle(
-          color: textPrimary,
-          fontSize: 24,
-          fontWeight: FontWeight.w600,
+        iconTheme: const IconThemeData(color: AppColors.textPrimary),
+        titleTextStyle: AppFonts.heading2(
+          color: AppColors.textPrimary,
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: inputBackground,
+        fillColor: AppColors.inputBackground,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: borderColor),
+          borderSide: const BorderSide(color: AppColors.borderColor),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: borderColor),
+          borderSide: const BorderSide(color: AppColors.borderColor),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: primaryBlue, width: 2),
+          borderSide: const BorderSide(color: AppColors.primaryBlue, width: 2),
         ),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: primaryBlue,
-          foregroundColor: Colors.white,
+          backgroundColor: AppColors.primaryBlue,
+          foregroundColor: AppColors.textWhite,
+          textStyle: AppFonts.button(
+            color: AppColors.textWhite,
+          ),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
@@ -62,7 +70,10 @@ class AppTheme {
       ),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
-          foregroundColor: textSecondary,
+          foregroundColor: AppColors.textSecondary,
+          textStyle: AppFonts.button(
+            color: AppColors.textSecondary,
+          ),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
@@ -70,11 +81,11 @@ class AppTheme {
         ),
       ),
       cardTheme: CardThemeData(
-        color: cardBackground,
+        color: AppColors.cardBackground,
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
-          side: const BorderSide(color: borderColor),
+          side: const BorderSide(color: AppColors.borderColor),
         ),
       ),
     );
