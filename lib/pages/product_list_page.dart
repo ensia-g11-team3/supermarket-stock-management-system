@@ -24,79 +24,30 @@ class _ProductListPageState extends State<ProductListPage> {
   String _selectedCategory = 'All Categories';
   String _selectedStockLevel = 'All Stock Levels';
 
-  final List<Map<String, dynamic>> _products = [
-    {
-      'id': '1',
-      'name': 'Coca Cola 500ml',
-      'barcode': '123456789',
-      'category': 'Beverages',
-      'stock': 50,
-      'minStock': 10,
-      'price': 2.50,
-      'supplier': 'Beverage Co.',
-    },
-    {
-      'id': '2',
-      'name': 'Lays Chips',
-      'barcode': '987654321',
-      'category': 'Snacks',
-      'stock': 30,
-      'minStock': 10,
-      'price': 1.99,
-      'supplier': 'Snack Corp',
-    },
-    {
-      'id': '3',
-      'name': 'Milk 1L',
-      'barcode': '456789123',
-      'category': 'Dairy',
-      'stock': 25,
-      'minStock': 10,
-      'price': 3.99,
-      'supplier': 'Dairy Farms',
-    },
-    {
-      'id': '4',
-      'name': 'White Bread',
-      'barcode': '789123456',
-      'category': 'Bakery',
-      'stock': 40,
-      'minStock': 10,
-      'price': 2.49,
-      'supplier': 'Local Bakery',
-    },
-    {
-      'id': '5',
-      'name': 'Orange Juice 1L',
-      'barcode': '321654987',
-      'category': 'Beverages',
-      'stock': 20,
-      'minStock': 10,
-      'price': 4.99,
-      'supplier': 'Beverage Co.',
-    },
-    {
-      'id': '6',
-      'name': 'Butter 250g',
-      'barcode': '654987321',
-      'category': 'Dairy',
-      'stock': 5,
-      'minStock': 10,
-      'price': 5.49,
-      'supplier': 'Dairy Farms',
-    },
-    {
-      'id': '7',
-      'name': 'Coffee Beans 500g',
-      'barcode': '147258369',
-      'category': 'Beverages',
-      'stock': 8,
-      'minStock': 10,
-      'price': 12.99,
-      'supplier': 'Coffee Import',
-    },
-  ];
+  final List<Map<String, dynamic>> _products = [];
+  bool _isLoading = true;
 
+  @override
+  void initState() {
+    super.initState();
+    _fetchProducts();
+  }
+
+  Future<void> _fetchProducts() async {
+    try {
+    final data = await ProductApi.getProducts();
+    setState(() {
+      _products = List<Map<String, dynamic>>.from(data);
+      _isLoading = false;
+    });
+   } catch (e) {
+    print("Error loading products: $e");
+    setState(() {
+      _isLoading = false;
+    });
+  }
+  }
+  
   List<Map<String, dynamic>> get _filteredProducts {
     return _products.where((Map<String, dynamic> product) {
       final bool matchesSearch = _searchQuery.isEmpty ||
@@ -140,7 +91,9 @@ class _ProductListPageState extends State<ProductListPage> {
           ],
         ),
         Expanded(
-          child: SingleChildScrollView(
+          child: _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : SingleChildScrollView(
             padding: const EdgeInsets.all(32),
             child: Container(
               constraints: const BoxConstraints(maxWidth: 1400),
@@ -271,10 +224,9 @@ class _ProductListPageState extends State<ProductListPage> {
                                     children: [
                                       IconButton(
                                         icon: const Icon(Icons.edit, size: 20),
-                                        onPressed: () {
-                                          if (widget.onNavigateToEdit != null) {
-                                            widget.onNavigateToEdit!(product['id']);
-                                          }
+                                        onPressed: () async {
+                                          await widget.onNavigateToEdit?.call(product['id'].toString());
+                                          _fetchProducts(); // Refresh list after edit
                                         },
                                         color: AppTheme.primaryBlue,
                                         tooltip: 'Edit',
@@ -294,13 +246,16 @@ class _ProductListPageState extends State<ProductListPage> {
                                                   child: const Text('Cancel'),
                                                 ),
                                                 TextButton(
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                    ScaffoldMessenger.of(context).showSnackBar(
-                                                      SnackBar(
-                                                        content: Text('${product['name']} deleted'),
-                                                      ),
-                                                    );
+                                                  onPressed: () async {
+                                                     Navigator.pop(context); // Close dialog
+
+                                                     await ProductApi.deleteProduct(int.parse(product['id'].toString()));
+
+                                                     ScaffoldMessenger.of(context).showSnackBar(
+                                                       SnackBar(content: Text('${product['name']} deleted')),
+                                                      );
+
+                                                      _fetchProducts(); // Refresh list
                                                   },
                                                   style: TextButton.styleFrom(
                                                     foregroundColor: Colors.red,
