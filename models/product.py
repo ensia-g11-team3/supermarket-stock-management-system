@@ -17,7 +17,7 @@ class Product:
             
             query = """
                 INSERT INTO products 
-                (barcode, name, category, quantity_in_stock, unit, buying_price, 
+                (barcode, name, category, qty, unit, buying_price, 
                  selling_price, expiry_date, supplier, status, description)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             """
@@ -26,7 +26,7 @@ class Product:
                 data.get('barcode'),
                 data.get('name'),
                 data.get('category'),
-                data.get('quantity_in_stock', 0),
+                data.get('qty', 0),
                 data.get('unit', 'piece'),
                 data.get('buying_price'),
                 data.get('selling_price'),

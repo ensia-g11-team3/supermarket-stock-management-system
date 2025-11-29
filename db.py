@@ -11,7 +11,7 @@ def get_db_connection():
             host='localhost',
             user='root',
             password='',  # Change this to your MySQL password
-            database='supermarket_db',
+            database='stock_db',
             port=3306
         )
         return connection
