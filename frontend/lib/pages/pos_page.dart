@@ -4,6 +4,7 @@ import '../theme/app_theme.dart';
 import '../widgets/page_header.dart';
 import '../widgets/primary_button.dart';
 import '../widgets/search_bar.dart';
+import '../services/api_service.dart';
 
 class POSPage extends StatefulWidget {
   const POSPage({super.key});
@@ -13,17 +14,7 @@ class POSPage extends StatefulWidget {
 }
 
 class _POSPageState extends State<POSPage> {
-  final List<_Product> _products = [
-    _Product('Coca Cola 500ml', 'Beverages', 2.50, 50),
-    _Product('Lays Chips', 'Snacks', 1.99, 30),
-    _Product('Milk 1L', 'Dairy', 3.99, 25),
-    _Product('White Bread', 'Bakery', 2.49, 40),
-    _Product('Orange Juice 1L', 'Beverages', 4.99, 20),
-    _Product('Butter 250g', 'Dairy', 5.49, 15),
-    _Product('Coffee Beans 500g', 'Beverages', 12.99, 10),
-    _Product('Chocolate Bar', 'Snacks', 1.49, 60),
-  ];
-
+  List<_Product> _products = [];
   final List<_CartItem> _cart = [];
   final double _taxRate = 0.1;
 
@@ -31,6 +22,14 @@ class _POSPageState extends State<POSPage> {
   String _barcodeInput = '';
   String _paymentMethod = 'cash';
   final TextEditingController _barcodeController = TextEditingController();
+  
+  bool _isLoading = true;
+  String? _errorMessage;
+  bool _isProcessingTransaction = false;
+  
+  // Worker ID - In a real app, this would come from authentication
+  // For now, using a default value of 1
+  static const int _defaultWorkerId = 1;
 
   List<_Product> get _filteredProducts {
     if (_searchQuery.isEmpty) return _products;
@@ -63,15 +62,114 @@ class _POSPageState extends State<POSPage> {
     });
   }
 
+  @override
+  void initState() {
+    super.initState();
+    _loadProducts();
+  }
+
+  Future<void> _loadProducts() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final productsData = await ApiService.getPosProducts();
+      setState(() {
+        _products = productsData.map((p) => _Product.fromApi(p)).toList();
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _errorMessage = e.toString().replaceAll('Exception: ', '');
+        _isLoading = false;
+      });
+    }
+  }
+
   void _addBarcodeToCart() {
     if (_barcodeInput.isEmpty) return;
-    // Demo behavior: add the first product for any barcode
-    final _Product product = _products.first;
-    _addToCart(product);
+    
+    // Find product by barcode
+    final _Product? product = _products
+        .where((p) => p.barcode.toLowerCase() == _barcodeInput.toLowerCase())
+        .firstOrNull;
+    
+    if (product != null) {
+      _addToCart(product);
+      setState(() {
+        _barcodeInput = '';
+        _barcodeController.clear();
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Product with barcode $_barcodeInput not found'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      setState(() {
+        _barcodeInput = '';
+        _barcodeController.clear();
+      });
+    }
+  }
+  
+  Future<void> _handleCheckout() async {
+    if (_cart.isEmpty) return;
+
     setState(() {
-      _barcodeInput = '';
-      _barcodeController.clear();
+      _isProcessingTransaction = true;
     });
+
+    try {
+      // Prepare items for API
+      final items = _cart.map((cartItem) => {
+        'product_id': cartItem.product.id,
+        'quantity': cartItem.quantity,
+      }).toList();
+
+      // Call API to create transaction
+      final result = await ApiService.createTransaction(
+        workerId: _defaultWorkerId,
+        totalAmount: _subtotal, // Using subtotal without tax as backend expects raw amount
+        paymentMethod: _paymentMethod,
+        items: items,
+      );
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Transaction completed! ID: ${result['transaction_id']}',
+            ),
+            backgroundColor: Colors.green,
+          ),
+        );
+        
+        // Clear cart after successful transaction
+        _clearCart();
+        
+        // Reload products to update stock
+        await _loadProducts();
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: ${e.toString().replaceAll('Exception: ', '')}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isProcessingTransaction = false;
+        });
+      }
+    }
   }
 
   void _updateQuantity(_CartItem item, int delta) {
@@ -155,6 +253,56 @@ class _POSPageState extends State<POSPage> {
   }
 
   Widget _buildProductPanel() {
+    if (_isLoading) {
+      return const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 16),
+            Text('Loading products...'),
+          ],
+        ),
+      );
+    }
+
+    if (_errorMessage != null) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.error_outline, size: 64, color: Colors.red[300]),
+            const SizedBox(height: 16),
+            Text(
+              'Error loading products',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(height: 8),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32),
+              child: Text(
+                _errorMessage!,
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.grey[600]),
+              ),
+            ),
+            const SizedBox(height: 24),
+            PrimaryButton(
+              onPressed: _loadProducts,
+              child: const Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.refresh, size: 20),
+                  SizedBox(width: 8),
+                  Text('Retry'),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -189,37 +337,55 @@ class _POSPageState extends State<POSPage> {
               ),
             ),
             const SizedBox(height: 16),
-            TextField(
-              controller: _barcodeController,
-              readOnly: true,
-              decoration: InputDecoration(
-                hintText: 'Enter barcode...',
-                hintStyle: const TextStyle(
-                  color: AppTheme.textSecondary,
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _barcodeController,
+                    readOnly: true,
+                    decoration: InputDecoration(
+                      hintText: 'Enter barcode...',
+                      hintStyle: const TextStyle(
+                        color: AppTheme.textSecondary,
+                      ),
+                      filled: true,
+                      fillColor: AppTheme.inputBackground,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(color: AppTheme.borderColor),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(color: AppTheme.borderColor),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(color: AppTheme.primaryBlue, width: 2),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                        vertical: 16,
+                        horizontal: 20,
+                      ),
+                    ),
+                    style: const TextStyle(
+                      fontSize: 18,
+                      color: AppTheme.textPrimary,
+                    ),
+                  ),
                 ),
-                filled: true,
-                fillColor: AppTheme.inputBackground,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(color: AppTheme.borderColor),
+                const SizedBox(width: 12),
+                PrimaryButton(
+                  onPressed: _barcodeInput.isEmpty ? null : _addBarcodeToCart,
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.add, size: 20),
+                      SizedBox(width: 4),
+                      Text('Add'),
+                    ],
+                  ),
                 ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(color: AppTheme.borderColor),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(color: AppTheme.primaryBlue, width: 2),
-                ),
-                contentPadding: const EdgeInsets.symmetric(
-                  vertical: 16,
-                  horizontal: 20,
-                ),
-              ),
-              style: const TextStyle(
-                fontSize: 18,
-                color: AppTheme.textPrimary,
-              ),
+              ],
             ),
             const SizedBox(height: 16),
             // Keypad with specific layout
@@ -286,6 +452,21 @@ class _POSPageState extends State<POSPage> {
 
   Widget _buildProductGrid() {
     final List<_Product> products = _filteredProducts;
+
+    if (products.isEmpty) {
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.all(32.0),
+          child: Text(
+            'No products found',
+            style: TextStyle(
+              fontSize: 16,
+              color: AppTheme.textSecondary,
+            ),
+          ),
+        ),
+      );
+    }
 
     return GridView.builder(
       shrinkWrap: true,
@@ -389,15 +570,33 @@ class _POSPageState extends State<POSPage> {
                 _buildPaymentMethodSelector(),
                 const SizedBox(height: 16),
                 PrimaryButton(
-                  onPressed: _cart.isEmpty ? null : () {},
-                  child: const Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.print, size: 20),
-                      SizedBox(width: 8),
-                      Text('Print Receipt'),
-                    ],
-                  ),
+                  onPressed: (_cart.isEmpty || _isProcessingTransaction)
+                      ? null
+                      : _handleCheckout,
+                  child: _isProcessingTransaction
+                      ? const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              ),
+                            ),
+                            SizedBox(width: 8),
+                            Text('Processing...'),
+                          ],
+                        )
+                      : const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.check_circle, size: 20),
+                            SizedBox(width: 8),
+                            Text('Complete Sale'),
+                          ],
+                        ),
                 ),
               ],
             ),
@@ -715,12 +914,58 @@ class _QuantityButton extends StatelessWidget {
 }
 
 class _Product {
+  final int id;
   final String name;
+  final String barcode;
   final String category;
   final double price;
   final int stock;
 
-  const _Product(this.name, this.category, this.price, this.stock);
+  _Product({
+    required this.id,
+    required this.name,
+    required this.barcode,
+    required this.category,
+    required this.price,
+    required this.stock,
+  });
+
+  // Factory constructor to create from API response
+  factory _Product.fromApi(Map<String, dynamic> data) {
+    // Try to extract category from name or use a default
+    // Since backend doesn't provide category, we'll use 'Uncategorized'
+    String category = 'Uncategorized';
+    final name = data['name'] as String? ?? '';
+    
+    // Simple category detection based on name keywords
+    final nameLower = name.toLowerCase();
+    if (nameLower.contains('cola') || nameLower.contains('juice') || nameLower.contains('drink')) {
+      category = 'Beverages';
+    } else if (nameLower.contains('chip') || nameLower.contains('snack') || nameLower.contains('chocolate')) {
+      category = 'Snacks';
+    } else if (nameLower.contains('milk') || nameLower.contains('butter') || nameLower.contains('dairy')) {
+      category = 'Dairy';
+    } else if (nameLower.contains('bread') || nameLower.contains('bakery')) {
+      category = 'Bakery';
+    }
+
+    return _Product(
+      id: data['id'] as int? ?? 0,
+      name: name,
+      barcode: data['barcode'] as String? ?? '',
+      category: category,
+      price: (data['selling_price'] as num?)?.toDouble() ?? 0.0,
+      stock: (data['quantity_in_stock'] as int?) ?? 0,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is _Product && runtimeType == other.runtimeType && id == other.id;
+
+  @override
+  int get hashCode => id.hashCode;
 }
 
 class _CartItem {
