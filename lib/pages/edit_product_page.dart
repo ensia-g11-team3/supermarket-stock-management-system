@@ -55,64 +55,84 @@ class _EditProductPageState extends State<EditProductPage> {
     'Supplier D',
   ];
 
-  // Simulate loading product data by productId
-  void _loadProductData() {
-    // In a real app, you would fetch this from your data source
-    // For now, we'll use sample data based on productId
-    _productNameController.text = 'Coca Cola 500ml';
-    _barcodeController.text = '123456789';
-    _quantityController.text = '50';
-    _minStockController.text = '10';
-    _priceController.text = '2.50';
-    _descriptionController.text = 'Carbonated soft drink';
-    _selectedCategory = 'Beverages';
-    _selectedSupplier = 'Beverage Co.';
+  Future<void> _loadProductData() async {
+  try {
+    final product = await ProductApi.getProductById(widget.productId);
+
+    setState(() {
+      _productNameController.text = product["name"];
+      _barcodeController.text = product["barcode"];
+      _quantityController.text = product["quantity"].toString();
+      _minStockController.text = product["minStock"].toString();
+      _priceController.text = product["price"].toString();
+      _descriptionController.text = product["description"] ?? "";
+      _selectedCategory = product["category"];
+      _selectedSupplier = product["supplier"];
+    });
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Failed to load product: $e"),
+        backgroundColor: Colors.red,
+      ),
+    );
   }
+}
+
 
   @override
   void initState() {
-    super.initState();
-    _productNameController = TextEditingController();
-    _barcodeController = TextEditingController();
-    _quantityController = TextEditingController(text: '0');
-    _minStockController = TextEditingController(text: '10');
-    _priceController = TextEditingController(text: '0.00');
-    _descriptionController = TextEditingController();
-    _loadProductData();
-  }
-
-  @override
-  void dispose() {
-    _productNameController.dispose();
-    _barcodeController.dispose();
-    _quantityController.dispose();
-    _minStockController.dispose();
-    _priceController.dispose();
-    _descriptionController.dispose();
     super.dispose();
   }
 
-  void _handleSave() {
-    if (_formKey.currentState!.validate()) {
-      if (_selectedCategory == null || _selectedSupplier == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Please select a category and supplier'),
-            backgroundColor: Colors.red,
-          ),
-        );
-        return;
-      }
+  void _handleSave() async {
+  if (!_formKey.currentState!.validate()) return;
 
-      widget.onProductUpdated();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Product updated successfully!'),
-          backgroundColor: Colors.green,
-        ),
-      );
-    }
+  if (_selectedCategory == null || _selectedSupplier == null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Please select a category and supplier'),
+        backgroundColor: Colors.red,
+      ),
+    );
+    return;
   }
+
+  final updatedData = {
+    "name": _productNameController.text,
+    "barcode": _barcodeController.text,
+    "category": _selectedCategory,
+    "supplier": _selectedSupplier,
+    "quantity": int.parse(_quantityController.text),
+    "minStock": int.parse(_minStockController.text),
+    "price": double.parse(_priceController.text),
+    "description": _descriptionController.text,
+  };
+
+  try {
+    await ProductApi.updateProduct(widget.productId, updatedData);
+
+    widget.onProductUpdated();
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Product updated successfully!'),
+        backgroundColor: Colors.green,
+      ),
+    );
+
+    widget.onNavigateBack(); // go back to list
+
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Failed to update product: $e"),
+        backgroundColor: Colors.red,
+      ),
+    );
+  }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -429,4 +449,3 @@ class _EditProductPageState extends State<EditProductPage> {
     );
   }
 }
-
