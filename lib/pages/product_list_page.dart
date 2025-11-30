@@ -4,6 +4,8 @@ import '../widgets/search_bar.dart';
 import '../widgets/primary_button.dart';
 import '../widgets/stock_badge.dart';
 import '../theme/app_theme.dart';
+import '../services/product_api.dart';
+
 
 class ProductListPage extends StatefulWidget {
   final ValueChanged<String>? onNavigateToEdit;

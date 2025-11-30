@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../widgets/page_header.dart';
 import '../widgets/primary_button.dart';
 import '../theme/app_theme.dart';
+import '../services/product_api.dart';
 
 class EditProductPage extends StatefulWidget {
   final String productId;
@@ -56,29 +57,28 @@ class _EditProductPageState extends State<EditProductPage> {
   ];
 
   Future<void> _loadProductData() async {
-  try {
-    final product = await ProductApi.getProductById(widget.productId);
+    try {
+      final product = await ProductApi.getProductById(widget.productId);
 
-    setState(() {
-      _productNameController.text = product["name"];
-      _barcodeController.text = product["barcode"];
-      _quantityController.text = product["quantity"].toString();
-      _minStockController.text = product["minStock"].toString();
-      _priceController.text = product["price"].toString();
-      _descriptionController.text = product["description"] ?? "";
-      _selectedCategory = product["category"];
-      _selectedSupplier = product["supplier"];
-    });
-  } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text("Failed to load product: $e"),
-        backgroundColor: Colors.red,
-      ),
-    );
+      setState(() {
+        _productNameController.text = product["name"];
+        _barcodeController.text = product["barcode"];
+        _quantityController.text = product["quantity"].toString();
+        _minStockController.text = product["minStock"].toString();
+        _priceController.text = product["price"].toString();
+        _descriptionController.text = product["description"] ?? "";
+        _selectedCategory = product["category"];
+        _selectedSupplier = product["supplier"];
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Failed to load product: $e"),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
-}
-
 
   @override
   void initState() {
@@ -86,53 +86,51 @@ class _EditProductPageState extends State<EditProductPage> {
   }
 
   void _handleSave() async {
-  if (!_formKey.currentState!.validate()) return;
+    if (!_formKey.currentState!.validate()) return;
 
-  if (_selectedCategory == null || _selectedSupplier == null) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Please select a category and supplier'),
-        backgroundColor: Colors.red,
-      ),
-    );
-    return;
+    if (_selectedCategory == null || _selectedSupplier == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please select a category and supplier'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    final updatedData = {
+      "name": _productNameController.text,
+      "barcode": _barcodeController.text,
+      "category": _selectedCategory,
+      "supplier": _selectedSupplier,
+      "quantity": int.parse(_quantityController.text),
+      "minStock": int.parse(_minStockController.text),
+      "price": double.parse(_priceController.text),
+      "description": _descriptionController.text,
+    };
+
+    try {
+      await ProductApi.updateProduct(widget.productId, updatedData);
+
+      widget.onProductUpdated();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Product updated successfully!'),
+          backgroundColor: Colors.green,
+        ),
+      );
+
+      widget.onNavigateBack(); // go back to list
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Failed to update product: $e"),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
-
-  final updatedData = {
-    "name": _productNameController.text,
-    "barcode": _barcodeController.text,
-    "category": _selectedCategory,
-    "supplier": _selectedSupplier,
-    "quantity": int.parse(_quantityController.text),
-    "minStock": int.parse(_minStockController.text),
-    "price": double.parse(_priceController.text),
-    "description": _descriptionController.text,
-  };
-
-  try {
-    await ProductApi.updateProduct(widget.productId, updatedData);
-
-    widget.onProductUpdated();
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Product updated successfully!'),
-        backgroundColor: Colors.green,
-      ),
-    );
-
-    widget.onNavigateBack(); // go back to list
-
-  } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text("Failed to update product: $e"),
-        backgroundColor: Colors.red,
-      ),
-    );
-  }
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -253,7 +251,9 @@ class _EditProductPageState extends State<EditProductPage> {
                                 controller: _priceController,
                                 label: 'Price (\$)',
                                 hint: '0.00',
-                                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                        decimal: true),
                                 isRequired: true,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
@@ -362,7 +362,8 @@ class _EditProductPageState extends State<EditProductPage> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: AppTheme.primaryBlue, width: 2),
+              borderSide:
+                  const BorderSide(color: AppTheme.primaryBlue, width: 2),
             ),
             contentPadding: EdgeInsets.symmetric(
               horizontal: 16,
@@ -429,7 +430,8 @@ class _EditProductPageState extends State<EditProductPage> {
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(color: AppTheme.primaryBlue, width: 2),
+                borderSide:
+                    const BorderSide(color: AppTheme.primaryBlue, width: 2),
               ),
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,

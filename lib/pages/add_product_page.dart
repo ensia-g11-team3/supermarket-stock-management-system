@@ -1,9 +1,8 @@
-
-
 import 'package:flutter/material.dart';
 import '../widgets/page_header.dart';
 import '../widgets/primary_button.dart';
 import '../theme/app_theme.dart';
+import '../services/product_api.dart';
 
 class AddProductPage extends StatefulWidget {
   const AddProductPage({super.key});
@@ -51,55 +50,53 @@ class _AddProductPageState extends State<AddProductPage> {
   }
 
   void _handleSave() async {
-  if (!_formKey.currentState!.validate()) return;
-if (_selectedCategory == null || _selectedSupplier == null) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Please select a category and supplier'),
-        backgroundColor: Colors.red,
-      ),
-    );
-    return;
+    if (!_formKey.currentState!.validate()) return;
+    if (_selectedCategory == null || _selectedSupplier == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please select a category and supplier'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    final data = {
+      "name": _productNameController.text,
+      "barcode": _barcodeController.text,
+      "category": _selectedCategory,
+      "supplier": _selectedSupplier,
+      "quantity": int.parse(_quantityController.text),
+      "minStock": int.parse(_minStockController.text),
+      "price": double.parse(_priceController.text),
+      "description": _descriptionController.text,
+    };
+
+    try {
+      await ProductApi.addProduct(data);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Product added successfully!'),
+          backgroundColor: Colors.green,
+        ),
+      );
+
+      _resetForm();
+
+      // Optional: Navigate back
+      Navigator.pop(context, true); // tells previous screen to refresh list
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to add product: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
- final data = {
-    "name": _productNameController.text,
-    "barcode": _barcodeController.text,
-    "category": _selectedCategory,
-    "supplier": _selectedSupplier,
-    "quantity": int.parse(_quantityController.text),
-    "minStock": int.parse(_minStockController.text),
-    "price": double.parse(_priceController.text),
-    "description": _descriptionController.text,
-  };
-
-  try {
-    await ProductApi.addProduct(data);
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Product added successfully!'),
-        backgroundColor: Colors.green,
-      ),
-    );
-
-    _resetForm();
-
-    // Optional: Navigate back
-    Navigator.pop(context, true); // tells previous screen to refresh list
-
-  } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Failed to add product: $e'),
-        backgroundColor: Colors.red,
-      ),
-    );
-  }
-}
-
-
-    void _resetForm() {
+  void _resetForm() {
     _formKey.currentState!.reset();
     _productNameController.clear();
     _barcodeController.clear();
@@ -225,7 +222,8 @@ if (_selectedCategory == null || _selectedSupplier == null) {
                                 controller: _priceController,
                                 label: 'Price (\$)',
                                 hint: '0.00',
-                                keyboardType: TextInputType.numberWithOptions(decimal: true),
+                                keyboardType: TextInputType.numberWithOptions(
+                                    decimal: true),
                                 isRequired: true,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
@@ -334,7 +332,8 @@ if (_selectedCategory == null || _selectedSupplier == null) {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: AppTheme.primaryBlue, width: 2),
+              borderSide:
+                  const BorderSide(color: AppTheme.primaryBlue, width: 2),
             ),
             contentPadding: EdgeInsets.symmetric(
               horizontal: 16,
@@ -401,7 +400,8 @@ if (_selectedCategory == null || _selectedSupplier == null) {
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(color: AppTheme.primaryBlue, width: 2),
+                borderSide:
+                    const BorderSide(color: AppTheme.primaryBlue, width: 2),
               ),
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,
@@ -421,4 +421,3 @@ if (_selectedCategory == null || _selectedSupplier == null) {
     );
   }
 }
-    
