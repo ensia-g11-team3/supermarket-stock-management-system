@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import 'package:flutter/material.dart';
 import '../widgets/page_header.dart';
 import '../widgets/primary_button.dart';
@@ -111,6 +112,15 @@ class _AddProductPageState extends State<AddProductPage> {
   }
 
   @override
+=======
+    setState(() {
+      _selectedCategory = null;
+      _selectedSupplier = null;
+    });
+  }
+
+  @override
+>>>>>>> Stashed changes
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -222,8 +232,12 @@ class _AddProductPageState extends State<AddProductPage> {
                                 controller: _priceController,
                                 label: 'Price (\$)',
                                 hint: '0.00',
+<<<<<<< Updated upstream
                                 keyboardType: TextInputType.numberWithOptions(
                                     decimal: true),
+=======
+                                keyboardType: TextInputType.numberWithOptions(decimal: true),
+>>>>>>> Stashed changes
                                 isRequired: true,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
@@ -332,8 +346,12 @@ class _AddProductPageState extends State<AddProductPage> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
+<<<<<<< Updated upstream
               borderSide:
                   const BorderSide(color: AppTheme.primaryBlue, width: 2),
+=======
+              borderSide: const BorderSide(color: AppTheme.primaryBlue, width: 2),
+>>>>>>> Stashed changes
             ),
             contentPadding: EdgeInsets.symmetric(
               horizontal: 16,
