@@ -51,6 +51,7 @@ class _AddProductPageState extends State<AddProductPage> {
 
   void _handleSave() async {
     if (!_formKey.currentState!.validate()) return;
+
     if (_selectedCategory == null || _selectedSupplier == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -84,8 +85,7 @@ class _AddProductPageState extends State<AddProductPage> {
 
       _resetForm();
 
-      // Optional: Navigate back
-      Navigator.pop(context, true); // tells previous screen to refresh list
+      Navigator.pop(context, true);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -104,6 +104,7 @@ class _AddProductPageState extends State<AddProductPage> {
     _minStockController.text = '10';
     _priceController.text = '0.00';
     _descriptionController.clear();
+
     setState(() {
       _selectedCategory = null;
       _selectedSupplier = null;
@@ -111,15 +112,6 @@ class _AddProductPageState extends State<AddProductPage> {
   }
 
   @override
-=======
-    setState(() {
-      _selectedCategory = null;
-      _selectedSupplier = null;
-    });
-  }
-
-  @override
->>>>>>> Stashed changes
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -138,7 +130,6 @@ class _AddProductPageState extends State<AddProductPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Form Fields
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -231,12 +222,7 @@ class _AddProductPageState extends State<AddProductPage> {
                                 controller: _priceController,
                                 label: 'Price (\$)',
                                 hint: '0.00',
-<<<<<<< Updated upstream
-                                keyboardType: TextInputType.numberWithOptions(
-                                    decimal: true),
-=======
-                                keyboardType: TextInputType.numberWithOptions(decimal: true),
->>>>>>> Stashed changes
+                                keyboardType: const TextInputType.numberWithOptions(decimal: true),
                                 isRequired: true,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
@@ -261,7 +247,7 @@ class _AddProductPageState extends State<AddProductPage> {
                       ],
                     ),
                     const SizedBox(height: 32),
-                    // Action Buttons
+
                     Row(
                       children: [
                         PrimaryButton(
@@ -271,12 +257,6 @@ class _AddProductPageState extends State<AddProductPage> {
                         const SizedBox(width: 12),
                         TextButton(
                           onPressed: _resetForm,
-                          style: TextButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 24,
-                              vertical: 12,
-                            ),
-                          ),
                           child: const Text('Reset Form'),
                         ),
                       ],
@@ -313,16 +293,11 @@ class _AddProductPageState extends State<AddProductPage> {
                 color: AppTheme.textPrimary,
               ),
             ),
-            if (isRequired) ...[
-              const SizedBox(width: 4),
+            if (isRequired)
               const Text(
                 '*',
-                style: TextStyle(
-                  color: Colors.red,
-                  fontSize: 14,
-                ),
+                style: TextStyle(color: Colors.red),
               ),
-            ],
           ],
         ),
         const SizedBox(height: 8),
@@ -339,22 +314,13 @@ class _AddProductPageState extends State<AddProductPage> {
               borderRadius: BorderRadius.circular(8),
               borderSide: const BorderSide(color: AppTheme.borderColor),
             ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: AppTheme.borderColor),
-            ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-<<<<<<< Updated upstream
-              borderSide:
-                  const BorderSide(color: AppTheme.primaryBlue, width: 2),
-=======
               borderSide: const BorderSide(color: AppTheme.primaryBlue, width: 2),
->>>>>>> Stashed changes
             ),
-            contentPadding: EdgeInsets.symmetric(
+            contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,
-              vertical: maxLines > 1 ? 12 : 12,
+              vertical: 12,
             ),
           ),
         ),
@@ -382,16 +348,8 @@ class _AddProductPageState extends State<AddProductPage> {
                 color: AppTheme.textPrimary,
               ),
             ),
-            if (isRequired) ...[
-              const SizedBox(width: 4),
-              const Text(
-                '*',
-                style: TextStyle(
-                  color: Colors.red,
-                  fontSize: 14,
-                ),
-              ),
-            ],
+            if (isRequired)
+              const Text('*', style: TextStyle(color: Colors.red)),
           ],
         ),
         const SizedBox(height: 8),
@@ -405,31 +363,14 @@ class _AddProductPageState extends State<AddProductPage> {
             value: value,
             decoration: InputDecoration(
               hintText: 'Select ${label.toLowerCase()}',
+              border: OutlineInputBorder(borderSide: BorderSide.none),
               filled: true,
               fillColor: AppTheme.inputBackground,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide.none,
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide.none,
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide:
-                    const BorderSide(color: AppTheme.primaryBlue, width: 2),
-              ),
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 12,
-              ),
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             ),
             items: items.map((item) {
-              return DropdownMenuItem<String>(
-                value: item,
-                child: Text(item),
-              );
+              return DropdownMenuItem(value: item, child: Text(item));
             }).toList(),
             onChanged: onChanged,
           ),
