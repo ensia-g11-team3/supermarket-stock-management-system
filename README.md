@@ -65,6 +65,19 @@ project/
 
 ## 🚀 How to Run the Project
 
+
+### **Database**
+## Create database
+CREATE DATABASE stock_db;
+
+## Configure db.py
+Set your MySQL username, password, host, and database.
+
+
+## Create tables
+use tables.sql
+(make sure MySQL server is running) 
+
 ### **Backend**
 
 ```
