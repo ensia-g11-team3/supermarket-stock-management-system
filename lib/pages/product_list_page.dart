@@ -53,9 +53,43 @@ class _ProductListPageState extends State<ProductListPage> {
   List<Map<String, dynamic>> get _filteredProducts {
     return _products.where((Map<String, dynamic> product) {
       final bool matchesSearch = _searchQuery.isEmpty ||
+          product['name'].toString().toLowerCase().contains(_searchQuery.toLowerCase()) ||
+          product['barcode'].toString().contains(_searchQuery);
 
+      final bool matchesCategory =
+          _selectedCategory == 'All Categories' || product['category'] == _selectedCategory;
 
-class _ProductListPageState extends State<ProductListPage> {
+      final bool matchesStockLevel = _selectedStockLevel == 'All Stock Levels' ||
+          (_selectedStockLevel == 'In Stock' && product['stock']! > product['minStock']!) ||
+          (_selectedStockLevel == 'Low Stock' &&
+              product['stock']! <= product['minStock']! &&
+              product['stock']! > product['minStock']! / 2) ||
+          (_selectedStockLevel == 'Very Low Stock' && product['stock']! <= product['minStock']! / 2);
+
+      return matchesSearch && matchesCategory && matchesStockLevel;
+    }).toList();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        PageHeader(
+          title: 'Product List',
+          description: 'Manage your inventory products.',
+          actions: [
+            PrimaryButton(
+              onPressed: widget.onNavigateToAdd,
+              child: const Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.add, size: 20),
+                  SizedBox(width: 8),
+                  Text('Add New Product'),
+                ],
+              ),
+            ),
           ],
         ),
         Expanded(
