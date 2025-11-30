@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 import 'package:flutter/material.dart';
 import '../widgets/page_header.dart';
 import '../widgets/primary_button.dart';
