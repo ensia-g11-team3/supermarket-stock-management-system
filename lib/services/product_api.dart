@@ -10,10 +10,21 @@ class ProductApi {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      return data["products"]; // backend returns {"count": x, "products": [...]}
+      return data[
+          "products"]; // backend returns {"count": x, "products": [...]}
     } else {
       throw Exception("Failed to load products");
     }
+  }
+
+  static Future<Map<String, dynamic>> getProductById(String id) async {
+    final response = await http.get(Uri.parse("$baseUrl/$id"));
+
+    if (response.statusCode != 200) {
+      throw Exception("Failed to load product");
+    }
+
+    return jsonDecode(response.body);
   }
 
   static Future<void> deleteProduct(int id) async {
@@ -21,16 +32,17 @@ class ProductApi {
   }
 
   static Future<void> addProduct(Map<String, dynamic> data) async {
-  final response = await http.post(
-    Uri.parse(baseUrl),
-    headers: {"Content-Type": "application/json"},
-    body: jsonEncode(data),
-  );
+    final response = await http.post(
+      Uri.parse(baseUrl),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(data),
+    );
 
-  if (response.statusCode != 201) {
-    throw Exception("Failed to add product: ${response.body}");
+    if (response.statusCode != 201) {
+      throw Exception("Failed to add product: ${response.body}");
+    }
   }
-}
+
   static Future<void> updateProduct(int id, Map<String, dynamic> data) async {
     final response = await http.put(
       Uri.parse("$baseUrl/$id"),

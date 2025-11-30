@@ -6,7 +6,6 @@ import '../widgets/stock_badge.dart';
 import '../theme/app_theme.dart';
 import '../services/product_api.dart';
 
-
 class ProductListPage extends StatefulWidget {
   final ValueChanged<String>? onNavigateToEdit;
   final VoidCallback? onNavigateToAdd;
@@ -26,7 +25,7 @@ class _ProductListPageState extends State<ProductListPage> {
   String _selectedCategory = 'All Categories';
   String _selectedStockLevel = 'All Stock Levels';
 
-   final List<Map<String, dynamic>> _products = [];
+  List<Map<String, dynamic>> _products = [];
   bool _isLoading = true;
 
   @override
@@ -37,34 +36,40 @@ class _ProductListPageState extends State<ProductListPage> {
 
   Future<void> _fetchProducts() async {
     try {
-    final data = await ProductApi.getProducts();
-    setState(() {
-      _products = List<Map<String, dynamic>>.from(data);
-      _isLoading = false;
-    });
-   } catch (e) {
-    print("Error loading products: $e");
-    setState(() {
-      _isLoading = false;
-    });
+      final data = await ProductApi.getProducts();
+      setState(() {
+        _products = List<Map<String, dynamic>>.from(data);
+        _isLoading = false;
+      });
+    } catch (e) {
+      print("Error loading products: $e");
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
-  }
-  
+
   List<Map<String, dynamic>> get _filteredProducts {
     return _products.where((Map<String, dynamic> product) {
       final bool matchesSearch = _searchQuery.isEmpty ||
-          product['name'].toString().toLowerCase().contains(_searchQuery.toLowerCase()) ||
+          product['name']
+              .toString()
+              .toLowerCase()
+              .contains(_searchQuery.toLowerCase()) ||
           product['barcode'].toString().contains(_searchQuery);
 
-      final bool matchesCategory =
-          _selectedCategory == 'All Categories' || product['category'] == _selectedCategory;
+      final bool matchesCategory = _selectedCategory == 'All Categories' ||
+          product['category'] == _selectedCategory;
 
-      final bool matchesStockLevel = _selectedStockLevel == 'All Stock Levels' ||
-          (_selectedStockLevel == 'In Stock' && product['stock']! > product['minStock']!) ||
-          (_selectedStockLevel == 'Low Stock' &&
-              product['stock']! <= product['minStock']! &&
-              product['stock']! > product['minStock']! / 2) ||
-          (_selectedStockLevel == 'Very Low Stock' && product['stock']! <= product['minStock']! / 2);
+      final bool matchesStockLevel =
+          _selectedStockLevel == 'All Stock Levels' ||
+              (_selectedStockLevel == 'In Stock' &&
+                  product['stock']! > product['minStock']!) ||
+              (_selectedStockLevel == 'Low Stock' &&
+                  product['stock']! <= product['minStock']! &&
+                  product['stock']! > product['minStock']! / 2) ||
+              (_selectedStockLevel == 'Very Low Stock' &&
+                  product['stock']! <= product['minStock']! / 2);
 
       return matchesSearch && matchesCategory && matchesStockLevel;
     }).toList();
@@ -96,193 +101,215 @@ class _ProductListPageState extends State<ProductListPage> {
           child: _isLoading
               ? const Center(child: CircularProgressIndicator())
               : SingleChildScrollView(
-            padding: const EdgeInsets.all(32),
-            child: Container(
-              constraints: const BoxConstraints(maxWidth: 1400),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Filters Section
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(24),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Filters',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
-                              color: AppTheme.textPrimary,
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: AppSearchBar(
-                                  placeholder: 'Name or barcode...',
-                                  value: _searchQuery,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _searchQuery = value;
-                                    });
-                                  },
-                                ),
-                              ),
-                              const SizedBox(width: 16),
-                              Expanded(
-                                child: _buildDropdown(
-                                  label: 'Category',
-                                  value: _selectedCategory,
-                                  items: [
-                                    'All Categories',
-                                    'Beverages',
-                                    'Snacks',
-                                    'Dairy',
-                                    'Bakery',
-                                  ],
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _selectedCategory = value!;
-                                    });
-                                  },
-                                ),
-                              ),
-                              const SizedBox(width: 16),
-                              Expanded(
-                                child: _buildDropdown(
-                                  label: 'Stock Level',
-                                  value: _selectedStockLevel,
-                                  items: [
-                                    'All Stock Levels',
-                                    'In Stock',
-                                    'Low Stock',
-                                    'Very Low Stock',
-                                  ],
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _selectedStockLevel = value!;
-                                    });
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  // Product Table
-                  Card(
-                    child: Table(
-                      columnWidths: const {
-                        0: FlexColumnWidth(2),
-                        1: FlexColumnWidth(1.5),
-                        2: FlexColumnWidth(1.5),
-                        3: FlexColumnWidth(1),
-                        4: FlexColumnWidth(1),
-                        5: FlexColumnWidth(2),
-                        6: FlexColumnWidth(1.5),
-                      },
+                  padding: const EdgeInsets.all(32),
+                  child: Container(
+                    constraints: const BoxConstraints(maxWidth: 1400),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Header Row
-                        TableRow(
-                          decoration: BoxDecoration(
-                            color: AppTheme.brownGold,
-                            border: Border(
-                              bottom: BorderSide(color: AppTheme.borderColor),
-                            ),
-                          ),
-                          children: const [
-                            _TableHeaderCell(Text('Product Name')),
-                            _TableHeaderCell(Text('Barcode')),
-                            _TableHeaderCell(Text('Category')),
-                            _TableHeaderCell(Text('Stock')),
-                            _TableHeaderCell(Text('Price')),
-                            _TableHeaderCell(Text('Supplier')),
-                            _TableHeaderCell(Text('Actions')),
-                          ],
-                        ),
-                        // Data Rows
-                        ..._filteredProducts.map((product) => TableRow(
+                        // Filters Section
+                        Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(24),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                _TableCell(Text(product['name'])),
-                                _TableCell(Text(product['barcode'])),
-                                _TableCell(Text(product['category'])),
-                                _TableCell(
-                                  StockBadge(
-                                    stock: product['stock'],
-                                    minStock: product['minStock'],
+                                const Text(
+                                  'Filters',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppTheme.textPrimary,
                                   ),
                                 ),
-                                _TableCell(Text('\$${product['price'].toStringAsFixed(2)}')),
-                                _TableCell(Text(product['supplier'])),
-                                _TableCell(
-                                  Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      IconButton(
-                                        icon: const Icon(Icons.edit, size: 20),
-                                        onPressed: () async {
-                                          await widget.onNavigateToEdit?.call(product['id'].toString());
-                                          _fetchProducts(); // Refresh list after edit
+                                const SizedBox(height: 16),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: AppSearchBar(
+                                        placeholder: 'Name or barcode...',
+                                        value: _searchQuery,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            _searchQuery = value;
+                                          });
                                         },
-                                        color: AppTheme.primaryBlue,
-                                        tooltip: 'Edit',
                                       ),
-                                      IconButton(
-                                        icon: const Icon(Icons.delete, size: 20),
-                                        onPressed: () {
-                                          showDialog(
-                                            context: context,
-                                            builder: (context) => AlertDialog(
-                                              title: const Text('Delete Product'),
-                                              content: Text(
-                                                  'Are you sure you want to delete ${product['name']}?'),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () => Navigator.pop(context),
-                                                  child: const Text('Cancel'),
-                                                ),
-                                                TextButton(
-                                                   onPressed: () async {
-                                                     Navigator.pop(context); // Close dialog
-
-                                                     await ProductApi.deleteProduct(int.parse(product['id'].toString()));
-
-                                                     ScaffoldMessenger.of(context).showSnackBar(
-                                                       SnackBar(content: Text('${product['name']} deleted')),
-                                                      );
-
-                                                      _fetchProducts(); // Refresh list
-                                                  },
-                                                  style: TextButton.styleFrom(
-                                                    foregroundColor: Colors.red,
-                                                  ),
-                                                  child: const Text('Delete'),
-                                                ),
-                                              ],
-                                            ),
-                                          );
+                                    ),
+                                    const SizedBox(width: 16),
+                                    Expanded(
+                                      child: _buildDropdown(
+                                        label: 'Category',
+                                        value: _selectedCategory,
+                                        items: [
+                                          'All Categories',
+                                          'Beverages',
+                                          'Snacks',
+                                          'Dairy',
+                                          'Bakery',
+                                        ],
+                                        onChanged: (value) {
+                                          setState(() {
+                                            _selectedCategory = value!;
+                                          });
                                         },
-                                        color: Colors.red,
-                                        tooltip: 'Delete',
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                    const SizedBox(width: 16),
+                                    Expanded(
+                                      child: _buildDropdown(
+                                        label: 'Stock Level',
+                                        value: _selectedStockLevel,
+                                        items: [
+                                          'All Stock Levels',
+                                          'In Stock',
+                                          'Low Stock',
+                                          'Very Low Stock',
+                                        ],
+                                        onChanged: (value) {
+                                          setState(() {
+                                            _selectedStockLevel = value!;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
-                            )),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        // Product Table
+                        Card(
+                          child: Table(
+                            columnWidths: const {
+                              0: FlexColumnWidth(2),
+                              1: FlexColumnWidth(1.5),
+                              2: FlexColumnWidth(1.5),
+                              3: FlexColumnWidth(1),
+                              4: FlexColumnWidth(1),
+                              5: FlexColumnWidth(2),
+                              6: FlexColumnWidth(1.5),
+                            },
+                            children: [
+                              // Header Row
+                              TableRow(
+                                decoration: BoxDecoration(
+                                  color: AppTheme.brownGold,
+                                  border: Border(
+                                    bottom:
+                                        BorderSide(color: AppTheme.borderColor),
+                                  ),
+                                ),
+                                children: const [
+                                  _TableHeaderCell(Text('Product Name')),
+                                  _TableHeaderCell(Text('Barcode')),
+                                  _TableHeaderCell(Text('Category')),
+                                  _TableHeaderCell(Text('Stock')),
+                                  _TableHeaderCell(Text('Price')),
+                                  _TableHeaderCell(Text('Supplier')),
+                                  _TableHeaderCell(Text('Actions')),
+                                ],
+                              ),
+                              // Data Rows
+                              ..._filteredProducts.map((product) => TableRow(
+                                    children: [
+                                      _TableCell(Text(product['name'])),
+                                      _TableCell(Text(product['barcode'])),
+                                      _TableCell(Text(product['category'])),
+                                      _TableCell(
+                                        StockBadge(
+                                          stock: product['stock'],
+                                          minStock: product['minStock'],
+                                        ),
+                                      ),
+                                      _TableCell(Text(
+                                          '\$${product['price'].toStringAsFixed(2)}')),
+                                      _TableCell(Text(product['supplier'])),
+                                      _TableCell(
+                                        Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            IconButton(
+                                              icon: const Icon(Icons.edit,
+                                                  size: 20),
+                                              onPressed: () async {
+                                                widget.onNavigateToEdit?.call(
+                                                    product['id'].toString());
+                                                _fetchProducts(); // Refresh list after edit
+                                              },
+                                              color: AppTheme.primaryBlue,
+                                              tooltip: 'Edit',
+                                            ),
+                                            IconButton(
+                                              icon: const Icon(Icons.delete,
+                                                  size: 20),
+                                              onPressed: () {
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      AlertDialog(
+                                                    title: const Text(
+                                                        'Delete Product'),
+                                                    content: Text(
+                                                        'Are you sure you want to delete ${product['name']}?'),
+                                                    actions: [
+                                                      TextButton(
+                                                        onPressed: () =>
+                                                            Navigator.pop(
+                                                                context),
+                                                        child: const Text(
+                                                            'Cancel'),
+                                                      ),
+                                                      TextButton(
+                                                        onPressed: () async {
+                                                          Navigator.pop(
+                                                              context); // Close dialog
+
+                                                          await ProductApi
+                                                              .deleteProduct(int
+                                                                  .parse(product[
+                                                                          'id']
+                                                                      .toString()));
+
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(
+                                                            SnackBar(
+                                                                content: Text(
+                                                                    '${product['name']} deleted')),
+                                                          );
+
+                                                          _fetchProducts(); // Refresh list
+                                                        },
+                                                        style: TextButton
+                                                            .styleFrom(
+                                                          foregroundColor:
+                                                              Colors.red,
+                                                        ),
+                                                        child: const Text(
+                                                            'Delete'),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                );
+                                              },
+                                              color: Colors.red,
+                                              tooltip: 'Delete',
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  )),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                ],
-              ),
-            ),
-          ),
+                ),
         ),
       ],
     );
@@ -327,7 +354,8 @@ class _ProductListPageState extends State<ProductListPage> {
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(color: AppTheme.primaryBlue, width: 2),
+                borderSide:
+                    const BorderSide(color: AppTheme.primaryBlue, width: 2),
               ),
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,

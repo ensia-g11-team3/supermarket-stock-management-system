@@ -110,7 +110,7 @@ class _EditProductPageState extends State<EditProductPage> {
     };
 
     try {
-      await ProductApi.updateProduct(widget.productId, updatedData);
+      await ProductApi.updateProduct(int.parse(widget.productId), updatedData);
 
       widget.onProductUpdated();
 
