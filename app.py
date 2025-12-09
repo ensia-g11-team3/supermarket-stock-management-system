@@ -12,6 +12,10 @@ CORS(app)
 # Register blueprints
 app.register_blueprint(product_bp, url_prefix='/api')
 
+@app.route("/")
+def home():
+    return "Flask backend is running!"
+
 # Health check endpoint
 @app.route('/api/health', methods=['GET'])
 def health_check():
