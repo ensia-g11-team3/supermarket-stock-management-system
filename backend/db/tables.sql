@@ -26,10 +26,10 @@ CREATE TABLE products (
     category VARCHAR(50) NOT NULL,
     quantity_in_stock INT NOT NULL DEFAULT 0,
     qty INT NOT NULL DEFAULT 0,
+    product_threshold INT, -- added in second sprint
     unit VARCHAR(20) NOT NULL DEFAULT 'piece',
     buying_price DECIMAL(10,2) NOT NULL,
     selling_price DECIMAL(10,2) NOT NULL,
-    expiry_date DATE NULL,
     supplier VARCHAR(100) NULL,
     status VARCHAR(20) NOT NULL DEFAULT 'In stock',
     description TEXT NULL,
@@ -55,4 +55,57 @@ CREATE TABLE transaction_items (
     PRIMARY KEY (order_id, product_id),
     CONSTRAINT fk_items_transaction FOREIGN KEY (transaction_id) REFERENCES transactions(transaction_id),
     CONSTRAINT fk_items_product FOREIGN KEY (product_id) REFERENCES products(product_id)
+);
+
+-- Categories table
+CREATE TABLE categories (
+    category_id INT AUTO_INCREMENT PRIMARY KEY,
+    category_name VARCHAR(50) NOT NULL UNIQUE,
+    category_description TEXT,
+);
+
+-- Supplier
+CREATE TABLE suppliers (
+    supplier_id INT AUTO_INCREMENT PRIMARY KEY,
+    supplier_name VARCHAR(50) NOT NULL,
+    supplier_description TEXT
+);
+
+-- Product batch table
+CREATE TABLE product_batches (
+    batch_id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT NOT NULL, --FK
+    quantity INT NOT NULL,
+    -- both dates can be NULL 
+    manifacture_date DATE,
+    expiry_date DATE,
+    supplier_id INT,
+
+    CONSTRAINT fk_batch_product FOREIGN KEY (product_id) REFERENCES products(product_id)
+    CONSTRAINT fk_batch_supplier FOREIGN KEY (supplier_id) REFERENCES suppliers(supplier_id)
+);
+
+-- alerts table
+CREATE TABLE low_stock_alerts (
+    alert_id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT NOT NULL, 
+    -- threshold and current qty not here but you get it from products table by product_id
+    is_active BOOLEAN DEFAULT TRUE, -- whether alert is active or resolved
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP, -- the time when qty fell below threshold qty <= threshold
+    CONSTRAINT fk_alert_product FOREIGN KEY (product_id) REFERENCES products(product_id)
+);
+
+-- Activity History table
+CREATE TABLE activity_history (
+    activity_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL, -- who did the movement (example added a product, category etc)
+    action_name VARCHAR(255) NOT NULL, -- add, remove, edit, 
+    entity_type VARCHAR(50) NOT NULL, -- product, category, user etc
+    entity_id INT NOT NULL, -- id of the entity on which action was performed
+    previous_value TEXT NULL, -- previous value before action
+    new_value TEXT NULL, -- new value after action
+    affected_attribute TEXT NULL, -- which attributes were affected
+    activity_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_activity_user FOREIGN KEY (user_id) REFERENCES users(user_id)
+    CONSTRAINT fk_activity_entity FOREIGN KEY (entity_id) REFERENCES products(product_id)
 );
