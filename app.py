@@ -3,6 +3,7 @@ from flask_cors import CORS
 from config import Config
 from routes.product_routes import product_bp
 from routes.categories import categories_bp
+from routes.transactions import transactions_bp
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -13,6 +14,8 @@ CORS(app)
 # Register blueprints
 app.register_blueprint(product_bp, url_prefix='/api')
 app.register_blueprint(categories_bp, url_prefix='/api/categories')
+app.register_blueprint(transactions_bp, url_prefix='/api/transactions')
+
 
 @app.route("/")
 def home():
