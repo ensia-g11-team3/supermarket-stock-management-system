@@ -1,10 +1,10 @@
-from db import get_db_connection, close_db_connection
+from db import get_connection, close_connection
 from mysql.connector import Error
 
 class Category:
     @staticmethod
     def create(data):
-        connection = get_db_connection()
+        connection = get_connection()
         if not connection:
             return False, "Database connection failed", 500
         try:
@@ -26,11 +26,11 @@ class Category:
                 return False, "Category with this name already exists", 400
             return False, f"Database error: {str(e)}", 500
         finally:
-            close_db_connection(connection)
+            close_connection(connection)
 
     @staticmethod
     def get_all():
-        connection = get_db_connection()
+        connection = get_connection()
         if not connection:
             return False, "Database connection failed", 500
         try:
@@ -42,11 +42,11 @@ class Category:
         except Error as e:
             return False, f"Database error: {str(e)}", 500
         finally:
-            close_db_connection(connection)
+            close_connection(connection)
 
     @staticmethod
     def get_by_id(category_id):
-        connection = get_db_connection()
+        connection = get_connection()
         if not connection:
             return False, "Database connection failed", 500
         try:
@@ -60,11 +60,11 @@ class Category:
         except Error as e:
             return False, f"Database error: {str(e)}", 500
         finally:
-            close_db_connection(connection)
+            close_connection(connection)
 
     @staticmethod
     def update(category_id, data):
-        connection = get_db_connection()
+        connection = get_connection()
         if not connection:
             return False, "Database connection failed", 500
         try:
@@ -98,11 +98,11 @@ class Category:
                 return False, "Category with this name already exists", 400
             return False, f"Database error: {str(e)}", 500
         finally:
-            close_db_connection(connection)
+            close_connection(connection)
 
     @staticmethod
     def delete(category_id):
-        connection = get_db_connection()
+        connection = get_connection()
         if not connection:
             return False, "Database connection failed", 500
         try:
@@ -118,4 +118,4 @@ class Category:
         except Error as e:
             return False, f"Database error: {str(e)}", 500
         finally:
-            close_db_connection(connection)
+            close_connection(connection)

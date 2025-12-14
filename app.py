@@ -1,8 +1,8 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
 from config import Config
-from routes.product_routes import product_bp
-from routes.categories import categories_bp
+from backend.routes.product_routes import product_bp
+from backend.routes.categories import categories_bp
 
 app = Flask(__name__)
 app.config.from_object(Config)
