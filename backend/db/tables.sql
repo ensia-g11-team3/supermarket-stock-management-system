@@ -98,14 +98,14 @@ CREATE TABLE low_stock_alerts (
 -- Activity History table
 CREATE TABLE activity_history (
     activity_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL, -- who did the movement (example added a product, category etc)
-    action_name VARCHAR(255) NOT NULL, -- add, remove, edit, 
-    entity_type VARCHAR(50) NOT NULL, -- product, category, user etc
-    entity_id INT NOT NULL, -- id of the entity on which action was performed
-    previous_value TEXT NULL, -- previous value before action
-    new_value TEXT NULL, -- new value after action
-    affected_attribute TEXT NULL, -- which attributes were affected
+    user_id INT NOT NULL,                  -- who did the action (e.g., added a product)
+    action_name VARCHAR(255) NOT NULL,     -- add, remove, edit, etc.
+    entity_type VARCHAR(50) NOT NULL,      -- product, category, user, etc.
+    entity_id INT NOT NULL,                -- id of the entity affected
+    previous_value VARCHAR(255) NULL,              -- previous value before action
+    new_value VARCHAR(255) NULL,                   -- new value after action
+    affected_attribute VARCHAR(255) NULL,          -- which attributes were affected
     activity_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_activity_user FOREIGN KEY (user_id) REFERENCES users(user_id)
-    CONSTRAINT fk_activity_entity FOREIGN KEY (entity_id) REFERENCES products(product_id)
+    CONSTRAINT fk_activity_user 
+        FOREIGN KEY (user_id) REFERENCES users(user_id)
 );

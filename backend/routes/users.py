@@ -1,28 +1,150 @@
-# backend/routes/users.py
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, g
 from db import get_connection
 import mysql.connector
 import bcrypt
+import os
+from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
+from functools import wraps
+from routes.activity_log import log_activity
+import json
+
+# Added token auth with permission gates for user and product flows
+
+SECRET_KEY = os.getenv("SECRET_KEY", "stock-secret-key")
+TOKEN_MAX_AGE = int(os.getenv("TOKEN_MAX_AGE_SECONDS", "86400"))
+serializer = URLSafeTimedSerializer(SECRET_KEY)
 
 users_bp = Blueprint('users', __name__)
 
+
+def generate_token(user_payload):
+    return serializer.dumps(user_payload)
+
+
+def decode_token(token):
+    try:
+        return serializer.loads(token, max_age=TOKEN_MAX_AGE)
+    except (BadSignature, SignatureExpired):
+        return None
+
+
+def _sanitize_user_record(user):
+    if not user:
+        return None
+    user['user_id'] = int(user['user_id'])
+    for perm_key in ['can_view_products', 'can_add_product', 'can_edit_product',
+                     'can_delete_product', 'can_view_activity_history', 'can_set_alerts']:
+        user[perm_key] = bool(user[perm_key])
+    user.pop('password_hash', None)
+    return user
+
+
+def _fetch_user_with_permissions(user_id):
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT user_id, username, full_name, phone_number, email, role, password_hash,
+               can_view_products, can_add_product, can_edit_product,
+               can_delete_product, can_view_activity_history, can_set_alerts
+        FROM users
+        WHERE user_id = %s
+    """, (user_id,))
+    user = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    return _sanitize_user_record(user)
+
+
+def require_permission(permission=None, admin_only=False):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            auth_header = request.headers.get('Authorization', '')
+            token = None
+            if auth_header.startswith('Bearer '):
+                token = auth_header.split(' ', 1)[1].strip()
+            if not token:
+                return jsonify({'error': 'Unauthorized'}), 401
+
+            payload = decode_token(token)
+            if not payload or 'user_id' not in payload:
+                return jsonify({'error': 'Invalid or expired token'}), 401
+
+            user = _fetch_user_with_permissions(payload['user_id'])
+            if not user:
+                return jsonify({'error': 'User not found'}), 401
+
+            if admin_only and user['role'].lower() != 'admin':
+                return jsonify({'error': 'Forbidden'}), 403
+
+            if permission and not user.get(permission, False) and user['role'].lower() != 'admin':
+                return jsonify({'error': 'Forbidden'}), 403
+
+            g.current_user = user
+            return func(*args, **kwargs)
+
+        return wrapper
+
+    return decorator
+
+
+@users_bp.route('/auth/login', methods=['POST'])
+def login():
+    conn = None
+    try:
+        data = request.get_json() or {}
+        username = data.get('username')
+        password = data.get('password')
+        if not username or not password:
+            return jsonify({'error': 'Username and password are required'}), 400
+
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("""
+            SELECT user_id, username, full_name, phone_number, email, role, password_hash,
+                   can_view_products, can_add_product, can_edit_product,
+                   can_delete_product, can_view_activity_history, can_set_alerts
+            FROM users WHERE username = %s
+        """, (username,))
+        user = cursor.fetchone()
+        cursor.close()
+        conn.close()
+
+        if not user or not bcrypt.checkpw(password.encode('utf-8'), user['password_hash'].encode('utf-8')):
+            return jsonify({'error': 'Invalid credentials'}), 401
+
+        safe_user = _sanitize_user_record(user)
+        token = generate_token({'user_id': safe_user['user_id']})
+        return jsonify({'token': token, 'user': safe_user})
+
+    except Exception as err:
+        if conn:
+            conn.close()
+        return jsonify({'error': str(err)}), 500
+
+
+@users_bp.route('/auth/me', methods=['GET'])
+@require_permission()
+def current_user():
+    return jsonify({'user': g.current_user})
+
+
 @users_bp.route('/users', methods=['GET'])
+@require_permission(admin_only=True)
 def get_users():
     """Get all users with filtering and pagination"""
     conn = None
     try:
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
-        
-        # Get query parameters
+
         search = request.args.get('search', '')
         role = request.args.get('role', '')
         status_filter = request.args.get('status', '')
         page = int(request.args.get('page', 1))
         limit = int(request.args.get('limit', 50))
         offset = (page - 1) * limit
-        
-        # Build query
+
         query = """
             SELECT 
                 user_id, username, full_name, phone_number, email, 
@@ -34,57 +156,45 @@ def get_users():
             WHERE 1=1
         """
         params = []
-        
+
         if search:
             query += " AND (username LIKE %s OR full_name LIKE %s OR email LIKE %s OR phone_number LIKE %s)"
             search_term = f"%{search}%"
             params.extend([search_term, search_term, search_term, search_term])
-        
+
         if role and role != 'All Roles':
             query += " AND role = %s"
             params.append(role)
-            
-        # Note: Your table doesn't have a 'status' column, so we'll use role-based filtering instead
+
         if status_filter and status_filter != 'All Status':
-            # You can implement status logic later if you add a status column
             pass
-        
+
         query += " ORDER BY created_at DESC LIMIT %s OFFSET %s"
         params.extend([limit, offset])
-        
+
         cursor.execute(query, params)
         users = cursor.fetchall()
-        
-        # Convert to proper Python types and don't return password_hash
-        for user in users:
-            user['user_id'] = int(user['user_id'])
-            # Convert tinyint(1) to boolean for permissions
-            for perm_key in ['can_view_products', 'can_add_product', 'can_edit_product', 
-                           'can_delete_product', 'can_view_activity_history', 'can_set_alerts']:
-                user[perm_key] = bool(user[perm_key])
-            # Remove password hash from response
-            if 'password_hash' in user:
-                del user['password_hash']
-        
-        # Get total count for pagination
+
+        users = [_sanitize_user_record(user) for user in users]
+
         count_query = "SELECT COUNT(*) as total FROM users WHERE 1=1"
         count_params = []
-        
+
         if search:
             count_query += " AND (username LIKE %s OR full_name LIKE %s OR email LIKE %s OR phone_number LIKE %s)"
             count_params.extend([search_term, search_term, search_term, search_term])
-        
+
         if role and role != 'All Roles':
             count_query += " AND role = %s"
             count_params.append(role)
-        
+
         cursor.execute(count_query, count_params)
         total_result = cursor.fetchone()
         total = total_result['total'] if total_result else 0
-        
+
         cursor.close()
         conn.close()
-        
+
         return jsonify({
             'users': users,
             'total': total,
@@ -92,20 +202,22 @@ def get_users():
             'limit': limit,
             'total_pages': (total + limit - 1) // limit
         })
-        
+
     except Exception as err:
         if conn:
             conn.close()
         return jsonify({'error': str(err)}), 500
 
+
 @users_bp.route('/users/<int:user_id>', methods=['GET'])
+@require_permission(admin_only=True)
 def get_user(user_id):
     """Get a specific user by ID"""
     conn = None
     try:
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
-        
+
         cursor.execute("""
             SELECT 
                 user_id, username, full_name, phone_number, email, 
@@ -116,68 +228,57 @@ def get_user(user_id):
             FROM users 
             WHERE user_id = %s
         """, (user_id,))
-        
+
         user = cursor.fetchone()
-        
+
         if user:
-            # Convert to proper Python types and don't return password_hash
-            user['user_id'] = int(user['user_id'])
-            for perm_key in ['can_view_products', 'can_add_product', 'can_edit_product', 
-                           'can_delete_product', 'can_view_activity_history', 'can_set_alerts']:
-                user[perm_key] = bool(user[perm_key])
-            # Remove password hash from response
-            if 'password_hash' in user:
-                del user['password_hash']
-        
+            user = _sanitize_user_record(user)
+
         cursor.close()
         conn.close()
-        
+
         if not user:
             return jsonify({'error': 'User not found'}), 404
-            
+
         return jsonify({'user': user})
-        
+
     except Exception as err:
         if conn:
             conn.close()
         return jsonify({'error': str(err)}), 500
 
+
 @users_bp.route('/users', methods=['POST'])
+@require_permission(admin_only=True)
 def create_user():
     """Create a new user with all attributes"""
     conn = None
     try:
         data = request.get_json()
-        
-        # Validate required fields
+
         required_fields = ['username', 'full_name', 'phone_number', 'email', 'password', 'role']
         for field in required_fields:
             if not data.get(field):
                 return jsonify({'error': f'{field} is required'}), 400
-        
+
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
-        
-        # Check if username or email already exists
-        cursor.execute("SELECT user_id FROM users WHERE username = %s OR email = %s", 
+
+        cursor.execute("SELECT user_id FROM users WHERE username = %s OR email = %s",
                       (data['username'], data['email']))
         existing_user = cursor.fetchone()
         if existing_user:
             return jsonify({'error': 'Username or email already exists'}), 400
-        
-        # Hash password
+
         password_hash = bcrypt.hashpw(data['password'].encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
-        
-        # Set permissions based on role or use provided permissions
+
         permissions = _get_default_permissions(data['role'])
-        
-        # Override with provided permissions if any
+
         for perm_key in ['can_view_products', 'can_add_product', 'can_edit_product',
                         'can_delete_product', 'can_view_activity_history', 'can_set_alerts']:
             if perm_key in data:
                 permissions[perm_key] = bool(data[perm_key])
-        
-        # Insert user with all permissions
+
         cursor.execute("""
             INSERT INTO users (
                 username, full_name, phone_number, email, password_hash, role,
@@ -191,111 +292,140 @@ def create_user():
             permissions['can_edit_product'], permissions['can_delete_product'],
             permissions['can_view_activity_history'], permissions['can_set_alerts']
         ))
-        
+
         user_id = cursor.lastrowid
+        log_activity(
+            conn,
+            g.current_user['user_id'],
+            'create',
+            'user',
+            user_id,
+            previous_value=None,
+            new_value={k: v for k, v in data.items() if k not in ['password']},
+            affected_attribute='users'
+        )
         conn.commit()
-        
+
         cursor.close()
         conn.close()
-        
+
         return jsonify({
             'message': 'User created successfully',
             'user_id': user_id
         }), 201
-        
+
     except Exception as err:
         if conn:
             conn.rollback()
             conn.close()
         return jsonify({'error': str(err)}), 500
 
+
 @users_bp.route('/users/<int:user_id>', methods=['PUT'])
+@require_permission(admin_only=True)
 def update_user(user_id):
     """Update an existing user with all attributes"""
     conn = None
     try:
         data = request.get_json()
-        
+
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
-        
-        # Check if user exists
+
         cursor.execute("SELECT user_id FROM users WHERE user_id = %s", (user_id,))
-        if not cursor.fetchone():
+        existing = cursor.fetchone()
+        if not existing:
             return jsonify({'error': 'User not found'}), 404
-        
-        # Build update query dynamically
+
         update_fields = []
         params = []
-        
-        # Basic info fields
+
         basic_fields = ['username', 'full_name', 'phone_number', 'email', 'role']
         for field in basic_fields:
             if field in data:
                 update_fields.append(f"{field} = %s")
                 params.append(data[field])
-        
-        # Permission fields
+
         perm_fields = ['can_view_products', 'can_add_product', 'can_edit_product',
                       'can_delete_product', 'can_view_activity_history', 'can_set_alerts']
         for field in perm_fields:
             if field in data:
                 update_fields.append(f"{field} = %s")
                 params.append(bool(data[field]))
-        
-        # Handle password reset
+
         if data.get('reset_password') and data.get('new_password'):
             password_hash = bcrypt.hashpw(data['new_password'].encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
             update_fields.append("password_hash = %s")
             params.append(password_hash)
-        
+
         if not update_fields:
             return jsonify({'error': 'No fields to update'}), 400
-        
+
         params.append(user_id)
         query = f"UPDATE users SET {', '.join(update_fields)} WHERE user_id = %s"
-        
+
         cursor.execute(query, params)
+        log_activity(
+            conn,
+            g.current_user['user_id'],
+            'update',
+            'user',
+            user_id,
+            previous_value={k: v for k, v in existing.items() if k != 'password_hash'},
+            new_value={k: v for k, v in data.items() if k not in ['password', 'new_password', 'reset_password']},
+            affected_attribute=', '.join(update_fields)
+        )
         conn.commit()
-        
+
         cursor.close()
         conn.close()
-        
+
         return jsonify({'message': 'User updated successfully'})
-        
+
     except Exception as err:
         if conn:
             conn.rollback()
             conn.close()
         return jsonify({'error': str(err)}), 500
 
+
 @users_bp.route('/users/<int:user_id>', methods=['DELETE'])
+@require_permission(admin_only=True)
 def delete_user(user_id):
     """Delete a user"""
     conn = None
     try:
         conn = get_connection()
         cursor = conn.cursor()
-        
-        # Check if user exists
+
         cursor.execute("SELECT user_id FROM users WHERE user_id = %s", (user_id,))
         if not cursor.fetchone():
             return jsonify({'error': 'User not found'}), 404
-        
-        # Delete user
+
         cursor.execute("DELETE FROM users WHERE user_id = %s", (user_id,))
+        log_activity(
+            conn,
+            g.current_user['user_id'],
+            'delete',
+            'user',
+            user_id,
+            previous_value={'user_id': user_id},
+            new_value=None,
+            affected_attribute='users'
+        )
         conn.commit()
-        
+
         cursor.close()
         conn.close()
-        
+
         return jsonify({'message': 'User deleted successfully'})
-        
+
     except Exception as err:
         if conn:
             conn.rollback()
             conn.close()
         return jsonify({'error': str(err)}), 500
+
 
 def _get_default_permissions(role):
     """Get default permissions based on role"""
@@ -307,7 +437,7 @@ def _get_default_permissions(role):
         'can_view_activity_history': False,
         'can_set_alerts': False
     }
-    
+
     role_lower = role.lower()
     if role_lower == 'admin':
         permissions.update({key: True for key in permissions})
@@ -323,5 +453,5 @@ def _get_default_permissions(role):
         permissions.update({
             'can_view_products': True
         })
-    
+
     return permissions
