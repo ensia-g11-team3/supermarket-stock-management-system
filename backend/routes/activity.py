@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from routes.activity_log import log_activity
 from db import get_connection
 from routes.users import require_permission
 
@@ -61,3 +62,22 @@ def list_activity():
         'total_pages': (total + limit - 1) // limit
     })
 
+# POST route added by NOUR MALEK YAHIAOUI
+@activity_bp.route('/activity', methods=['POST'])
+def create_activity():
+    data = request.get_json()
+    conn = get_connection()
+    try:
+        log_activity(
+            conn,
+            user_id=data.get("user_id"),
+            action_name=data.get("action_name"),
+            entity_type=data.get("entity_type"),
+            entity_id=data.get("entity_id"),
+            previous_value=data.get("previous_value"),
+            new_value=data.get("new_value"),
+            affected_attribute=data.get("affected_attribute")
+        )
+        return jsonify({"message": "Activity logged"}), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
