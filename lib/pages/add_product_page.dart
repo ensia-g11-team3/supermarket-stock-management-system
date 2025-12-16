@@ -5,7 +5,11 @@ import '../theme/app_theme.dart';
 import '../services/product_api.dart';
 
 class AddProductPage extends StatefulWidget {
-  const AddProductPage({super.key});
+  final VoidCallback? onProductAdded;
+  const AddProductPage({
+    super.key,
+    this.onProductAdded,
+  });
 
   @override
   State<AddProductPage> createState() => _AddProductPageState();
@@ -67,7 +71,7 @@ class _AddProductPageState extends State<AddProductPage> {
       "barcode": _barcodeController.text,
       "category": _selectedCategory,
       "supplier": _selectedSupplier,
-      "quantity": int.parse(_quantityController.text),
+      "qty": int.parse(_quantityController.text),
       "minStock": int.parse(_minStockController.text),
       "price": double.parse(_priceController.text),
       "description": _descriptionController.text,
@@ -76,16 +80,17 @@ class _AddProductPageState extends State<AddProductPage> {
     try {
       await ProductApi.addProduct(data);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Product added successfully!'),
-          backgroundColor: Colors.green,
-        ),
-      );
+      if(mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Product added successfully'),
+            backgroundColor: Colors.green,
+          ),
+        );
 
-      _resetForm();
-
-      Navigator.pop(context, true);
+        _resetForm();
+        widget.onProductAdded?.call();
+      }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

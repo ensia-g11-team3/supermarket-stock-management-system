@@ -9,7 +9,7 @@ def validate_product_data(data, is_update=False):
     
     # Required fields for creation
     if not is_update:
-        required_fields = ['barcode', 'name', 'category', 'buying_price', 'selling_price']
+        required_fields = ['barcode', 'name', 'category', 'price']
         for field in required_fields:
             if field not in data or not data[field]:
                 errors.append(f"'{field}' is required")
@@ -29,14 +29,14 @@ def validate_product_data(data, is_update=False):
         if not isinstance(data['category'], str) or len(data['category']) > 50:
             errors.append("'category' must be a string with max 50 characters")
     
-    # Validate quantity_in_stock
-    if 'quantity_in_stock' in data:
+    # Validate qty
+    if 'qty' in data:
         try:
-            qty = int(data['quantity_in_stock'])
+            qty = int(data['qty'])
             if qty < 0:
-                errors.append("'quantity_in_stock' must be non-negative")
+                errors.append("'qty' must be non-negative")
         except (ValueError, TypeError):
-            errors.append("'quantity_in_stock' must be a valid integer")
+            errors.append("'qty' must be a valid integer")
     
     # Validate unit
     if 'unit' in data:
@@ -44,29 +44,29 @@ def validate_product_data(data, is_update=False):
             errors.append("'unit' must be a string with max 20 characters")
     
     # Validate buying_price
-    if 'buying_price' in data:
-        try:
-            price = float(data['buying_price'])
-            if price < 0:
-                errors.append("'buying_price' must be non-negative")
-        except (ValueError, TypeError):
-            errors.append("'buying_price' must be a valid number")
+    # if 'buying_price' in data:
+    #     try:
+    #         price = float(data['buying_price'])
+    #         if price < 0:
+    #             errors.append("'buying_price' must be non-negative")
+    #     except (ValueError, TypeError):
+    #         errors.append("'buying_price' must be a valid number")
     
-    # Validate selling_price
-    if 'selling_price' in data:
+    # Validate price
+    if 'price' in data:
         try:
-            price = float(data['selling_price'])
+            price = float(data['price'])
             if price < 0:
-                errors.append("'selling_price' must be non-negative")
+                errors.append("'price' must be non-negative")
         except (ValueError, TypeError):
-            errors.append("'selling_price' must be a valid number")
+            errors.append("'price' must be a valid number")
     
     # Validate expiry_date
-    if 'expiry_date' in data and data['expiry_date']:
-        try:
-            datetime.strptime(data['expiry_date'], '%Y-%m-%d')
-        except (ValueError, TypeError):
-            errors.append("'expiry_date' must be in YYYY-MM-DD format")
+    # if 'expiry_date' in data and data['expiry_date']:
+    #     try:
+    #         datetime.strptime(data['expiry_date'], '%Y-%m-%d')
+    #     except (ValueError, TypeError):
+    #         errors.append("'expiry_date' must be in YYYY-MM-DD format")
     
     # Validate supplier
     if 'supplier' in data and data['supplier']:

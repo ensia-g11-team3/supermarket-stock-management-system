@@ -43,8 +43,14 @@ class _AppRouterState extends State<AppRouter> {
   String? _editUserId;
   String? _editProductId;
 
+  Key _productListKey = UniqueKey();
+
   void _navigateToPage(String page) {
     setState(() {
+      if (page == 'products') {
+        // Regenerate key to force rebuild of ProductListPage
+        _productListKey = UniqueKey();
+      }
       _currentPage = page;
     });
   }
@@ -59,6 +65,7 @@ class _AppRouterState extends State<AppRouter> {
         return const SalesHistoryPage();
       case 'products':
         return ProductListPage(
+          key: _productListKey,
           onNavigateToAdd: () => _navigateToPage('add-product'),
           onNavigateToEdit: (String productId) {
             setState(() {
@@ -68,7 +75,9 @@ class _AppRouterState extends State<AppRouter> {
           },
         );
       case 'add-product':
-        return const AddProductPage();
+        return AddProductPage(
+          onProductAdded: () => _navigateToPage('products'),
+        );
       case 'edit-product':
         return EditProductPage(
           productId: _editProductId ?? '1',

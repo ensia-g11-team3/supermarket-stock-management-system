@@ -10,7 +10,7 @@ def get_db_connection():
         connection = mysql.connector.connect(
             host='localhost',
             user='root',
-            password='',  # Change this to your MySQL password
+            password='root123',  # Change this to your MySQL password
             database='stock_db',
             port=3306
         )
@@ -25,3 +25,14 @@ def close_db_connection(connection):
     """
     if connection and connection.is_connected():
         connection.close()
+
+
+
+
+
+
+
+
+
+
+        

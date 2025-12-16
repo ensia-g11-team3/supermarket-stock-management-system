@@ -38,7 +38,7 @@ class _ProductListPageState extends State<ProductListPage> {
     try {
       final data = await ProductApi.getProducts();
       setState(() {
-        _products = List<Map<String, dynamic>>.from(data);
+        _products = data;
         _isLoading = false;
       });
     } catch (e) {
@@ -62,14 +62,15 @@ class _ProductListPageState extends State<ProductListPage> {
           product['category'] == _selectedCategory;
 
       final bool matchesStockLevel =
-          _selectedStockLevel == 'All Stock Levels' ||
-              (_selectedStockLevel == 'In Stock' &&
-                  product['stock']! > product['minStock']!) ||
-              (_selectedStockLevel == 'Low Stock' &&
-                  product['stock']! <= product['minStock']! &&
-                  product['stock']! > product['minStock']! / 2) ||
-              (_selectedStockLevel == 'Very Low Stock' &&
-                  product['stock']! <= product['minStock']! / 2);
+    _selectedStockLevel == 'All Stock Levels' ||
+    (_selectedStockLevel == 'In Stock' &&
+        product['qty']! > product['minStock']!) ||
+    (_selectedStockLevel == 'Low Stock' &&
+        product['qty']! <= product['minStock']! &&
+        product['qty']! > product['minStock']! / 2) ||
+    (_selectedStockLevel == 'Very Low Stock' &&
+        product['qty']! <= product['minStock']! / 2 &&
+        product['qty']! > 0);
 
       return matchesSearch && matchesCategory && matchesStockLevel;
     }).toList();
@@ -85,16 +86,16 @@ class _ProductListPageState extends State<ProductListPage> {
           description: 'Manage your inventory products.',
           actions: [
             PrimaryButton(
-              onPressed: widget.onNavigateToAdd,
-              child: const Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.add, size: 20),
-                  SizedBox(width: 8),
-                  Text('Add New Product'),
-                ],
-              ),
-            ),
+  onPressed: widget.onNavigateToAdd,
+  child: const Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Icon(Icons.add, size: 20),
+      SizedBox(width: 8),
+      Text('Add New Product'),
+    ],
+  ),
+),
           ],
         ),
         Expanded(
@@ -194,7 +195,7 @@ class _ProductListPageState extends State<ProductListPage> {
                             },
                             children: [
                               // Header Row
-                              TableRow(
+                              const TableRow(
                                 decoration: BoxDecoration(
                                   color: AppTheme.brownGold,
                                   border: Border(
@@ -202,7 +203,7 @@ class _ProductListPageState extends State<ProductListPage> {
                                         BorderSide(color: AppTheme.borderColor),
                                   ),
                                 ),
-                                children: const [
+                                children:  [
                                   _TableHeaderCell(Text('Product Name')),
                                   _TableHeaderCell(Text('Barcode')),
                                   _TableHeaderCell(Text('Category')),
@@ -220,12 +221,11 @@ class _ProductListPageState extends State<ProductListPage> {
                                       _TableCell(Text(product['category'])),
                                       _TableCell(
                                         StockBadge(
-                                          stock: product['stock'],
+                                          stock: product['qty'],
                                           minStock: product['minStock'],
                                         ),
                                       ),
-                                      _TableCell(Text(
-                                          '\$${product['price'].toStringAsFixed(2)}')),
+                                      _TableCell(Text('\$${double.tryParse(product['price'].toString()) ?? 0.0}')),
                                       _TableCell(Text(product['supplier'])),
                                       _TableCell(
                                         Row(
@@ -234,10 +234,8 @@ class _ProductListPageState extends State<ProductListPage> {
                                             IconButton(
                                               icon: const Icon(Icons.edit,
                                                   size: 20),
-                                              onPressed: () async {
-                                                widget.onNavigateToEdit?.call(
-                                                    product['id'].toString());
-                                                _fetchProducts(); // Refresh list after edit
+                                              onPressed: () {
+                                                 widget.onNavigateToEdit?.call(product['product_id'].toString());
                                               },
                                               color: AppTheme.primaryBlue,
                                               tooltip: 'Edit',
@@ -270,7 +268,7 @@ class _ProductListPageState extends State<ProductListPage> {
                                                           await ProductApi
                                                               .deleteProduct(int
                                                                   .parse(product[
-                                                                          'id']
+                                                                          'product_id']
                                                                       .toString()));
 
                                                           ScaffoldMessenger.of(

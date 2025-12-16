@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import '../widgets/page_header.dart';
 import '../widgets/primary_button.dart';
 import '../theme/app_theme.dart';
@@ -58,12 +59,13 @@ class _EditProductPageState extends State<EditProductPage> {
 
   Future<void> _loadProductData() async {
     try {
-      final product = await ProductApi.getProductById(widget.productId);
+      final response = await ProductApi.getProductById(widget.productId);
+      final product = response['product'] ?? response;
 
       setState(() {
         _productNameController.text = product["name"];
         _barcodeController.text = product["barcode"];
-        _quantityController.text = product["quantity"].toString();
+        _quantityController.text = product["qty"].toString();
         _minStockController.text = product["minStock"].toString();
         _priceController.text = product["price"].toString();
         _descriptionController.text = product["description"] ?? "";
@@ -71,6 +73,7 @@ class _EditProductPageState extends State<EditProductPage> {
         _selectedSupplier = product["supplier"];
       });
     } catch (e) {
+      if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text("Failed to load product: $e"),
@@ -78,12 +81,35 @@ class _EditProductPageState extends State<EditProductPage> {
         ),
       );
     }
+    }
   }
 
   @override
   void initState() {
-    super.dispose();
+    super.initState();
+
+    // Initialize controllers
+  _productNameController = TextEditingController();
+  _barcodeController = TextEditingController();
+  _quantityController = TextEditingController();
+  _minStockController = TextEditingController();
+  _priceController = TextEditingController();
+  _descriptionController = TextEditingController();
+  
+  // Load product data
+  _loadProductData();
   }
+
+  @override
+void dispose() {
+  _productNameController.dispose();
+  _barcodeController.dispose();
+  _quantityController.dispose();
+  _minStockController.dispose();
+  _priceController.dispose();
+  _descriptionController.dispose();
+  super.dispose();
+}
 
   void _handleSave() async {
     if (!_formKey.currentState!.validate()) return;
@@ -103,7 +129,7 @@ class _EditProductPageState extends State<EditProductPage> {
       "barcode": _barcodeController.text,
       "category": _selectedCategory,
       "supplier": _selectedSupplier,
-      "quantity": int.parse(_quantityController.text),
+      "qty": int.parse(_quantityController.text),
       "minStock": int.parse(_minStockController.text),
       "price": double.parse(_priceController.text),
       "description": _descriptionController.text,
