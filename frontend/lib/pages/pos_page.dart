@@ -149,8 +149,8 @@ class POSState {
 /// DATA LAYER
 class ApiPOSRepository implements POSRepository {
   static const String baseUrl = 'http://127.0.0.1:5000'; // CHANGE THIS IP!
-  static const String productsUrl = '$baseUrl/pos/products';
-  static const String transactionsUrl = '$baseUrl/pos/transactions';
+  static const String productsUrl = '$baseUrl/api/pos/products';
+  static const String transactionsUrl = '$baseUrl/api/pos/transactions';
 
   @override
   Future<List<Product>> fetchProducts() async {

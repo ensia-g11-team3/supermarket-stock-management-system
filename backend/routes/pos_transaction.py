@@ -6,7 +6,7 @@ from datetime import datetime
 
 pos_bp = Blueprint('pos', __name__)
 
-@pos_bp.route('/pos/products', methods=['GET'])
+@pos_bp.route('/products', methods=['GET'])
 def get_pos_products():
     """POS: Get available products (qty > 0)"""
     conn = get_connection()
@@ -22,7 +22,7 @@ def get_pos_products():
     conn.close()
     return jsonify({'products': products})
 
-@pos_bp.route('/pos/transactions', methods=['POST'])
+@pos_bp.route('/transactions', methods=['POST'])
 def create_pos_transaction():
     """POS: Atomic transaction + stock deduction from qty"""
     conn = None
