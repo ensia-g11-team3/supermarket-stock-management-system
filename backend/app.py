@@ -2,9 +2,12 @@
 from flask import Flask
 from routes.pos_transaction import pos_bp
 from routes.users import users_bp
+from routes.activity import activity_bp
 from routes.categories import categories_bp
 from routes.transactions import transactions_bp
 from flask_cors import CORS
+
+# Registered POS, user, and activity history blueprints
 
 app = Flask(__name__)
 CORS(app)
