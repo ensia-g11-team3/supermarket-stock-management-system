@@ -1,17 +1,27 @@
-# Virtual environment
-venv/
-
-# Python cache
+# Byte-compiled / optimized / DLL files
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
+*.py[cod]
+*$py.class
 
-# Environment / secrets
-.env
-*.env
+# Virtual environments
+venv/
+env/
+.venv/
 
-# Editor / OS files
+# IDE / editor folders
 .vscode/
 .idea/
-.DS_Store
+*.sublime-project
+*.sublime-workspace
+
+# Database files (SQLite, if any)
+*.db
+*.sqlite3
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
