@@ -9,44 +9,16 @@ class AlertsPage extends StatefulWidget {
   State<AlertsPage> createState() => _AlertsPageState();
 }
 
-class _AlertsPageState extends State<AlertsPage> with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 2, vsync: this);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
+class _AlertsPageState extends State<AlertsPage> {
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        PageHeader(
-          title: 'Low Stock & Expiry Alerts',
-          description: 'Monitor inventory levels and expiration dates',
-          actions: [
-            ElevatedButton.icon(
-              onPressed: () {},
-              icon: const Icon(Icons.add_box_outlined, size: 20),
-              label: const Text('Create Purchase Order'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primaryBlue,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-            ),
-          ],
+        const PageHeader(
+          title: 'Low Stock Alerts',
+          description: 'Monitor inventory levels',
         ),
         Expanded(
           child: SingleChildScrollView(
@@ -56,8 +28,6 @@ class _AlertsPageState extends State<AlertsPage> with SingleTickerProviderStateM
               children: [
                 _buildStatsCards(),
                 const SizedBox(height: 32),
-                _buildTabs(),
-                const SizedBox(height: 24),
                 _buildDataTable(),
               ],
             ),
@@ -68,38 +38,12 @@ class _AlertsPageState extends State<AlertsPage> with SingleTickerProviderStateM
   }
 
   Widget _buildStatsCards() {
-    return Row(
-      children: [
-        Expanded(
-          child: _buildStatCard(
-            icon: Icons.warning_amber_rounded,
-            iconColor: AppColors.red,
-            iconBgColor: AppColors.red.withOpacity(0.1),
-            title: 'Critical Alerts',
-            value: '2',
-          ),
-        ),
-        const SizedBox(width: 24),
-        Expanded(
-          child: _buildStatCard(
-            icon: Icons.inventory_2_outlined,
-            iconColor: AppColors.brownGold,
-            iconBgColor: AppColors.brownGold.withOpacity(0.1),
-            title: 'Low Stock Items',
-            value: '4',
-          ),
-        ),
-        const SizedBox(width: 24),
-        Expanded(
-          child: _buildStatCard(
-            icon: Icons.calendar_today_outlined,
-            iconColor: AppColors.orange,
-            iconBgColor: AppColors.orange.withOpacity(0.1),
-            title: 'Expiring Soon',
-            value: '4',
-          ),
-        ),
-      ],
+    return _buildStatCard(
+      icon: Icons.inventory_2_outlined,
+      iconColor: AppColors.brownGold,
+      iconBgColor: AppColors.brownGold.withOpacity(0.1),
+      title: 'Low Stock Items',
+      value: '4',
     );
   }
 
@@ -155,29 +99,7 @@ class _AlertsPageState extends State<AlertsPage> with SingleTickerProviderStateM
     );
   }
 
-  Widget _buildTabs() {
-    return Container(
-      decoration: const BoxDecoration(
-        border: Border(
-          bottom: BorderSide(color: AppColors.borderColor),
-        ),
-      ),
-      child: TabBar(
-        controller: _tabController,
-        isScrollable: true,
-        labelColor: AppColors.primaryBlue,
-        unselectedLabelColor: AppColors.textSecondary,
-        labelStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
-        unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w400, fontSize: 16),
-        indicatorColor: AppColors.primaryBlue,
-        indicatorWeight: 3,
-        tabs: const [
-          Tab(text: 'Low Stock'),
-          Tab(text: 'Close to Expiry'),
-        ],
-      ),
-    );
-  }
+
 
   Widget _buildDataTable() {
     return Container(
@@ -193,7 +115,6 @@ class _AlertsPageState extends State<AlertsPage> with SingleTickerProviderStateM
           2: FlexColumnWidth(1), // Current Stock
           3: FlexColumnWidth(1), // Min Stock
           4: FlexColumnWidth(1.5), // Supplier
-          5: FixedColumnWidth(120), // Actions
         },
         defaultVerticalAlignment: TableCellVerticalAlignment.middle,
         children: [
@@ -209,7 +130,6 @@ class _AlertsPageState extends State<AlertsPage> with SingleTickerProviderStateM
               _buildHeaderCell('Current Stock'),
               _buildHeaderCell('Min Stock'),
               _buildHeaderCell('Supplier'),
-              _buildHeaderCell('Actions', alignment: Alignment.centerRight),
             ],
           ),
           // Data Rows
@@ -341,25 +261,6 @@ class _AlertsPageState extends State<AlertsPage> with SingleTickerProviderStateM
           child: Text(
             supplier,
             style: const TextStyle(color: AppColors.textSecondary, fontSize: 14),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-          child: Align(
-            alignment: Alignment.centerRight,
-            child: ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primaryBlue,
-                foregroundColor: Colors.white,
-                elevation: 0,
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-              child: const Text('Order Now', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
-            ),
           ),
         ),
       ],
