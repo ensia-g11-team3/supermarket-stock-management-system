@@ -6,7 +6,7 @@ import bcrypt
 
 users_bp = Blueprint('users', __name__)
 
-@users_bp.route('/users', methods=['GET'])
+@users_bp.route('/', methods=['GET'])
 def get_users():
     """Get all users with filtering and pagination"""
     conn = None
@@ -142,7 +142,7 @@ def get_user(user_id):
             conn.close()
         return jsonify({'error': str(err)}), 500
 
-@users_bp.route('/users', methods=['POST'])
+@users_bp.route('/', methods=['POST'])
 def create_user():
     """Create a new user with all attributes"""
     conn = None
@@ -209,7 +209,7 @@ def create_user():
             conn.close()
         return jsonify({'error': str(err)}), 500
 
-@users_bp.route('/users/<int:user_id>', methods=['PUT'])
+@users_bp.route('/<int:user_id>', methods=['PUT'])
 def update_user(user_id):
     """Update an existing user with all attributes"""
     conn = None
@@ -269,7 +269,7 @@ def update_user(user_id):
             conn.close()
         return jsonify({'error': str(err)}), 500
 
-@users_bp.route('/users/<int:user_id>', methods=['DELETE'])
+@users_bp.route('/<int:user_id>', methods=['DELETE'])
 def delete_user(user_id):
     """Delete a user"""
     conn = None
