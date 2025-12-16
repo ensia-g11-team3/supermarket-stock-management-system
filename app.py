@@ -3,7 +3,7 @@ from flask_cors import CORS
 from config import Config
 from routes.product_routes import product_bp
 from routes.categories import categories_bp
-from routes.transactions import transactions_bp
+from backend.routes.transactions import transactions_bp
 
 app = Flask(__name__)
 app.config.from_object(Config)

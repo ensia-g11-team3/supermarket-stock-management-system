@@ -16,121 +16,7 @@ serializer = URLSafeTimedSerializer(SECRET_KEY)
 
 users_bp = Blueprint('users', __name__)
 
-
-def generate_token(user_payload):
-    return serializer.dumps(user_payload)
-
-
-def decode_token(token):
-    try:
-        return serializer.loads(token, max_age=TOKEN_MAX_AGE)
-    except (BadSignature, SignatureExpired):
-        return None
-
-
-def _sanitize_user_record(user):
-    if not user:
-        return None
-    user['user_id'] = int(user['user_id'])
-    for perm_key in ['can_view_products', 'can_add_product', 'can_edit_product',
-                     'can_delete_product', 'can_view_activity_history', 'can_set_alerts']:
-        user[perm_key] = bool(user[perm_key])
-    user.pop('password_hash', None)
-    return user
-
-
-def _fetch_user_with_permissions(user_id):
-    conn = get_connection()
-    cursor = conn.cursor(dictionary=True)
-    cursor.execute("""
-        SELECT user_id, username, full_name, phone_number, email, role, password_hash,
-               can_view_products, can_add_product, can_edit_product,
-               can_delete_product, can_view_activity_history, can_set_alerts
-        FROM users
-        WHERE user_id = %s
-    """, (user_id,))
-    user = cursor.fetchone()
-    cursor.close()
-    conn.close()
-    return _sanitize_user_record(user)
-
-
-def require_permission(permission=None, admin_only=False):
-    def decorator(func):
-        @wraps(func)
-        def wrapper(*args, **kwargs):
-            auth_header = request.headers.get('Authorization', '')
-            token = None
-            if auth_header.startswith('Bearer '):
-                token = auth_header.split(' ', 1)[1].strip()
-            if not token:
-                return jsonify({'error': 'Unauthorized'}), 401
-
-            payload = decode_token(token)
-            if not payload or 'user_id' not in payload:
-                return jsonify({'error': 'Invalid or expired token'}), 401
-
-            user = _fetch_user_with_permissions(payload['user_id'])
-            if not user:
-                return jsonify({'error': 'User not found'}), 401
-
-            if admin_only and user['role'].lower() != 'admin':
-                return jsonify({'error': 'Forbidden'}), 403
-
-            if permission and not user.get(permission, False) and user['role'].lower() != 'admin':
-                return jsonify({'error': 'Forbidden'}), 403
-
-            g.current_user = user
-            return func(*args, **kwargs)
-
-        return wrapper
-
-    return decorator
-
-
-@users_bp.route('/auth/login', methods=['POST'])
-def login():
-    conn = None
-    try:
-        data = request.get_json() or {}
-        username = data.get('username')
-        password = data.get('password')
-        if not username or not password:
-            return jsonify({'error': 'Username and password are required'}), 400
-
-        conn = get_connection()
-        cursor = conn.cursor(dictionary=True)
-        cursor.execute("""
-            SELECT user_id, username, full_name, phone_number, email, role, password_hash,
-                   can_view_products, can_add_product, can_edit_product,
-                   can_delete_product, can_view_activity_history, can_set_alerts
-            FROM users WHERE username = %s
-        """, (username,))
-        user = cursor.fetchone()
-        cursor.close()
-        conn.close()
-
-        if not user or not bcrypt.checkpw(password.encode('utf-8'), user['password_hash'].encode('utf-8')):
-            return jsonify({'error': 'Invalid credentials'}), 401
-
-        safe_user = _sanitize_user_record(user)
-        token = generate_token({'user_id': safe_user['user_id']})
-        return jsonify({'token': token, 'user': safe_user})
-
-    except Exception as err:
-        if conn:
-            conn.close()
-        return jsonify({'error': str(err)}), 500
-
-
-@users_bp.route('/auth/me', methods=['GET'])
-@require_permission()
-def current_user():
-    return jsonify({'user': g.current_user})
-
-
-@users_bp.route('/users', methods=['GET'])
-@require_permission(admin_only=True)
+@users_bp.route('/', methods=['GET'])
 def get_users():
     """Get all users with filtering and pagination"""
     conn = None
@@ -247,9 +133,7 @@ def get_user(user_id):
             conn.close()
         return jsonify({'error': str(err)}), 500
 
-
-@users_bp.route('/users', methods=['POST'])
-@require_permission(admin_only=True)
+@users_bp.route('/', methods=['POST'])
 def create_user():
     """Create a new user with all attributes"""
     conn = None
@@ -320,9 +204,7 @@ def create_user():
             conn.close()
         return jsonify({'error': str(err)}), 500
 
-
-@users_bp.route('/users/<int:user_id>', methods=['PUT'])
-@require_permission(admin_only=True)
+@users_bp.route('/<int:user_id>', methods=['PUT'])
 def update_user(user_id):
     """Update an existing user with all attributes"""
     conn = None
@@ -388,9 +270,7 @@ def update_user(user_id):
             conn.close()
         return jsonify({'error': str(err)}), 500
 
-
-@users_bp.route('/users/<int:user_id>', methods=['DELETE'])
-@require_permission(admin_only=True)
+@users_bp.route('/<int:user_id>', methods=['DELETE'])
 def delete_user(user_id):
     """Delete a user"""
     conn = None

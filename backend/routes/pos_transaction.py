@@ -9,52 +9,7 @@ from routes.activity_log import log_activity
 
 pos_bp = Blueprint('pos', __name__)
 
-
-def _refresh_product_totals(conn, product_id):
-    cursor = conn.cursor()
-    cursor.execute("""
-        UPDATE products 
-        SET qty = (SELECT COALESCE(SUM(quantity), 0) FROM product_batches WHERE product_id = %s),
-            quantity_in_stock = (SELECT COALESCE(SUM(quantity), 0) FROM product_batches WHERE product_id = %s)
-        WHERE product_id = %s
-    """, (product_id, product_id, product_id))
-    cursor.close()
-
-
-def _consume_batches_fefo(conn, product_id, quantity):
-    cursor = conn.cursor(dictionary=True)
-    cursor.execute("""
-        SELECT batch_id, quantity
-        FROM product_batches
-        WHERE product_id = %s AND quantity > 0
-        ORDER BY 
-            CASE WHEN expiry_date IS NULL THEN 1 ELSE 0 END,
-            expiry_date ASC,
-            batch_id ASC
-        FOR UPDATE
-    """, (product_id,))
-    batches = cursor.fetchall()
-    remaining = quantity
-    for batch in batches:
-        if remaining <= 0:
-            break
-        take = min(batch['quantity'], remaining)
-        cursor.execute("""
-            UPDATE product_batches
-            SET quantity = quantity - %s
-            WHERE batch_id = %s AND quantity >= %s
-        """, (take, batch['batch_id'], take))
-        if cursor.rowcount == 0:
-            continue
-        remaining -= take
-    cursor.close()
-    if remaining > 0:
-        raise ValueError(f'Insufficient stock for product {product_id}')
-    _refresh_product_totals(conn, product_id)
-
-
-@pos_bp.route('/pos/products', methods=['GET'])
-@require_permission('can_view_products')
+@pos_bp.route('/products', methods=['GET'])
 def get_pos_products():
     conn = get_connection()
     cursor = conn.cursor(dictionary=True)
@@ -76,9 +31,7 @@ def get_pos_products():
     conn.close()
     return jsonify({'products': products})
 
-
-@pos_bp.route('/pos/transactions', methods=['POST'])
-@require_permission('can_view_products')
+@pos_bp.route('/transactions', methods=['POST'])
 def create_pos_transaction():
     conn = None
     cursor = None
