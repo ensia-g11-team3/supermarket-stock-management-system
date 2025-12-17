@@ -101,6 +101,12 @@ class Layout extends StatelessWidget {
                         onTap: () => onNavigate('alerts'),
                       ),
                       _NavItem(
+                        icon: Icons.tune,
+                        label: 'Stock Thresholds',
+                        isSelected: currentPage == 'thresholds',
+                        onTap: () => onNavigate('thresholds'),
+                      ),
+                      _NavItem(
                         icon: Icons.swap_horiz,
                         label: 'Stock Movement',
                         isSelected: currentPage == 'movements',
