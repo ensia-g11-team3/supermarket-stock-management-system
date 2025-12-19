@@ -12,6 +12,7 @@ import 'pages/edit_product_page.dart';
 import 'pages/categories_page.dart';
 import 'pages/suppliers_page.dart';
 import 'pages/alerts_page.dart';
+import 'pages/threshold_page.dart';
 import 'pages/stock_movement_page.dart';
 import 'pages/user_list_page.dart';
 import 'pages/create_user_page.dart';
@@ -99,6 +100,8 @@ class _AppRouterState extends State<AppRouter> {
         return const SuppliersPage();
       case 'alerts':
         return const AlertsPage();
+      case 'thresholds':
+        return const ThresholdPage();
       case 'movements':
         return const StockMovementPage();
       case 'users':
