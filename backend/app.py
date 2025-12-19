@@ -7,8 +7,6 @@ from routes.categories import categories_bp
 from routes.transactions import transactions_bp
 from flask_cors import CORS
 
-# Registered POS, user, and activity history blueprints
-
 app = Flask(__name__)
 CORS(app)
 
@@ -21,6 +19,7 @@ app.register_blueprint(pos_bp, url_prefix='/api/pos')
 app.register_blueprint(users_bp, url_prefix='/api/users')
 app.register_blueprint(categories_bp, url_prefix='/api/categories')
 app.register_blueprint(transactions_bp, url_prefix='/api/transactions')
+app.register_blueprint(activity_bp, url_prefix='/api/activities')
 
 if __name__ == "__main__":
     app.run(debug=True)
