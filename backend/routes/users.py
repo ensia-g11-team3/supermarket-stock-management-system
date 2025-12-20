@@ -26,7 +26,7 @@ def get_users():
         query = """
             SELECT 
                 user_id, username, full_name, phone_number, email, 
-                role, password_hash,
+                role, password_hash, is_active,
                 can_view_products, can_add_product, can_edit_product,
                 can_delete_product, can_view_activity_history, can_set_alerts,
                 created_at
@@ -109,7 +109,7 @@ def get_user(user_id):
         cursor.execute("""
             SELECT 
                 user_id, username, full_name, phone_number, email, 
-                role, password_hash,
+                role, password_hash, is_active,
                 can_view_products, can_add_product, can_edit_product,
                 can_delete_product, can_view_activity_history, can_set_alerts,
                 created_at
@@ -180,13 +180,13 @@ def create_user():
         # Insert user with all permissions
         cursor.execute("""
             INSERT INTO users (
-                username, full_name, phone_number, email, password_hash, role,
+                username, full_name, phone_number, email, password_hash, is_active, role,
                 can_view_products, can_add_product, can_edit_product,
                 can_delete_product, can_view_activity_history, can_set_alerts
-            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, )
         """, (
             data['username'], data['full_name'], data['phone_number'], data['email'],
-            password_hash, data['role'],
+            password_hash, data['role'], data['is_active'],
             permissions['can_view_products'], permissions['can_add_product'], 
             permissions['can_edit_product'], permissions['can_delete_product'],
             permissions['can_view_activity_history'], permissions['can_set_alerts']
