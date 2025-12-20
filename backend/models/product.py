@@ -27,7 +27,7 @@ class Product:
                 data.get('name'),
                 data.get('category'),
                 data.get('qty', 0),
-                data.get('product_threshold', 0),
+                data.get('product_threshold'),
                 float(data.get('selling_price', 0.0)), 
                 float(data.get('buying_price', 0.0)),
                 data.get('supplier'),
