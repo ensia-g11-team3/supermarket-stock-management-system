@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from backend.models.product import Product
+from models.product import Product
 from utils.validators import validate_product_data
 
 product_bp = Blueprint('products', __name__)
@@ -44,10 +44,7 @@ def get_all_products():
         success, result, status_code = Product.get_all()
         
         if success:
-            return jsonify({
-                "count": len(result),
-                "products": result
-            }), status_code
+            return jsonify(result), status_code
         else:
             return jsonify({"error": result}), status_code
             
