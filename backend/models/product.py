@@ -1,4 +1,4 @@
-from db import get_db_connection, close_db_connection
+from db import get_connection, close_connection
 from mysql.connector import Error
 
 class Product:
@@ -8,7 +8,7 @@ class Product:
         Create a new product in the database.
         Returns (success, result/error_message, status_code)
         """
-        connection = get_db_connection()
+        connection = get_connection()
         if not connection:
             return False, "Database connection failed", 500
         
@@ -17,9 +17,9 @@ class Product:
             
             query = """
                 INSERT INTO products 
-                (barcode, name, category, qty, unit, buying_price, 
-                 selling_price, expiry_date, supplier, status, description)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                (barcode, name, category, qty, product_threshold, 
+                 selling_price, buying_price, supplier, status, description)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             """
             
             values = (
@@ -27,12 +27,13 @@ class Product:
                 data.get('name'),
                 data.get('category'),
                 data.get('qty', 0),
-                data.get('unit', 'piece'),
-                data.get('buying_price'),
-                data.get('selling_price'),
-                data.get('expiry_date'),
+                data.get('product_threshold'),
+                float(data.get('selling_price', 0.0)), 
+                float(data.get('buying_price', 0.0)),
                 data.get('supplier'),
-                data.get('status', 'In stock'),
+                'Out of stock' if data.get('qty', 0) == 0 else \
+                   'Low stock' if data.get('qty', 0) <= data.get('product_threshold', 0) else \
+                   'In stock',
                 data.get('description')
             )
             
@@ -56,7 +57,7 @@ class Product:
                     return False, "Product with this name already exists", 400
             return False, f"Database error: {str(e)}", 500
         finally:
-            close_db_connection(connection)
+            close_connection(connection)
     
     @staticmethod
     def get_all():
@@ -64,7 +65,7 @@ class Product:
         Retrieve all products from the database.
         Returns (success, result/error_message, status_code)
         """
-        connection = get_db_connection()
+        connection = get_connection()
         if not connection:
             return False, "Database connection failed", 500
         
@@ -73,12 +74,15 @@ class Product:
             cursor.execute("SELECT * FROM products ORDER BY created_at DESC")
             products = cursor.fetchall()
             cursor.close()
-            return True, products, 200
+            return True, {
+            "count": len(products),
+            "products": products
+            }, 200
             
         except Error as e:
             return False, f"Database error: {str(e)}", 500
         finally:
-            close_db_connection(connection)
+            close_connection(connection)
     
     @staticmethod
     def get_by_id(product_id):
@@ -86,7 +90,7 @@ class Product:
         Retrieve a single product by ID.
         Returns (success, result/error_message, status_code)
         """
-        connection = get_db_connection()
+        connection = get_connection()
         if not connection:
             return False, "Database connection failed", 500
         
@@ -104,7 +108,7 @@ class Product:
         except Error as e:
             return False, f"Database error: {str(e)}", 500
         finally:
-            close_db_connection(connection)
+            close_connection(connection)
     
     @staticmethod
     def update(product_id, data):
@@ -112,7 +116,7 @@ class Product:
         Update a product's information.
         Returns (success, result/error_message, status_code)
         """
-        connection = get_db_connection()
+        connection = get_connection()
         if not connection:
             return False, "Database connection failed", 500
         
@@ -129,8 +133,8 @@ class Product:
             update_fields = []
             values = []
             
-            allowed_fields = ['barcode', 'name', 'category', 'quantity_in_stock', 'unit', 
-                            'buying_price', 'selling_price', 'expiry_date', 'supplier', 
+            allowed_fields = ['barcode', 'name', 'category', 'qty', 'product_threshold', 
+                            'selling_price', 'buying_price', 'supplier', 
                             'status', 'description']
             
             for field in allowed_fields:
@@ -163,7 +167,7 @@ class Product:
                     return False, "Product with this name already exists", 400
             return False, f"Database error: {str(e)}", 500
         finally:
-            close_db_connection(connection)
+            close_connection(connection)
     
     @staticmethod
     def delete(product_id):
@@ -171,7 +175,7 @@ class Product:
         Delete a product from the database.
         Returns (success, result/error_message, status_code)
         """
-        connection = get_db_connection()
+        connection = get_connection()
         if not connection:
             return False, "Database connection failed", 500
         
@@ -193,4 +197,4 @@ class Product:
         except Error as e:
             return False, f"Database error: {str(e)}", 500
         finally:
-            close_db_connection(connection)
+            close_connection(connection)

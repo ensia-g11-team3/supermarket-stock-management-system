@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import '../widgets/page_header.dart';
 import '../widgets/primary_button.dart';
 import '../theme/app_theme.dart';
+import '../services/product_api.dart';
 
 class AddProductPage extends StatefulWidget {
-  const AddProductPage({super.key});
+  final VoidCallback? onProductAdded;
+  const AddProductPage({
+    super.key,
+    this.onProductAdded,
+  });
 
   @override
   State<AddProductPage> createState() => _AddProductPageState();
@@ -16,7 +21,8 @@ class _AddProductPageState extends State<AddProductPage> {
   final _barcodeController = TextEditingController();
   final _quantityController = TextEditingController(text: '0');
   final _minStockController = TextEditingController(text: '10');
-  final _priceController = TextEditingController(text: '0.00');
+  final _sellingPriceController = TextEditingController(text: '0.00');
+  final _buyingPriceController = TextEditingController(text: '0.00');
   final _descriptionController = TextEditingController();
 
   String? _selectedCategory;
@@ -43,33 +49,58 @@ class _AddProductPageState extends State<AddProductPage> {
     _barcodeController.dispose();
     _quantityController.dispose();
     _minStockController.dispose();
-    _priceController.dispose();
+    _sellingPriceController.dispose();
+    _buyingPriceController.dispose();
     _descriptionController.dispose();
     super.dispose();
   }
 
-  void _handleSave() {
-    if (_formKey.currentState!.validate()) {
-      if (_selectedCategory == null || _selectedSupplier == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Please select a category and supplier'),
-            backgroundColor: Colors.red,
-          ),
-        );
-        return;
-      }
+  void _handleSave() async {
+    if (!_formKey.currentState!.validate()) return;
 
-      // Save product logic here
+    if (_selectedCategory == null || _selectedSupplier == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Product saved successfully!'),
-          backgroundColor: Colors.green,
+          content: Text('Please select a category and supplier'),
+          backgroundColor: Colors.red,
         ),
       );
+      return;
+    }
 
-      // Reset form
-      _resetForm();
+    final data = {
+      "name": _productNameController.text,
+      "barcode": _barcodeController.text,
+      "category": _selectedCategory,
+      "supplier": _selectedSupplier,
+      "qty": int.parse(_quantityController.text),
+      "product_threshold": int.parse(_minStockController.text),
+      "buying_price": double.parse(_buyingPriceController.text),
+      "selling_price": double.parse(_sellingPriceController.text),
+      "description": _descriptionController.text,
+    };
+
+    try {
+      await ProductApi.addProduct(data);
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Product added successfully'),
+            backgroundColor: Colors.green,
+          ),
+        );
+
+        _resetForm();
+        widget.onProductAdded?.call();
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to add product: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 
@@ -79,8 +110,10 @@ class _AddProductPageState extends State<AddProductPage> {
     _barcodeController.clear();
     _quantityController.text = '0';
     _minStockController.text = '10';
-    _priceController.text = '0.00';
+    _buyingPriceController.text = '0.00';
+    _sellingPriceController.text = '0.00';
     _descriptionController.clear();
+
     setState(() {
       _selectedCategory = null;
       _selectedSupplier = null;
@@ -106,7 +139,6 @@ class _AddProductPageState extends State<AddProductPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Form Fields
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -196,10 +228,31 @@ class _AddProductPageState extends State<AddProductPage> {
                               ),
                               const SizedBox(height: 20),
                               _buildTextField(
-                                controller: _priceController,
-                                label: 'Price (\$)',
+                                controller: _buyingPriceController,
+                                label: 'Buying Price (\$)',
                                 hint: '0.00',
-                                keyboardType: TextInputType.numberWithOptions(decimal: true),
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                        decimal: true),
+                                isRequired: true,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter price';
+                                  }
+                                  if (double.tryParse(value) == null) {
+                                    return 'Please enter a valid price';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 20),
+                              _buildTextField(
+                                controller: _sellingPriceController,
+                                label: 'Selling Price (\$)',
+                                hint: '0.00',
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                        decimal: true),
                                 isRequired: true,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
@@ -224,7 +277,6 @@ class _AddProductPageState extends State<AddProductPage> {
                       ],
                     ),
                     const SizedBox(height: 32),
-                    // Action Buttons
                     Row(
                       children: [
                         PrimaryButton(
@@ -232,9 +284,8 @@ class _AddProductPageState extends State<AddProductPage> {
                           child: const Text('Save Product'),
                         ),
                         const SizedBox(width: 12),
-                        PrimaryButton(
+                        TextButton(
                           onPressed: _resetForm,
-                          variant: ButtonVariant.secondary,
                           child: const Text('Reset Form'),
                         ),
                       ],
@@ -271,16 +322,11 @@ class _AddProductPageState extends State<AddProductPage> {
                 color: AppTheme.textPrimary,
               ),
             ),
-            if (isRequired) ...[
-              const SizedBox(width: 4),
+            if (isRequired)
               const Text(
                 '*',
-                style: TextStyle(
-                  color: Colors.red,
-                  fontSize: 14,
-                ),
+                style: TextStyle(color: Colors.red),
               ),
-            ],
           ],
         ),
         const SizedBox(height: 8),
@@ -297,17 +343,14 @@ class _AddProductPageState extends State<AddProductPage> {
               borderRadius: BorderRadius.circular(8),
               borderSide: const BorderSide(color: AppTheme.borderColor),
             ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: AppTheme.borderColor),
-            ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: AppTheme.primaryBlue, width: 2),
+              borderSide:
+                  const BorderSide(color: AppTheme.primaryBlue, width: 2),
             ),
-            contentPadding: EdgeInsets.symmetric(
+            contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,
-              vertical: maxLines > 1 ? 12 : 12,
+              vertical: 12,
             ),
           ),
         ),
@@ -335,16 +378,8 @@ class _AddProductPageState extends State<AddProductPage> {
                 color: AppTheme.textPrimary,
               ),
             ),
-            if (isRequired) ...[
-              const SizedBox(width: 4),
-              const Text(
-                '*',
-                style: TextStyle(
-                  color: Colors.red,
-                  fontSize: 14,
-                ),
-              ),
-            ],
+            if (isRequired)
+              const Text('*', style: TextStyle(color: Colors.red)),
           ],
         ),
         const SizedBox(height: 8),
@@ -358,30 +393,14 @@ class _AddProductPageState extends State<AddProductPage> {
             value: value,
             decoration: InputDecoration(
               hintText: 'Select ${label.toLowerCase()}',
+              border: OutlineInputBorder(borderSide: BorderSide.none),
               filled: true,
               fillColor: AppTheme.inputBackground,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide.none,
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide.none,
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(color: AppTheme.primaryBlue, width: 2),
-              ),
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 12,
-              ),
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             ),
             items: items.map((item) {
-              return DropdownMenuItem<String>(
-                value: item,
-                child: Text(item),
-              );
+              return DropdownMenuItem(value: item, child: Text(item));
             }).toList(),
             onChanged: onChanged,
           ),
@@ -390,4 +409,3 @@ class _AddProductPageState extends State<AddProductPage> {
     );
   }
 }
-

@@ -5,6 +5,7 @@ from routes.users import users_bp
 from routes.activity import activity_bp
 from routes.categories import categories_bp
 from routes.transactions import transactions_bp
+from routes.product_routes import product_bp
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -20,6 +21,7 @@ app.register_blueprint(users_bp, url_prefix='/api/users')
 app.register_blueprint(categories_bp, url_prefix='/api/categories')
 app.register_blueprint(transactions_bp, url_prefix='/api/transactions')
 app.register_blueprint(activity_bp, url_prefix='/api/activities')
+app.register_blueprint(product_bp, url_prefix='/api/products')
 
 if __name__ == "__main__":
     app.run(debug=True)

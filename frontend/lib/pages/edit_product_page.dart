@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import '../widgets/page_header.dart';
 import '../widgets/primary_button.dart';
 import '../theme/app_theme.dart';
+import '../services/product_api.dart';
 
 class EditProductPage extends StatefulWidget {
   final String productId;
@@ -25,7 +27,8 @@ class _EditProductPageState extends State<EditProductPage> {
   late TextEditingController _barcodeController;
   late TextEditingController _quantityController;
   late TextEditingController _minStockController;
-  late TextEditingController _priceController;
+  late TextEditingController _buyingPriceController;
+  late TextEditingController _sellingPriceController;
   late TextEditingController _descriptionController;
 
   String? _selectedCategory;
@@ -53,31 +56,51 @@ class _EditProductPageState extends State<EditProductPage> {
     'Supplier B',
     'Supplier C',
     'Supplier D',
+    'Local Farm',
   ];
 
-  // Simulate loading product data by productId
-  void _loadProductData() {
-    // In a real app, you would fetch this from your data source
-    // For now, we'll use sample data based on productId
-    _productNameController.text = 'Coca Cola 500ml';
-    _barcodeController.text = '123456789';
-    _quantityController.text = '50';
-    _minStockController.text = '10';
-    _priceController.text = '2.50';
-    _descriptionController.text = 'Carbonated soft drink';
-    _selectedCategory = 'Beverages';
-    _selectedSupplier = 'Beverage Co.';
+  Future<void> _loadProductData() async {
+    try {
+      final response = await ProductApi.getProductById(widget.productId);
+      final product = response['product'] ?? response;
+
+      setState(() {
+        _productNameController.text = product["name"];
+        _barcodeController.text = product["barcode"];
+        _quantityController.text = product["qty"].toString();
+        _minStockController.text = product["product_threshold"].toString();
+        _buyingPriceController.text = product["buying_price"].toString();
+        _sellingPriceController.text = product["selling_price"].toString();
+        _descriptionController.text = product["description"] ?? "";
+        _selectedCategory = product["category"];
+        _selectedSupplier = product["supplier"];
+      });
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Failed to load product: $e"),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   @override
   void initState() {
     super.initState();
+
+    // Initialize controllers
     _productNameController = TextEditingController();
     _barcodeController = TextEditingController();
-    _quantityController = TextEditingController(text: '0');
-    _minStockController = TextEditingController(text: '10');
-    _priceController = TextEditingController(text: '0.00');
+    _quantityController = TextEditingController();
+    _minStockController = TextEditingController();
+    _sellingPriceController = TextEditingController();
+    _buyingPriceController = TextEditingController();
     _descriptionController = TextEditingController();
+
+    // Load product data
     _loadProductData();
   }
 
@@ -87,28 +110,55 @@ class _EditProductPageState extends State<EditProductPage> {
     _barcodeController.dispose();
     _quantityController.dispose();
     _minStockController.dispose();
-    _priceController.dispose();
+    _sellingPriceController.dispose();
+    _buyingPriceController.dispose();
     _descriptionController.dispose();
     super.dispose();
   }
 
-  void _handleSave() {
-    if (_formKey.currentState!.validate()) {
-      if (_selectedCategory == null || _selectedSupplier == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Please select a category and supplier'),
-            backgroundColor: Colors.red,
-          ),
-        );
-        return;
-      }
+  void _handleSave() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    if (_selectedCategory == null || _selectedSupplier == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please select a category and supplier'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    final updatedData = {
+      "name": _productNameController.text,
+      "barcode": _barcodeController.text,
+      "category": _selectedCategory,
+      "supplier": _selectedSupplier,
+      "qty": int.parse(_quantityController.text),
+      "product_threshold": int.parse(_minStockController.text),
+      "buying_price": double.parse(_buyingPriceController.text),
+      "selling_price": double.parse(_sellingPriceController.text),
+      "description": _descriptionController.text,
+    };
+
+    try {
+      await ProductApi.updateProduct(int.parse(widget.productId), updatedData);
 
       widget.onProductUpdated();
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Product updated successfully!'),
           backgroundColor: Colors.green,
+        ),
+      );
+
+      widget.onNavigateBack(); // go back to list
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Failed to update product: $e"),
+          backgroundColor: Colors.red,
         ),
       );
     }
@@ -123,17 +173,10 @@ class _EditProductPageState extends State<EditProductPage> {
           title: 'Edit Product',
           description: 'Update product details',
           actions: [
-            PrimaryButton(
+            TextButton.icon(
               onPressed: widget.onNavigateBack,
-              variant: ButtonVariant.secondary,
-              child: const Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.arrow_back, size: 18),
-                  SizedBox(width: 8),
-                  Text('Back to Product List'),
-                ],
-              ),
+              icon: const Icon(Icons.arrow_back),
+              label: const Text('Back to Product List'),
             ),
           ],
         ),
@@ -237,10 +280,31 @@ class _EditProductPageState extends State<EditProductPage> {
                               ),
                               const SizedBox(height: 20),
                               _buildTextField(
-                                controller: _priceController,
-                                label: 'Price (\$)',
+                                controller: _sellingPriceController,
+                                label: 'Selling Price (\$)',
                                 hint: '0.00',
-                                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                        decimal: true),
+                                isRequired: true,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter price';
+                                  }
+                                  if (double.tryParse(value) == null) {
+                                    return 'Please enter a valid price';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 20),
+                              _buildTextField(
+                                controller: _buyingPriceController,
+                                label: 'Buying Price (\$)',
+                                hint: '0.00',
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                        decimal: true),
                                 isRequired: true,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
@@ -273,9 +337,14 @@ class _EditProductPageState extends State<EditProductPage> {
                           child: const Text('Save Changes'),
                         ),
                         const SizedBox(width: 12),
-                        PrimaryButton(
+                        TextButton(
                           onPressed: widget.onNavigateBack,
-                          variant: ButtonVariant.secondary,
+                          style: TextButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 24,
+                              vertical: 12,
+                            ),
+                          ),
                           child: const Text('Cancel'),
                         ),
                       ],
@@ -344,7 +413,8 @@ class _EditProductPageState extends State<EditProductPage> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: AppTheme.primaryBlue, width: 2),
+              borderSide:
+                  const BorderSide(color: AppTheme.primaryBlue, width: 2),
             ),
             contentPadding: EdgeInsets.symmetric(
               horizontal: 16,
@@ -411,7 +481,8 @@ class _EditProductPageState extends State<EditProductPage> {
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(color: AppTheme.primaryBlue, width: 2),
+                borderSide:
+                    const BorderSide(color: AppTheme.primaryBlue, width: 2),
               ),
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,
@@ -431,4 +502,3 @@ class _EditProductPageState extends State<EditProductPage> {
     );
   }
 }
-
