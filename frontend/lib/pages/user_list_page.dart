@@ -5,6 +5,7 @@ import '../widgets/search_bar.dart';
 import '../widgets/status_badge.dart';
 import '../widgets/role_badge.dart';
 import '../theme/app_theme.dart';
+import '../services/user_api.dart';
 
 class UserListPage extends StatefulWidget {
   final VoidCallback onNavigateToCreate;
@@ -26,88 +27,81 @@ class _UserListPageState extends State<UserListPage> {
   String _selectedStatus = 'All Status';
   String _sortBy = 'Name';
 
-  final List<Map<String, dynamic>> _users = [
-    {
-      'id': '1',
-      'username': 'admin',
-      'fullName': 'John Administrator',
-      'email': 'admin@stockify.com',
-      'phone': '+1234567890',
-      'role': 'Admin',
-      'status': true,
-      'created': 'Jan 15, 2024',
-    },
-    {
-      'id': '2',
-      'username': 'sarah.manager',
-      'fullName': 'Sarah Johnson',
-      'email': 'sarah.j@stockify.com',
-      'phone': '+1234567891',
-      'role': 'Stock Manager',
-      'status': true,
-      'created': 'Feb 10, 2024',
-    },
-    {
-      'id': '3',
-      'username': 'mike.pos',
-      'fullName': 'Mike Williams',
-      'email': 'mike.w@stockify.com',
-      'phone': '+1234567892',
-      'role': 'POS Worker',
-      'status': true,
-      'created': 'Feb 20, 2024',
-    },
-    {
-      'id': '4',
-      'username': 'emma.pos',
-      'fullName': 'Emma Davis',
-      'email': 'emma.d@stockify.com',
-      'phone': '+1234567893',
-      'role': 'POS Worker',
-      'status': false,
-      'created': 'Mar 5, 2024',
-    },
-    {
-      'id': '5',
-      'username': 'david.manager',
-      'fullName': 'David Brown',
-      'email': 'david.b@stockify.com',
-      'phone': '+1234567894',
-      'role': 'Stock Manager',
-      'status': true,
-      'created': 'Mar 15, 2024',
-    },
-  ];
+  List<Map<String, dynamic>> _users = [];
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUsers();
+  }
+
+  Future<void> _fetchUsers() async {
+    try {
+      final data = await UserApi.getUsers();
+      setState(() {
+        _users = data;
+        _isLoading = false;
+      });
+    } catch (e) {
+      print("Error loading users: $e");
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   List<Map<String, dynamic>> get _filteredUsers {
     return _users.where((Map<String, dynamic> user) {
       final bool matchesSearch = _searchQuery.isEmpty ||
-          user['username'].toString().toLowerCase().contains(_searchQuery.toLowerCase()) ||
-          user['fullName'].toString().toLowerCase().contains(_searchQuery.toLowerCase()) ||
-          user['email'].toString().toLowerCase().contains(_searchQuery.toLowerCase()) ||
-          user['phone'].toString().toLowerCase().contains(_searchQuery.toLowerCase()) ||
-          user['role'].toString().toLowerCase().contains(_searchQuery.toLowerCase());
+          user['username']
+              .toString()
+              .toLowerCase()
+              .contains(_searchQuery.toLowerCase()) ||
+          user['full_name']
+              .toString()
+              .toLowerCase()
+              .contains(_searchQuery.toLowerCase()) ||
+          user['email']
+              .toString()
+              .toLowerCase()
+              .contains(_searchQuery.toLowerCase()) ||
+          user['phone_number']
+              .toString()
+              .toLowerCase()
+              .contains(_searchQuery.toLowerCase()) ||
+          user['role']
+              .toString()
+              .toLowerCase()
+              .contains(_searchQuery.toLowerCase());
+      user['created_at']
+          .toString()
+          .toLowerCase()
+          .contains(_searchQuery.toLowerCase());
 
-      final bool matchesRole = _selectedRole == 'All Roles' || user['role'] == _selectedRole;
+      final bool matchesRole =
+          _selectedRole == 'All Roles' || user['role'] == _selectedRole;
+
       final bool matchesStatus = _selectedStatus == 'All Status' ||
-          (_selectedStatus == 'Active' && user['status'] == true) ||
-          (_selectedStatus == 'Inactive' && user['status'] == false);
+          (_selectedStatus == 'Active' && user['is_active'] == 1) ||
+          (_selectedStatus == 'Inactive' && user['is_active'] == 0);
 
       return matchesSearch && matchesRole && matchesStatus;
     }).toList()
       ..sort((Map<String, dynamic> a, Map<String, dynamic> b) {
         switch (_sortBy) {
           case 'Name':
-            return a['fullName'].compareTo(b['fullName']);
+            return a['full_name'].compareTo(b['full_name']);
           case 'Date':
-            return b['created'].compareTo(a['created']);
+            return b['created_at'].compareTo(a['created_at']);
           default:
             return 0;
         }
       });
   }
 
-  void _showDeleteConfirmation(BuildContext context, Map<String, dynamic> user) {
+  void _showDeleteConfirmation(
+      BuildContext context, Map<String, dynamic> user) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -163,7 +157,7 @@ class _UserListPageState extends State<UserListPage> {
                   children: [
                     _buildInfoRow('Username', user['username']),
                     const SizedBox(height: 8),
-                    _buildInfoRow('Full Name', user['fullName']),
+                    _buildInfoRow('Full Name', user['full_name']),
                     const SizedBox(height: 8),
                     _buildInfoRow('Role', user['role']),
                   ],
@@ -194,7 +188,8 @@ class _UserListPageState extends State<UserListPage> {
                 Navigator.of(context).pop();
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text('User "${user['username']}" has been deleted'),
+                    content:
+                        Text('User "${user['username']}" has been deleted'),
                     backgroundColor: Colors.green,
                     behavior: SnackBarBehavior.floating,
                   ),
@@ -260,258 +255,298 @@ class _UserListPageState extends State<UserListPage> {
           ],
         ),
         Expanded(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: Center(
-              child: Container(
-                constraints: const BoxConstraints(maxWidth: 1400),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Filters & Search Card
-                    Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Filters & Search',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: AppTheme.textPrimary,
+          child: _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : SingleChildScrollView(
+                  padding: const EdgeInsets.all(24),
+                  child: Center(
+                    child: Container(
+                      constraints: const BoxConstraints(maxWidth: 1400),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Filters & Search Card
+                          Card(
+                            child: Padding(
+                              padding: const EdgeInsets.all(20),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Filters & Search',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppTheme.textPrimary,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 16),
+                                  AppSearchBar(
+                                    placeholder:
+                                        'Search by name, email, phone, or role...',
+                                    value: _searchQuery,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _searchQuery = value;
+                                      });
+                                    },
+                                  ),
+                                  const SizedBox(height: 16),
+                                  LayoutBuilder(
+                                    builder: (context, constraints) {
+                                      if (constraints.maxWidth < 800) {
+                                        return Column(
+                                          children: [
+                                            _buildDropdown(
+                                              label: 'Filter by Role',
+                                              value: _selectedRole,
+                                              items: const [
+                                                'All Roles',
+                                                'Admin',
+                                                'Stock Manager',
+                                                'POS Worker',
+                                              ],
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  _selectedRole = value!;
+                                                });
+                                              },
+                                            ),
+                                            const SizedBox(height: 12),
+                                            _buildDropdown(
+                                              label: 'Filter by Status',
+                                              value: _selectedStatus,
+                                              items: const [
+                                                'All Status',
+                                                'Active',
+                                                'Inactive',
+                                              ],
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  _selectedStatus = value!;
+                                                });
+                                              },
+                                            ),
+                                            const SizedBox(height: 12),
+                                            _buildDropdown(
+                                              label: 'Sort By',
+                                              value: _sortBy,
+                                              items: const [
+                                                'Name',
+                                                'Date',
+                                              ],
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  _sortBy = value!;
+                                                });
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      }
+                                      return Row(
+                                        children: [
+                                          Expanded(
+                                            child: _buildDropdown(
+                                              label: 'Filter by Role',
+                                              value: _selectedRole,
+                                              items: const [
+                                                'All Roles',
+                                                'Admin',
+                                                'Stock Manager',
+                                                'POS Worker',
+                                              ],
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  _selectedRole = value!;
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                          const SizedBox(width: 12),
+                                          Expanded(
+                                            child: _buildDropdown(
+                                              label: 'Filter by Status',
+                                              value: _selectedStatus,
+                                              items: const [
+                                                'All Status',
+                                                'Active',
+                                                'Inactive',
+                                              ],
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  _selectedStatus = value!;
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                          const SizedBox(width: 12),
+                                          Expanded(
+                                            child: _buildDropdown(
+                                              label: 'Sort By',
+                                              value: _sortBy,
+                                              items: const [
+                                                'Name',
+                                                'Date',
+                                              ],
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  _sortBy = value!;
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  ),
+                                ],
                               ),
                             ),
-                            const SizedBox(height: 16),
-                            AppSearchBar(
-                              placeholder: 'Search by name, email, phone, or role...',
-                              value: _searchQuery,
-                              onChanged: (value) {
-                                setState(() {
-                                  _searchQuery = value;
-                                });
-                              },
-                            ),
-                            const SizedBox(height: 16),
-                            LayoutBuilder(
+                          ),
+                          const SizedBox(height: 20),
+                          // User Table with Smart Horizontal Scroll
+                          Card(
+                            child: LayoutBuilder(
                               builder: (context, constraints) {
-                                if (constraints.maxWidth < 800) {
-                                  return Column(
-                                    children: [
-                                      _buildDropdown(
-                                        label: 'Filter by Role',
-                                        value: _selectedRole,
-                                        items: const [
-                                          'All Roles',
-                                          'Admin',
-                                          'Stock Manager',
-                                          'POS Worker',
-                                        ],
-                                        onChanged: (value) {
-                                          setState(() {
-                                            _selectedRole = value!;
-                                          });
-                                        },
+                                const double tableMinWidth = 950;
+                                final bool needsScroll =
+                                    constraints.maxWidth < tableMinWidth;
+
+                                return Scrollbar(
+                                  thumbVisibility: needsScroll,
+                                  child: SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: ConstrainedBox(
+                                      constraints: BoxConstraints(
+                                        minWidth: needsScroll
+                                            ? tableMinWidth
+                                            : constraints.maxWidth,
                                       ),
-                                      const SizedBox(height: 12),
-                                      _buildDropdown(
-                                        label: 'Filter by Status',
-                                        value: _selectedStatus,
-                                        items: const [
-                                          'All Status',
-                                          'Active',
-                                          'Inactive',
+                                      child: Table(
+                                        columnWidths: needsScroll
+                                            ? const {
+                                                0: FixedColumnWidth(130),
+                                                1: FixedColumnWidth(150),
+                                                2: FixedColumnWidth(200),
+                                                3: FixedColumnWidth(130),
+                                                4: FixedColumnWidth(130),
+                                                5: FixedColumnWidth(90),
+                                                6: FixedColumnWidth(120),
+                                              }
+                                            : const {
+                                                0: FlexColumnWidth(1.3),
+                                                1: FlexColumnWidth(1.5),
+                                                2: FlexColumnWidth(2.0),
+                                                3: FlexColumnWidth(1.3),
+                                                4: FlexColumnWidth(1.3),
+                                                5: FlexColumnWidth(0.9),
+                                                6: FlexColumnWidth(1.2),
+                                              },
+                                        children: [
+                                          TableRow(
+                                            decoration: BoxDecoration(
+                                              color: AppTheme.brownGold,
+                                              border: Border(
+                                                bottom: BorderSide(
+                                                    color:
+                                                        AppTheme.borderColor),
+                                              ),
+                                            ),
+                                            children: const [
+                                              _TableHeaderCell(
+                                                  Text('Username')),
+                                              _TableHeaderCell(
+                                                  Text('Full Name')),
+                                              _TableHeaderCell(Text('Email')),
+                                              _TableHeaderCell(Text('Phone')),
+                                              _TableHeaderCell(Text('Role')),
+                                              _TableHeaderCell(Text('Status')),
+                                              _TableHeaderCell(Text('Actions')),
+                                            ],
+                                          ),
+                                          ..._filteredUsers.map((user) =>
+                                              TableRow(
+                                                decoration: BoxDecoration(
+                                                  border: Border(
+                                                    bottom: BorderSide(
+                                                      color: AppTheme
+                                                          .borderColor
+                                                          .withOpacity(0.5),
+                                                    ),
+                                                  ),
+                                                ),
+                                                children: [
+                                                  _TableCell(
+                                                      Text(user['username'])),
+                                                  _TableCell(
+                                                      Text(user['full_name'])),
+                                                  _TableCell(
+                                                      Text(user['email'])),
+                                                  _TableCell(Text(
+                                                      user['phone_number'])),
+                                                  _TableCell(RoleBadge(
+                                                      role: user['role'])),
+                                                  _TableCell(StatusBadge(
+                                                      isActive:
+                                                          user['is_active'])),
+                                                  _TableCell(
+                                                    Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        IconButton(
+                                                          icon: const Icon(
+                                                              Icons.edit,
+                                                              size: 18),
+                                                          onPressed: () => widget
+                                                              .onNavigateToEdit(
+                                                                  user['id']),
+                                                          color: AppTheme
+                                                              .primaryBlue,
+                                                          tooltip: 'Edit',
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(4),
+                                                          constraints:
+                                                              const BoxConstraints(),
+                                                        ),
+                                                        const SizedBox(
+                                                            width: 8),
+                                                        IconButton(
+                                                          icon: const Icon(
+                                                              Icons.delete,
+                                                              size: 18),
+                                                          onPressed: () =>
+                                                              _showDeleteConfirmation(
+                                                                  context,
+                                                                  user),
+                                                          color: Colors.red,
+                                                          tooltip: 'Delete',
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(4),
+                                                          constraints:
+                                                              const BoxConstraints(),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              )),
                                         ],
-                                        onChanged: (value) {
-                                          setState(() {
-                                            _selectedStatus = value!;
-                                          });
-                                        },
-                                      ),
-                                      const SizedBox(height: 12),
-                                      _buildDropdown(
-                                        label: 'Sort By',
-                                        value: _sortBy,
-                                        items: const [
-                                          'Name',
-                                          'Date',
-                                        ],
-                                        onChanged: (value) {
-                                          setState(() {
-                                            _sortBy = value!;
-                                          });
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                }
-                                return Row(
-                                  children: [
-                                    Expanded(
-                                      child: _buildDropdown(
-                                        label: 'Filter by Role',
-                                        value: _selectedRole,
-                                        items: const [
-                                          'All Roles',
-                                          'Admin',
-                                          'Stock Manager',
-                                          'POS Worker',
-                                        ],
-                                        onChanged: (value) {
-                                          setState(() {
-                                            _selectedRole = value!;
-                                          });
-                                        },
                                       ),
                                     ),
-                                    const SizedBox(width: 12),
-                                    Expanded(
-                                      child: _buildDropdown(
-                                        label: 'Filter by Status',
-                                        value: _selectedStatus,
-                                        items: const [
-                                          'All Status',
-                                          'Active',
-                                          'Inactive',
-                                        ],
-                                        onChanged: (value) {
-                                          setState(() {
-                                            _selectedStatus = value!;
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                    const SizedBox(width: 12),
-                                    Expanded(
-                                      child: _buildDropdown(
-                                        label: 'Sort By',
-                                        value: _sortBy,
-                                        items: const [
-                                          'Name',
-                                          'Date',
-                                        ],
-                                        onChanged: (value) {
-                                          setState(() {
-                                            _sortBy = value!;
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 );
                               },
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(height: 20),
-                    // User Table with Smart Horizontal Scroll
-                    Card(
-                      child: LayoutBuilder(
-                        builder: (context, constraints) {
-                          const double tableMinWidth = 950;
-                          final bool needsScroll = constraints.maxWidth < tableMinWidth;
-                          
-                          return Scrollbar(
-                            thumbVisibility: needsScroll,
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: ConstrainedBox(
-                                constraints: BoxConstraints(
-                                  minWidth: needsScroll ? tableMinWidth : constraints.maxWidth,
-                                ),
-                                child: Table(
-                                  columnWidths: needsScroll ? const {
-                                    0: FixedColumnWidth(130),
-                                    1: FixedColumnWidth(150),
-                                    2: FixedColumnWidth(200),
-                                    3: FixedColumnWidth(130),
-                                    4: FixedColumnWidth(130),
-                                    5: FixedColumnWidth(90),
-                                    6: FixedColumnWidth(120),
-                                  } : const {
-                                    0: FlexColumnWidth(1.3),
-                                    1: FlexColumnWidth(1.5),
-                                    2: FlexColumnWidth(2.0),
-                                    3: FlexColumnWidth(1.3),
-                                    4: FlexColumnWidth(1.3),
-                                    5: FlexColumnWidth(0.9),
-                                    6: FlexColumnWidth(1.2),
-                                  },
-                                  children: [
-                                    TableRow(
-                                      decoration: BoxDecoration(
-                                        color: AppTheme.brownGold,
-                                        border: Border(
-                                          bottom: BorderSide(color: AppTheme.borderColor),
-                                        ),
-                                      ),
-                                      children: const [
-                                        _TableHeaderCell(Text('Username')),
-                                        _TableHeaderCell(Text('Full Name')),
-                                        _TableHeaderCell(Text('Email')),
-                                        _TableHeaderCell(Text('Phone')),
-                                        _TableHeaderCell(Text('Role')),
-                                        _TableHeaderCell(Text('Status')),
-                                        _TableHeaderCell(Text('Actions')),
-                                      ],
-                                    ),
-                                    ..._filteredUsers.map((user) => TableRow(
-                                      decoration: BoxDecoration(
-                                        border: Border(
-                                          bottom: BorderSide(
-                                            color: AppTheme.borderColor.withOpacity(0.5),
-                                          ),
-                                        ),
-                                      ),
-                                      children: [
-                                        _TableCell(Text(user['username'])),
-                                        _TableCell(Text(user['fullName'])),
-                                        _TableCell(Text(user['email'])),
-                                        _TableCell(Text(user['phone'])),
-                                        _TableCell(RoleBadge(role: user['role'])),
-                                        _TableCell(StatusBadge(isActive: user['status'])),
-                                        _TableCell(
-                                          Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              IconButton(
-                                                icon: const Icon(Icons.edit, size: 18),
-                                                onPressed: () => widget.onNavigateToEdit(user['id']),
-                                                color: AppTheme.primaryBlue,
-                                                tooltip: 'Edit',
-                                                padding: const EdgeInsets.all(4),
-                                                constraints: const BoxConstraints(),
-                                              ),
-                                              const SizedBox(width: 8),
-                                              IconButton(
-                                                icon: const Icon(Icons.delete, size: 18),
-                                                onPressed: () => _showDeleteConfirmation(context, user),
-                                                color: Colors.red,
-                                                tooltip: 'Delete',
-                                                padding: const EdgeInsets.all(4),
-                                                constraints: const BoxConstraints(),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    )),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-          ),
         ),
       ],
     );
@@ -556,7 +591,8 @@ class _UserListPageState extends State<UserListPage> {
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(color: AppTheme.primaryBlue, width: 2),
+                borderSide:
+                    const BorderSide(color: AppTheme.primaryBlue, width: 2),
               ),
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 12,
