@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:se_project/services/user_api.dart';
 import '../widgets/page_header.dart';
 import '../widgets/primary_button.dart';
 import '../widgets/status_badge.dart';
@@ -22,13 +23,15 @@ class EditUserPage extends StatefulWidget {
 
 class _EditUserPageState extends State<EditUserPage> {
   final _formKey = GlobalKey<FormState>();
-  final _usernameController = TextEditingController(text: 'admin');
-  final _fullNameController = TextEditingController(text: 'John Administrator');
-  final _phoneController = TextEditingController(text: '+1234567890');
-  final _emailController = TextEditingController(text: 'admin@stockify.com');
-  
-  String _selectedRole = 'Admin';
-  bool _resetPassword = false;
+  late TextEditingController _usernameController;
+  late TextEditingController _fullNameController;
+  late TextEditingController _phoneController;
+  late TextEditingController _emailController;
+  String? createdAt;
+
+  String? _selectedRole;
+  bool? _resetPassword;
+
   final Map<String, bool> _permissions = {
     'View products list': true,
     'Add product': true,
@@ -38,7 +41,43 @@ class _EditUserPageState extends State<EditUserPage> {
     'Set alerts': true,
   };
 
-  final List<String> _roles = ['Admin', 'Stock Manager', 'POS Worker'];
+  final List<String> _roles = ['Admin', 'Inventory Manager', 'Sales Clerk'];
+
+  Future<void> _loadUserData() async {
+    try {
+      final response = await UserApi.getUserById(widget.userId);
+      final user = response['user'] ?? response;
+
+      setState(() {
+        _usernameController.text = user["username"]!;
+        _fullNameController.text = user["full_name"]!;
+        _phoneController.text = user["phone_number"]!;
+        _emailController.text = user["email"]!;
+        _selectedRole = user["role"]!;
+        createdAt = user["created_at"]!;
+      });
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Failed to load user: $e"),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _usernameController = TextEditingController();
+    _fullNameController = TextEditingController();
+    _phoneController = TextEditingController();
+    _emailController = TextEditingController();
+    _resetPassword = false;
+    _loadUserData();
+  }
 
   @override
   void dispose() {
@@ -49,13 +88,45 @@ class _EditUserPageState extends State<EditUserPage> {
     super.dispose();
   }
 
-  void _handleSave() {
-    if (_formKey.currentState!.validate()) {
+  void _handleSave() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    if (_selectedRole == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please select a role'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    final updatedData = {
+      "username": _usernameController.text,
+      "full_name": _fullNameController.text,
+      "phone_number": _phoneController.text,
+      "email": _emailController.text,
+      "role": _selectedRole,
+      "reset_password": _resetPassword,
+    };
+    try {
+      await UserApi.updateUser(int.parse(widget.userId), updatedData);
+
       widget.onUserUpdated();
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('User updated successfully!'),
           backgroundColor: Colors.green,
+        ),
+      );
+
+      widget.onNavigateBack(); // go back to list
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Failed to update user: $e"),
+          backgroundColor: Colors.red,
         ),
       );
     }
@@ -121,7 +192,7 @@ class _EditUserPageState extends State<EditUserPage> {
                                         color: AppTheme.textSecondary,
                                       ),
                                     ),
-                                    const StatusBadge(isActive: true),
+                                    const StatusBadge(isActive: 1),
                                     const SizedBox(width: 24),
                                     const Text(
                                       'Created: ',
@@ -130,9 +201,9 @@ class _EditUserPageState extends State<EditUserPage> {
                                         color: AppTheme.textSecondary,
                                       ),
                                     ),
-                                    const Text(
-                                      'January 15, 2024',
-                                      style: TextStyle(
+                                    Text(
+                                      createdAt ?? ' ',
+                                      style: const TextStyle(
                                         fontSize: 14,
                                         color: AppTheme.textPrimary,
                                       ),
@@ -234,46 +305,7 @@ class _EditUserPageState extends State<EditUserPage> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 24),
-                    // Password Card
-                    Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(24),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Password',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                                color: AppTheme.textPrimary,
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            Row(
-                              children: [
-                                Checkbox(
-                                  value: _resetPassword,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _resetPassword = value ?? false;
-                                    });
-                                  },
-                                ),
-                                const Text(
-                                  'Reset password',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: AppTheme.textPrimary,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    
                     const SizedBox(height: 24),
                     // Role & Permissions Card
                     Card(
@@ -291,19 +323,21 @@ class _EditUserPageState extends State<EditUserPage> {
                               ),
                             ),
                             const SizedBox(height: 24),
-                            _buildDropdown(
-                              label: 'Role',
-                              value: _selectedRole,
-                              items: _roles,
-                              onChanged: (value) {
-                                setState(() {
-                                  _selectedRole = value!;
-                                  // Reset permissions to defaults when role changes
-                                  _permissions.updateAll((key, value) => true);
-                                });
-                              },
-                              isRequired: true,
-                            ),
+                            _selectedRole == null
+                                ? CircularProgressIndicator() // or SizedBox()
+                                : _buildDropdown(
+                                    label: 'Role',
+                                    value: _selectedRole!,
+                                    items: _roles,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _selectedRole = value!;
+                                        _permissions
+                                            .updateAll((key, value) => true);
+                                      });
+                                    },
+                                    isRequired: true,
+                                  ),
                             const SizedBox(height: 8),
                             const Text(
                               'Selecting a role will reset permissions to defaults',
@@ -330,7 +364,8 @@ class _EditUserPageState extends State<EditUserPage> {
                                         value: entry.value,
                                         onChanged: (value) {
                                           setState(() {
-                                            _permissions[entry.key] = value ?? false;
+                                            _permissions[entry.key] =
+                                                value ?? false;
                                           });
                                         },
                                         activeColor: AppTheme.primaryBlue,
@@ -425,7 +460,8 @@ class _EditUserPageState extends State<EditUserPage> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: AppTheme.primaryBlue, width: 2),
+              borderSide:
+                  const BorderSide(color: AppTheme.primaryBlue, width: 2),
             ),
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,
@@ -492,7 +528,8 @@ class _EditUserPageState extends State<EditUserPage> {
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(color: AppTheme.primaryBlue, width: 2),
+                borderSide:
+                    const BorderSide(color: AppTheme.primaryBlue, width: 2),
               ),
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,

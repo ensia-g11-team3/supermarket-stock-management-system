@@ -1,6 +1,4 @@
---Table Creation
-
--- Users table
+-- USERS
 CREATE TABLE users (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
@@ -8,6 +6,7 @@ CREATE TABLE users (
     phone_number VARCHAR(20) NOT NULL UNIQUE,
     email VARCHAR(100) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
+    is_active BOOLEAN NOT NULL DEFAULT FALSE,
     role VARCHAR(20) NOT NULL COMMENT 'Admin, Sales Clerk, Inventory Manager',
     can_view_products BOOLEAN DEFAULT FALSE,
     can_add_product BOOLEAN DEFAULT FALSE,
@@ -18,7 +17,7 @@ CREATE TABLE users (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- Products table
+-- PRODUCTS
 CREATE TABLE products (
     product_id INT AUTO_INCREMENT PRIMARY KEY,
     barcode VARCHAR(50) NOT NULL UNIQUE,
@@ -26,33 +25,107 @@ CREATE TABLE products (
     category VARCHAR(50) NOT NULL,
     quantity_in_stock INT NOT NULL DEFAULT 0,
     qty INT NOT NULL DEFAULT 0,
+    product_threshold INT,
     unit VARCHAR(20) NOT NULL DEFAULT 'piece',
     buying_price DECIMAL(10,2) NOT NULL,
     selling_price DECIMAL(10,2) NOT NULL,
-    expiry_date DATE NULL,
-    supplier VARCHAR(100) NULL,
+    supplier VARCHAR(100),
     status VARCHAR(20) NOT NULL DEFAULT 'In stock',
-    description TEXT NULL,
+    description TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
-
--- Transactions table
+-- TRANSACTIONS
 CREATE TABLE transactions (
     transaction_id INT AUTO_INCREMENT PRIMARY KEY,
     worker_id INT NOT NULL,
     total_amount DECIMAL(10,2) NOT NULL,
     payment_method VARCHAR(20) NOT NULL COMMENT 'Cash / Card',
     transaction_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_transactions_user FOREIGN KEY (worker_id) REFERENCES users(user_id)
+    CONSTRAINT fk_transactions_user
+        FOREIGN KEY (worker_id)
+        REFERENCES users(user_id)
+        ON DELETE CASCADE
 );
 
--- Transaction Items table
+-- TRANSACTION ITEMS
 CREATE TABLE transaction_items (
     transaction_id INT NOT NULL,
     product_id INT NOT NULL,
     quantity INT NOT NULL,
-    PRIMARY KEY (order_id, product_id),
-    CONSTRAINT fk_items_transaction FOREIGN KEY (transaction_id) REFERENCES transactions(transaction_id),
-    CONSTRAINT fk_items_product FOREIGN KEY (product_id) REFERENCES products(product_id)
+    PRIMARY KEY (transaction_id, product_id),
+    CONSTRAINT fk_items_transaction
+        FOREIGN KEY (transaction_id)
+        REFERENCES transactions(transaction_id)
+        ON DELETE CASCADE,
+    CONSTRAINT fk_items_product
+        FOREIGN KEY (product_id)
+        REFERENCES products(product_id)
+);
+
+-- CATEGORIES
+CREATE TABLE categories (
+    category_id INT AUTO_INCREMENT PRIMARY KEY,
+    category_name VARCHAR(50) NOT NULL UNIQUE,
+    category_description TEXT
+);
+
+-- SUPPLIERS
+CREATE TABLE suppliers (
+    supplier_id INT AUTO_INCREMENT PRIMARY KEY,
+    supplier_name VARCHAR(50) NOT NULL,
+    supplier_description TEXT
+);
+
+-- PRODUCT BATCHES
+CREATE TABLE product_batches (
+    batch_id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL,
+    manifacture_date DATE,
+    expiry_date DATE,
+    supplier_id INT,
+    CONSTRAINT fk_batch_product
+        FOREIGN KEY (product_id)
+        REFERENCES products(product_id)
+        ON DELETE CASCADE,
+    CONSTRAINT fk_batch_supplier
+        FOREIGN KEY (supplier_id)
+        REFERENCES suppliers(supplier_id)
+        ON DELETE SET NULL
+);
+
+-- LOW STOCK ALERTS
+CREATE TABLE low_stock_alerts (
+    alert_id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT NOT NULL,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_alert_product
+        FOREIGN KEY (product_id)
+        REFERENCES products(product_id)
+        ON DELETE CASCADE
+);
+
+-- ACTIVITY HISTORY
+CREATE TABLE activity_history (
+    activity_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    action_name VARCHAR(255) NOT NULL, --add delete update
+    entity_type VARCHAR(50) NOT NULL, --product category ...
+    entity_id INT NOT NULL,
+    previous_value VARCHAR(255),
+    new_value VARCHAR(255),
+    affected_attribute VARCHAR(255), --example name 
+    activity_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    
+    CONSTRAINT fk_activity_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(user_id)
+        ON DELETE CASCADE,
+
+    -- Indexes => added for faster search / access 
+    INDEX idx_activity_user_date (user_id, activity_date),
+    INDEX idx_activity_entity (entity_type, entity_id),
+    INDEX idx_activity_date (activity_date)
 );
