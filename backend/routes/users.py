@@ -150,7 +150,7 @@ def create_user():
         data = request.get_json()
         
         # Validate required fields
-        required_fields = ['username', 'full_name', 'phone_number', 'email', 'password', 'role']
+        required_fields = ['username', 'full_name', 'phone_number', 'email', 'password', 'role', 'is_active']
         for field in required_fields:
             if not data.get(field):
                 return jsonify({'error': f'{field} is required'}), 400
@@ -183,10 +183,10 @@ def create_user():
                 username, full_name, phone_number, email, password_hash, is_active, role,
                 can_view_products, can_add_product, can_edit_product,
                 can_delete_product, can_view_activity_history, can_set_alerts
-            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, )
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """, (
             data['username'], data['full_name'], data['phone_number'], data['email'],
-            password_hash, data['role'], data['is_active'],
+            password_hash, data['is_active'], data['role'],
             permissions['can_view_products'], permissions['can_add_product'], 
             permissions['can_edit_product'], permissions['can_delete_product'],
             permissions['can_view_activity_history'], permissions['can_set_alerts']
