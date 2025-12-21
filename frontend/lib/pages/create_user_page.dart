@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:se_project/services/user_api.dart';
 import '../widgets/page_header.dart';
 import '../widgets/primary_button.dart';
 
@@ -23,7 +24,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
   final _phoneController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  
+
   String _selectedRole = 'POS Worker';
   bool _isPasswordVisible = false;
   bool _isLoading = false;
@@ -38,12 +39,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
     'Set alerts': false,
   };
 
-  final List<String> _roles = [
-    'POS Worker',
-    'Admin',
-    'Manager',
-    'Inventory Staff'
-  ];
+  final List<String> _roles = ['POS Worker', 'Admin', 'Inventory Manager'];
 
   // Role-based default permissions
   final Map<String, List<String>> _rolePermissions = {
@@ -56,7 +52,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
       'View activities history',
       'Set alerts'
     ],
-    'Manager': [
+    'Inventory Manager': [
       'View products list',
       'Add product',
       'Edit product',
@@ -87,11 +83,73 @@ class _CreateUserPageState extends State<CreateUserPage> {
     super.dispose();
   }
 
+  void _handleSave() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    if (_selectedRole == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please select a role'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    final data = {
+      "username": _usernameController.text,
+      "full_name": _fullNameController.text,
+      "phone_number": _phoneController.text,
+      "email": _emailController.text,
+      "password": _passwordController.text,
+      "role": _selectedRole,
+      "is_active": true
+    };
+
+    try {
+      await UserApi.addUser(data);
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Product added successfully'),
+            backgroundColor: Colors.green,
+          ),
+        );
+
+        _resetForm();
+        widget.onUserCreated.call();
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to add user: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  void _resetForm() {
+    _formKey.currentState!.reset();
+    _usernameController.clear();
+    _fullNameController.clear();
+    _phoneController.clear();
+    _emailController.clear();
+    _passwordController.clear();
+
+    setState(() {
+      _selectedRole = 'POS Worker';
+      _permissions.updateAll((key, value) => false);
+      _updatePermissionsForRole(_selectedRole);
+    });
+  }
+
   void _updatePermissionsForRole(String role) {
     setState(() {
       // Reset all permissions
       _permissions.updateAll((key, value) => false);
-      
+
       // Set default permissions for selected role
       final defaultPerms = _rolePermissions[role] ?? [];
       for (var perm in defaultPerms) {
@@ -134,31 +192,6 @@ class _CreateUserPageState extends State<CreateUserPage> {
     return null;
   }
 
-  void _handleCreateUser() async {
-    if (_formKey.currentState!.validate()) {
-      setState(() => _isLoading = true);
-
-      // Simulate API call
-      await Future.delayed(const Duration(seconds: 2));
-
-      if (mounted) {
-        setState(() => _isLoading = false);
-        
-        // Show success message
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('User created successfully!'),
-            backgroundColor: Colors.green,
-            duration: Duration(seconds: 2),
-          ),
-        );
-
-        // Call the callback
-        widget.onUserCreated();
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -181,7 +214,8 @@ class _CreateUserPageState extends State<CreateUserPage> {
                   backgroundColor: Colors.grey[200],
                   foregroundColor: Colors.black87,
                   elevation: 0,
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 ),
               ),
             ],
@@ -215,7 +249,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
                           ),
                         ),
                         const SizedBox(height: 24),
-                        
+
                         Row(
                           children: [
                             Expanded(
@@ -223,7 +257,8 @@ class _CreateUserPageState extends State<CreateUserPage> {
                                 controller: _usernameController,
                                 label: 'Username',
                                 hint: 'Enter username',
-                                validator: (val) => _validateRequired(val, 'Username'),
+                                validator: (val) =>
+                                    _validateRequired(val, 'Username'),
                               ),
                             ),
                             const SizedBox(width: 16),
@@ -232,13 +267,14 @@ class _CreateUserPageState extends State<CreateUserPage> {
                                 controller: _fullNameController,
                                 label: 'Full Name',
                                 hint: 'Enter full name',
-                                validator: (val) => _validateRequired(val, 'Full name'),
+                                validator: (val) =>
+                                    _validateRequired(val, 'Full name'),
                               ),
                             ),
                           ],
                         ),
                         const SizedBox(height: 16),
-                        
+
                         Row(
                           children: [
                             Expanded(
@@ -246,7 +282,8 @@ class _CreateUserPageState extends State<CreateUserPage> {
                                 controller: _phoneController,
                                 label: 'Phone Number',
                                 hint: '+1234567890',
-                                validator: (val) => _validateRequired(val, 'Phone number'),
+                                validator: (val) =>
+                                    _validateRequired(val, 'Phone number'),
                               ),
                             ),
                             const SizedBox(width: 16),
@@ -261,7 +298,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
                           ],
                         ),
                         const SizedBox(height: 16),
-                        
+
                         _buildPasswordField(),
                         const SizedBox(height: 4),
                         Text(
@@ -271,11 +308,11 @@ class _CreateUserPageState extends State<CreateUserPage> {
                             color: Colors.grey[600],
                           ),
                         ),
-                        
+
                         const SizedBox(height: 40),
                         const Divider(),
                         const SizedBox(height: 32),
-                        
+
                         // Role & Permissions Section
                         Text(
                           'Role & Permissions',
@@ -286,7 +323,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
                           ),
                         ),
                         const SizedBox(height: 24),
-                        
+
                         _buildRoleDropdown(),
                         const SizedBox(height: 4),
                         Text(
@@ -296,9 +333,9 @@ class _CreateUserPageState extends State<CreateUserPage> {
                             color: Colors.grey[600],
                           ),
                         ),
-                        
+
                         const SizedBox(height: 24),
-                        
+
                         Text(
                           'Permissions',
                           style: TextStyle(
@@ -308,23 +345,24 @@ class _CreateUserPageState extends State<CreateUserPage> {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        
+
                         _buildPermissionsSection(),
-                        
+
                         const SizedBox(height: 40),
-                        
+
                         // Action Buttons
                         Row(
                           children: [
                             PrimaryButton(
-                              onPressed: _isLoading ? null : _handleCreateUser,
+                              onPressed: _isLoading ? null : _handleSave,
                               isLoading: _isLoading,
                               size: ButtonSize.lg,
                               child: const Text('Create User'),
                             ),
                             const SizedBox(width: 16),
                             PrimaryButton(
-                              onPressed: _isLoading ? null : widget.onNavigateBack,
+                              onPressed:
+                                  _isLoading ? null : widget.onNavigateBack,
                               variant: ButtonVariant.secondary,
                               size: ButtonSize.lg,
                               child: const Text('Cancel'),
