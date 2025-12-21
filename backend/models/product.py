@@ -1,5 +1,6 @@
 from db import get_connection, close_connection
 from mysql.connector import Error
+from models.low_stock_alert import LowStockAlert
 
 class Product:
     @staticmethod
@@ -151,6 +152,9 @@ class Product:
             
             cursor.execute(query, values)
             connection.commit()
+            # Handle alerts to be added automatically
+            LowStockAlert.create_if_needed(product_id)
+            LowStockAlert.remove_if_resolved(product_id)
             
             # Fetch the updated product
             cursor.execute("SELECT * FROM products WHERE product_id = %s", (product_id,))
