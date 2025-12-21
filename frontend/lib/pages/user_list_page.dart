@@ -9,7 +9,7 @@ import '../services/user_api.dart';
 
 class UserListPage extends StatefulWidget {
   final VoidCallback onNavigateToCreate;
-  final ValueChanged<String> onNavigateToEdit;
+  final ValueChanged<String>? onNavigateToEdit;
 
   const UserListPage({
     super.key,
@@ -301,10 +301,9 @@ class _UserListPageState extends State<UserListPage> {
                                               label: 'Filter by Role',
                                               value: _selectedRole,
                                               items: const [
-                                                'All Roles',
                                                 'Admin',
-                                                'Stock Manager',
-                                                'POS Worker',
+                                                'Inventory Manager',
+                                                'Sales Clerk'
                                               ],
                                               onChanged: (value) {
                                                 setState(() {
@@ -499,9 +498,13 @@ class _UserListPageState extends State<UserListPage> {
                                                           icon: const Icon(
                                                               Icons.edit,
                                                               size: 18),
-                                                          onPressed: () => widget
-                                                              .onNavigateToEdit(
-                                                                  user['id']),
+                                                          onPressed: () {
+                                                            widget
+                                                                .onNavigateToEdit
+                                                                ?.call(user[
+                                                                        'user_id']
+                                                                    .toString());
+                                                          },
                                                           color: AppTheme
                                                               .primaryBlue,
                                                           tooltip: 'Edit',

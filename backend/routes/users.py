@@ -98,7 +98,7 @@ def get_users():
             conn.close()
         return jsonify({'error': str(err)}), 500
 
-@users_bp.route('/users/<int:user_id>', methods=['GET'])
+@users_bp.route('/<int:user_id>', methods=['GET'])
 def get_user(user_id):
     """Get a specific user by ID"""
     conn = None
