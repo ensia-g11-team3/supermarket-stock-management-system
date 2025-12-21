@@ -305,46 +305,7 @@ class _EditUserPageState extends State<EditUserPage> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 24),
-                    // Password Card
-                    Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(24),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Password',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                                color: AppTheme.textPrimary,
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            Row(
-                              children: [
-                                Checkbox(
-                                  value: _resetPassword,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _resetPassword = value ?? false;
-                                    });
-                                  },
-                                ),
-                                const Text(
-                                  'Reset password',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: AppTheme.textPrimary,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    
                     const SizedBox(height: 24),
                     // Role & Permissions Card
                     Card(
