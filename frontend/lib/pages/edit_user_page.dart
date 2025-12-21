@@ -192,7 +192,7 @@ class _EditUserPageState extends State<EditUserPage> {
                                         color: AppTheme.textSecondary,
                                       ),
                                     ),
-                                    const StatusBadge(isActive: 1),
+                                    const StatusBadge(isActive: true),
                                     const SizedBox(width: 24),
                                     const Text(
                                       'Created: ',
