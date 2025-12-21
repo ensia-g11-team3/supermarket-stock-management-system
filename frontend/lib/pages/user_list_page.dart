@@ -181,19 +181,19 @@ class _UserListPageState extends State<UserListPage> {
               child: const Text('Cancel'),
             ),
             PrimaryButton(
-              onPressed: () {
-                setState(() {
-                  _users.removeWhere((u) => u['id'] == user['id']);
-                });
-                Navigator.of(context).pop();
+              onPressed: () async {
+                Navigator.pop(context); // Close dialog
+
+                await UserApi.deleteUser(int.parse(user['user_id'].toString()));
+
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content:
-                        Text('User "${user['username']}" has been deleted'),
-                    backgroundColor: Colors.green,
-                    behavior: SnackBarBehavior.floating,
+                    content: Text('${user['full_name']} deleted'),
+                    backgroundColor: Colors.green.withOpacity(0.8),
                   ),
                 );
+
+                _fetchUsers(); // Refresh list
               },
               variant: ButtonVariant.danger,
               child: const Text('Delete User'),
