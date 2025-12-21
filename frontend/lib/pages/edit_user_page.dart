@@ -27,6 +27,7 @@ class _EditUserPageState extends State<EditUserPage> {
   late TextEditingController _fullNameController;
   late TextEditingController _phoneController;
   late TextEditingController _emailController;
+  String? createdAt;
 
   String? _selectedRole;
   bool? _resetPassword;
@@ -53,6 +54,7 @@ class _EditUserPageState extends State<EditUserPage> {
         _phoneController.text = user["phone_number"]!;
         _emailController.text = user["email"]!;
         _selectedRole = user["role"]!;
+        createdAt = user["created_at"]!;
       });
     } catch (e) {
       if (mounted) {
@@ -199,9 +201,9 @@ class _EditUserPageState extends State<EditUserPage> {
                                         color: AppTheme.textSecondary,
                                       ),
                                     ),
-                                    const Text(
-                                      'January 15, 2024',
-                                      style: TextStyle(
+                                    Text(
+                                      createdAt ?? ' ',
+                                      style: const TextStyle(
                                         fontSize: 14,
                                         color: AppTheme.textPrimary,
                                       ),
