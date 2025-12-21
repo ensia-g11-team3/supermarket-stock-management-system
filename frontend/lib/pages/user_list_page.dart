@@ -488,7 +488,8 @@ class _UserListPageState extends State<UserListPage> {
                                                       role: user['role'])),
                                                   _TableCell(StatusBadge(
                                                       isActive:
-                                                          user['is_active'])),
+                                                          user['is_active'] ==
+                                                              1)),
                                                   _TableCell(
                                                     Row(
                                                       mainAxisSize:
