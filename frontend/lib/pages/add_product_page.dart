@@ -24,9 +24,9 @@ class _AddProductPageState extends State<AddProductPage> {
   final _sellingPriceController = TextEditingController(text: '0.00');
   final _buyingPriceController = TextEditingController(text: '0.00');
   final _descriptionController = TextEditingController();
+  final _supplierController = TextEditingController();
 
   String? _selectedCategory;
-  String? _selectedSupplier;
 
   final List<String> _categories = [
     'Electronics',
@@ -34,13 +34,6 @@ class _AddProductPageState extends State<AddProductPage> {
     'Food & Beverages',
     'Office Supplies',
     'Furniture',
-  ];
-
-  final List<String> _suppliers = [
-    'Supplier A',
-    'Supplier B',
-    'Supplier C',
-    'Supplier D',
   ];
 
   @override
@@ -58,10 +51,10 @@ class _AddProductPageState extends State<AddProductPage> {
   void _handleSave() async {
     if (!_formKey.currentState!.validate()) return;
 
-    if (_selectedCategory == null || _selectedSupplier == null) {
+    if (_selectedCategory == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Please select a category and supplier'),
+          content: Text('Please select a category'),
           backgroundColor: Colors.red,
         ),
       );
@@ -72,7 +65,7 @@ class _AddProductPageState extends State<AddProductPage> {
       "name": _productNameController.text,
       "barcode": _barcodeController.text,
       "category": _selectedCategory,
-      "supplier": _selectedSupplier,
+      "supplier": _supplierController.text,
       "qty": int.parse(_quantityController.text),
       "product_threshold": int.parse(_minStockController.text),
       "buying_price": double.parse(_buyingPriceController.text),
@@ -112,11 +105,11 @@ class _AddProductPageState extends State<AddProductPage> {
     _minStockController.text = '10';
     _buyingPriceController.text = '0.00';
     _sellingPriceController.text = '0.00';
+    _supplierController.clear();
     _descriptionController.clear();
 
     setState(() {
       _selectedCategory = null;
-      _selectedSupplier = null;
     });
   }
 
@@ -175,16 +168,10 @@ class _AddProductPageState extends State<AddProductPage> {
                                 isRequired: true,
                               ),
                               const SizedBox(height: 20),
-                              _buildDropdown(
+                              _buildTextField(
+                                controller: _supplierController,
                                 label: 'Supplier',
-                                value: _selectedSupplier,
-                                items: _suppliers,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _selectedSupplier = value;
-                                  });
-                                },
-                                isRequired: true,
+                                hint: 'Enter supplier name',
                               ),
                             ],
                           ),
