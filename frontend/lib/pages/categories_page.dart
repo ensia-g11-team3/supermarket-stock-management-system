@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/page_header.dart';
 import '../widgets/primary_button.dart';
+import '../services/categories_api.dart';
 
 class CategoriesPage extends StatefulWidget {
   const CategoriesPage({super.key});
@@ -10,49 +11,79 @@ class CategoriesPage extends StatefulWidget {
 }
 
 class _CategoriesPageState extends State<CategoriesPage> {
-  List<Category> categories = [
-    Category('Beverages', 'Drinks and beverages', 45),
-    Category('Snacks', 'Chips, cookies, and snacks', 32),
-    Category('Dairy', 'Milk, cheese, and dairy products', 28),
-    Category('Bakery', 'Bread, pastries, and baked goods', 19),
-    Category('Frozen', 'Frozen foods and ice cream', 24),
-  ];
+  List<Map<String, dynamic>> _categories = [];
+  bool _isLoading = true;
 
-  int get totalProducts => categories.fold(0, (sum, cat) => sum + cat.count);
-  double get avgProducts => categories.isEmpty ? 0 : totalProducts / categories.length;
+  @override
+  void initState() {
+    super.initState();
+    _fetchCategories();
+  }
+
+  Future<void> _fetchCategories() async {
+    try {
+      final data = await CategoryApi.getCategories();
+      setState(() {
+        _categories = data;
+        _isLoading = false;
+      });
+    } catch (e) {
+      debugPrint("Error loading categories: $e");
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  int get totalProducts => _categories.fold<int>(
+        0,
+        (sum, cat) => sum + ((cat['product_count'] ?? 0) as int),
+      );
+
+  double get avgProducts =>
+      _categories.isEmpty ? 0 : totalProducts / _categories.length;
 
   void _addCategory() {
     showDialog(
       context: context,
       builder: (context) => _CategoryDialog(
-        onSave: (name, desc) {
-          setState(() {
-            categories.add(Category(name, desc, 0));
+        onSave: (name, desc) async {
+          await CategoryApi.addCategory({
+            "category_name": name,
+            "category_description": desc,
           });
+          _fetchCategories();
         },
       ),
     );
   }
 
   void _editCategory(int index) {
+    final cat = _categories[index];
+
     showDialog(
       context: context,
       builder: (context) => _CategoryDialog(
-        category: categories[index],
-        onSave: (name, desc) {
-          setState(() {
-            categories[index].name = name;
-            categories[index].description = desc;
-          });
+        categoryName: cat['category_name'],
+        categoryDescription: cat['category_description'],
+        onSave: (name, desc) async {
+          await CategoryApi.updateCategory(
+            cat['category_id'],
+            {
+              "category_name": name,
+              "category_description": desc,
+            },
+          );
+          _fetchCategories();
         },
       ),
     );
   }
 
-  void _deleteCategory(int index) {
-    setState(() {
-      categories.removeAt(index);
-    });
+  void _deleteCategory(int index) async {
+    final cat = _categories[index];
+    await CategoryApi.deleteCategory(cat['category_id']);
+    _fetchCategories();
   }
 
   @override
@@ -107,7 +138,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
               Expanded(
                 child: _StatCard(
                   title: 'Total Categories',
-                  value: '${categories.length}',
+                  value: '${_categories.length}',
                   valueColor: Colors.black,
                 ),
               ),
@@ -145,7 +176,8 @@ class _CategoriesPageState extends State<CategoriesPage> {
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     decoration: BoxDecoration(
-                      border: Border(bottom: BorderSide(color: Colors.grey[300]!)),
+                      border:
+                          Border(bottom: BorderSide(color: Colors.grey[300]!)),
                     ),
                     child: Row(
                       children: [
@@ -198,11 +230,12 @@ class _CategoriesPageState extends State<CategoriesPage> {
                   ),
                   Expanded(
                     child: ListView.builder(
-                      itemCount: categories.length,
+                      itemCount: _categories.length,
                       itemBuilder: (context, index) {
-                        final cat = categories[index];
+                        final cat = _categories[index];
                         return Container(
-                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 16),
                           decoration: BoxDecoration(
                             border: Border(
                               bottom: BorderSide(color: Colors.grey[200]!),
@@ -213,27 +246,29 @@ class _CategoriesPageState extends State<CategoriesPage> {
                               Expanded(
                                 flex: 2,
                                 child: Text(
-                                  cat.name,
+                                  cat['category_name'],
                                   style: TextStyle(fontSize: 14),
                                 ),
                               ),
                               Expanded(
                                 flex: 3,
                                 child: Text(
-                                  cat.description,
-                                  style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+                                  cat['category_description'],
+                                  style: TextStyle(
+                                      fontSize: 14, color: Colors.grey[700]),
                                 ),
                               ),
                               Expanded(
                                 flex: 1,
                                 child: Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 4),
                                   decoration: BoxDecoration(
                                     color: Colors.blue[50],
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(
-                                    '${cat.count} items',
+                                    '${cat['product_count']} items',
                                     style: TextStyle(
                                       fontSize: 12,
                                       color: Colors.blue[700],
@@ -256,7 +291,8 @@ class _CategoriesPageState extends State<CategoriesPage> {
                                     ),
                                     SizedBox(width: 8),
                                     IconButton(
-                                      icon: Icon(Icons.delete_outline, size: 18),
+                                      icon:
+                                          Icon(Icons.delete_outline, size: 18),
                                       onPressed: () => _deleteCategory(index),
                                       color: Colors.red,
                                       padding: EdgeInsets.all(8),
@@ -329,10 +365,15 @@ class _StatCard extends StatelessWidget {
 }
 
 class _CategoryDialog extends StatefulWidget {
-  final Category? category;
+  final String? categoryName;
+  final String? categoryDescription;
   final Function(String, String) onSave;
 
-  const _CategoryDialog({this.category, required this.onSave});
+  const _CategoryDialog({
+    this.categoryName,
+    this.categoryDescription,
+    required this.onSave,
+  });
 
   @override
   State<_CategoryDialog> createState() => _CategoryDialogState();
@@ -345,14 +386,16 @@ class _CategoryDialogState extends State<_CategoryDialog> {
   @override
   void initState() {
     super.initState();
-    nameController = TextEditingController(text: widget.category?.name ?? '');
-    descController = TextEditingController(text: widget.category?.description ?? '');
+    nameController = TextEditingController(text: widget.categoryName ?? '');
+    descController =
+        TextEditingController(text: widget.categoryDescription ?? '');
   }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(widget.category == null ? 'Add Category' : 'Edit Category'),
+      title:
+          Text(widget.categoryName == null ? 'Add Category' : 'Edit Category'),
       content: SizedBox(
         width: 400,
         child: Column(
@@ -384,7 +427,8 @@ class _CategoryDialogState extends State<_CategoryDialog> {
         ),
         PrimaryButton(
           onPressed: () {
-            if (nameController.text.isNotEmpty && descController.text.isNotEmpty) {
+            if (nameController.text.isNotEmpty &&
+                descController.text.isNotEmpty) {
               widget.onSave(nameController.text, descController.text);
               Navigator.pop(context);
             }
