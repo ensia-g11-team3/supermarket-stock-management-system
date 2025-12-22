@@ -42,7 +42,12 @@ class _EditUserPageState extends State<EditUserPage> {
     'Set alerts': true,
   };
 
-  final List<String> _roles = ['Admin', 'Inventory Manager', 'Sales Clerk'];
+  final List<String> _roles = [
+    'Admin',
+    'Inventory Manager',
+    'Inventory Staff',
+    'POS worker / Sales Clerk'
+  ];
 
   Future<void> _loadUserData() async {
     try {

@@ -25,7 +25,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  String _selectedRole = 'POS Worker';
+  String _selectedRole = 'Inventory Manager';
   bool _isPasswordVisible = false;
   bool _isLoading = false;
 
@@ -39,11 +39,16 @@ class _CreateUserPageState extends State<CreateUserPage> {
     'Set alerts': false,
   };
 
-  final List<String> _roles = ['POS Worker', 'Admin', 'Inventory Manager'];
+  final List<String> _roles = [
+    'Admin',
+    'Inventory Manager',
+    'Inventory Staff',
+    'POS worker / Sales Clerk'
+  ];
 
   // Role-based default permissions
   final Map<String, List<String>> _rolePermissions = {
-    'POS Worker': ['View products list'],
+    'POS worker / Sales Clerk': ['View products list'],
     'Admin': [
       'View products list',
       'Add product',
