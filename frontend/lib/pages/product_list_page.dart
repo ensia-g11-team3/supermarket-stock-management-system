@@ -228,9 +228,9 @@ class _ProductListPageState extends State<ProductListPage> {
                                         ),
                                       ),
                                       _TableCell(Text(
-                                          '\$${double.tryParse(product['buying_price'].toString()) ?? 0.0}')),
+                                          '${double.tryParse(product['buying_price'].toString()) ?? 0.0} DA')),
                                       _TableCell(Text(
-                                          '\$${double.tryParse(product['selling_price'].toString()) ?? 0.0}')),
+                                          '${double.tryParse(product['selling_price'].toString()) ?? 0.0} DA')),
                                       _TableCell(Text(product['supplier'])),
                                       _TableCell(
                                         Row(
