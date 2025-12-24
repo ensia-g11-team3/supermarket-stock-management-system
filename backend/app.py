@@ -7,7 +7,6 @@ from routes.categories import categories_bp
 from routes.transactions import transactions_bp
 from routes.product_routes import product_bp
 from routes.low_stock_alerts import low_stock_alerts_bp
-from routes.thresholds import thresholds_bp
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -25,7 +24,6 @@ app.register_blueprint(transactions_bp, url_prefix='/api/transactions')
 app.register_blueprint(activity_bp, url_prefix='/api/activities')
 app.register_blueprint(product_bp, url_prefix='/api/products')
 app.register_blueprint(low_stock_alerts_bp, url_prefix="/api/low-stock-alerts")
-app.register_blueprint(thresholds_bp, url_prefix='/api/thresholds')
 
 if __name__ == "__main__":
     app.run(debug=True)
