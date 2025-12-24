@@ -111,20 +111,19 @@ CREATE TABLE low_stock_alerts (
 CREATE TABLE activity_history (
     activity_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
-    action_name VARCHAR(255) NOT NULL, --add delete update
-    entity_type VARCHAR(50) NOT NULL, --product category ...
+    action_name VARCHAR(255) NOT NULL,
+    entity_type VARCHAR(50) NOT NULL,
     entity_id INT NOT NULL,
     previous_value VARCHAR(255),
     new_value VARCHAR(255),
-    affected_attribute VARCHAR(255), --example name 
+    affected_attribute VARCHAR(255),
     activity_date DATETIME DEFAULT CURRENT_TIMESTAMP,
     
     CONSTRAINT fk_activity_user
         FOREIGN KEY (user_id)
         REFERENCES users(user_id)
         ON DELETE CASCADE,
-
-    -- Indexes => added for faster search / access 
+        
     INDEX idx_activity_user_date (user_id, activity_date),
     INDEX idx_activity_entity (entity_type, entity_id),
     INDEX idx_activity_date (activity_date)
