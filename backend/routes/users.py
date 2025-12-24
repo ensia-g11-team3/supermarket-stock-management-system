@@ -168,6 +168,7 @@ def create_user():
         # Hash password
         password_hash = bcrypt.hashpw(data['password'].encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
         
+        print(f"Hash to store: '{password_hash}'")
         # Set permissions based on role or use provided permissions
         permissions = _get_default_permissions(data['role'])
         
@@ -325,3 +326,63 @@ def _get_default_permissions(role):
         })
     
     return permissions
+
+@users_bp.route('/login', methods=['POST'])
+def login():
+    conn = None
+    try:
+        data = request.get_json()
+
+        username = data.get('username')
+        password = data.get('password')
+
+        if not username or not password:
+            return jsonify({'error': 'Username and password are required'}), 400
+
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        cursor.execute("""
+            SELECT 
+                user_id, username, full_name, role, password_hash, is_active,
+                can_view_products, can_add_product, can_edit_product,
+                can_delete_product, can_view_activity_history, can_set_alerts
+            FROM users
+            WHERE username = %s
+        """, (username,))
+
+        user = cursor.fetchone()
+        cursor.close()
+        conn.close()
+
+        if not user:
+            return jsonify({'error': 'Account does not exist'}), 404
+
+        if not user['is_active']:
+            return jsonify({'error': 'Account is disabled'}), 403
+
+        if not bcrypt.checkpw(
+            password.encode('utf-8'),
+            user['password_hash'].strip().encode('utf-8')
+           ):
+           return jsonify({'error': 'Incorrect password'}), 401
+
+        # Remove password hash before returning
+        del user['password_hash']
+
+        # Convert permissions to boolean
+        for key in [
+            'can_view_products', 'can_add_product', 'can_edit_product',
+            'can_delete_product', 'can_view_activity_history', 'can_set_alerts'
+        ]:
+            user[key] = bool(user[key])
+
+        return jsonify({
+            'message': 'Login successful',
+            'user': user
+        }), 200
+
+    except Exception as err:
+        if conn:
+            conn.close()
+        return jsonify({'error': str(err)}), 500
