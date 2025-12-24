@@ -18,9 +18,9 @@ class Product:
             
             query = """
                 INSERT INTO products 
-                (barcode, name, category, qty, 
+                (barcode, name, category, qty, product_threshold, 
                  selling_price, buying_price, supplier, status, description)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             """
             
             values = (
@@ -28,10 +28,13 @@ class Product:
                 data.get('name'),
                 data.get('category'),
                 data.get('qty', 0),
+                data.get('product_threshold'),
                 float(data.get('selling_price', 0.0)), 
                 float(data.get('buying_price', 0.0)),
                 data.get('supplier'),
-                'Out of stock' if data.get('qty', 0) == 0 else 'In stock',
+                'Out of stock' if data.get('qty', 0) == 0 else \
+                   'Low stock' if data.get('qty', 0) <= data.get('product_threshold', 0) else \
+                   'In stock',
                 data.get('description')
             )
             
@@ -131,7 +134,7 @@ class Product:
             update_fields = []
             values = []
             
-            allowed_fields = ['barcode', 'name', 'category', 'qty', 
+            allowed_fields = ['barcode', 'name', 'category', 'qty', 'product_threshold', 
                             'selling_price', 'buying_price', 'supplier', 
                             'status', 'description']
             

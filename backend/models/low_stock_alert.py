@@ -6,7 +6,7 @@ class LowStockAlert:
     @staticmethod
     def create_if_needed(product_id):
         """
-        Create an alert if product qty is low (<=10) and no active alert exists
+        Create an alert if product qty < threshold and no active alert exists
         """
         connection = get_connection()
         if not connection:
@@ -16,18 +16,17 @@ class LowStockAlert:
             cursor = connection.cursor(dictionary=True)
 
             query = """
-                SELECT qty
+                SELECT qty, product_threshold
                 FROM products
                 WHERE product_id = %s
             """
             cursor.execute(query, (product_id,))
             product = cursor.fetchone()
 
-            if not product:
+            if not product or product['product_threshold'] is None:
                 return False
 
-            # Use a fixed threshold of 10 for low stock
-            if product['qty'] >= 10:
+            if product['qty'] >= product['product_threshold']:
                 return False
 
             cursor.execute("""
@@ -53,7 +52,7 @@ class LowStockAlert:
     @staticmethod
     def remove_if_resolved(product_id):
         """
-        Deactivate alert if qty >= 10
+        Deactivate alert if qty >= threshold
         """
         connection = get_connection()
         if not connection:
@@ -63,18 +62,17 @@ class LowStockAlert:
             cursor = connection.cursor(dictionary=True)
 
             query = """
-                SELECT qty
+                SELECT qty, product_threshold
                 FROM products
                 WHERE product_id = %s
             """
             cursor.execute(query, (product_id,))
             product = cursor.fetchone()
 
-            if not product:
+            if not product or product['product_threshold'] is None:
                 return False
 
-            # Use a fixed threshold of 10 for low stock
-            if product['qty'] < 10:
+            if product['qty'] < product['product_threshold']:
                 return False
 
             cursor.execute("""
@@ -110,6 +108,7 @@ class LowStockAlert:
                     p.name,
                     p.category,
                     p.qty,
+                    p.product_threshold,
                     p.unit
                 FROM low_stock_alerts a
                 JOIN products p ON a.product_id = p.product_id

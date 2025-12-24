@@ -25,6 +25,7 @@ CREATE TABLE products (
     category VARCHAR(50) NOT NULL,
     quantity_in_stock INT NOT NULL DEFAULT 0,
     qty INT NOT NULL DEFAULT 0,
+    product_threshold INT,
     unit VARCHAR(20) NOT NULL DEFAULT 'piece',
     buying_price DECIMAL(10,2) NOT NULL,
     selling_price DECIMAL(10,2) NOT NULL,
@@ -128,5 +129,3 @@ CREATE TABLE activity_history (
     INDEX idx_activity_entity (entity_type, entity_id),
     INDEX idx_activity_date (activity_date)
 );
-
-
