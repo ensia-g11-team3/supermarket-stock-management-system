@@ -51,12 +51,14 @@ class _ProductListPageState extends State<ProductListPage> {
 
   List<Map<String, dynamic>> get _filteredProducts {
     return _products.where((Map<String, dynamic> product) {
+      final String name = product['name']?.toString().toLowerCase() ?? '';
+      final String barcode = product['barcode']?.toString() ?? '';
+      final int qty = product['qty'] ?? 0;
+      final int? threshold = product['product_threshold'];
+
       final bool matchesSearch = _searchQuery.isEmpty ||
-          product['name']
-              .toString()
-              .toLowerCase()
-              .contains(_searchQuery.toLowerCase()) ||
-          product['barcode'].toString().contains(_searchQuery);
+          name.contains(_searchQuery.toLowerCase()) ||
+          barcode.contains(_searchQuery);
 
       final bool matchesCategory = _selectedCategory == 'All Categories' ||
           product['category'] == _selectedCategory;
@@ -64,13 +66,15 @@ class _ProductListPageState extends State<ProductListPage> {
       final bool matchesStockLevel =
           _selectedStockLevel == 'All Stock Levels' ||
               (_selectedStockLevel == 'In Stock' &&
-                  product['qty']! > product['product_threshold']!) ||
+                  (threshold != null ? qty > threshold : qty > 10)) ||
               (_selectedStockLevel == 'Low Stock' &&
-                  product['qty']! <= product['product_threshold']! &&
-                  product['qty']! > product['product_threshold']! / 2) ||
+                  (threshold != null
+                      ? (qty <= threshold && qty > threshold / 2)
+                      : (qty <= 10 && qty > 5))) ||
               (_selectedStockLevel == 'Very Low Stock' &&
-                  product['qty']! <= product['product_threshold']! / 2 &&
-                  product['qty']! > 0);
+                  (threshold != null
+                      ? (qty <= threshold / 2 && qty > 0)
+                      : (qty <= 5 && qty > 0)));
 
       return matchesSearch && matchesCategory && matchesStockLevel;
     }).toList();
@@ -224,7 +228,10 @@ class _ProductListPageState extends State<ProductListPage> {
                                         StockBadge(
                                           stock: product['qty'],
                                           minStock:
-                                              product['product_threshold'],
+                                              product['product_threshold'] !=
+                                                      null
+                                                  ? product['product_threshold']
+                                                  : 0,
                                         ),
                                       ),
                                       _TableCell(Text(
