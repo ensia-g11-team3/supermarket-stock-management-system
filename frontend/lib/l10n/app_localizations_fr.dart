@@ -57,7 +57,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get navCategories => 'Catégories';
 
   @override
-  String get navSuppliers => 'Fournisseurs & Commandes';
+  String get navSuppliers => 'Fournisseurs';
 
   @override
   String get navLowStock => 'Alertes de stock bas';
@@ -72,9 +72,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get logout => 'Déconnexion';
 
   @override
-  String loggedInAs(String role) {
-    return 'Connecté en tant que $role';
-  }
+  String get loggedInAs => 'Connecté en tant que ';
 
   @override
   String get posTitle => 'Point de Vente';
