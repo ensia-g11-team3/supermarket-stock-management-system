@@ -43,7 +43,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
     'Admin',
     'Inventory Manager',
     'Inventory Staff',
-    'POS worker / Sales Clerk'
+    'POS worker'
   ];
 
   // Role-based default permissions

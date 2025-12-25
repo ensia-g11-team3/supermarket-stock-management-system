@@ -46,7 +46,7 @@ class _EditUserPageState extends State<EditUserPage> {
     'Admin',
     'Inventory Manager',
     'Inventory Staff',
-    'POS worker / Sales Clerk'
+    'POS worker'
   ];
 
   Future<void> _loadUserData() async {
