@@ -72,9 +72,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get logout => 'Logout';
 
   @override
-  String loggedInAs(String role) {
-    return 'Logged in as $role';
-  }
+  String get loggedInAs => 'Logged in as ';
 
   @override
   String get posTitle => 'Point of Sale';

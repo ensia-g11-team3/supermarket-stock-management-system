@@ -18,13 +18,13 @@
   "navProductList": "Liste des produits",
   "navAddProduct": "Ajouter un produit",
   "navCategories": "Catégories",
-  "navSuppliers": "Fournisseurs & Commandes",
+  "navSuppliers": "Fournisseurs",
   "navLowStock": "Alertes de stock bas",
   "navStockMovement": "Mouvement de stock",
   "navUserManagement": "Gestion des utilisateurs",
   "logout": "Déconnexion",
-  "loggedInAs": "Connecté en tant que {role}",
-
+  "loggedInAs": "Connecté en tant que ",
+  
   "posTitle": "Point de Vente",
   "posScanSearch": "Scannez ou recherchez des produits à ajouter au panier",
   "searchItem": "Scanner ou rechercher un article...",

@@ -23,12 +23,7 @@
   "navStockMovement": "Stock Movement",
   "navUserManagement": "User Management",
   "logout": "Logout",
-  "loggedInAs": "Logged in as {role}",
-  "@loggedInAs": {
-    "placeholders": {
-      "role": { "type": "String" }
-    }
-  },
+  "loggedInAs": "Logged in as ",
 
   "posTitle": "Point of Sale",
   "posScanSearch": "Scan or search for products to add to cart",

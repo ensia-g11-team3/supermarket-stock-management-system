@@ -224,8 +224,8 @@ abstract class AppLocalizations {
   /// No description provided for @loggedInAs.
   ///
   /// In en, this message translates to:
-  /// **'Logged in as {role}'**
-  String loggedInAs(String role);
+  /// **'Logged in as '**
+  String get loggedInAs;
 
   /// No description provided for @posTitle.
   ///
