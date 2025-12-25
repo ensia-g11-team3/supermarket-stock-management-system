@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:se_project/l10n/app_localizations.dart';
 import 'package:se_project/services/login_api.dart';
 import '../widgets/primary_button.dart';
 
@@ -42,7 +43,7 @@ class _LoginPageState extends State<LoginPage> {
                       fontSize: 32,
                       fontWeight: FontWeight.w300,
                       color: Color(0xFFCBA052))),
-              Text('Point of Sale System',
+              Text(AppLocalizations.of(context)!.posSubtitle,
                   style: TextStyle(color: Colors.grey[600], fontSize: 14)),
               SizedBox(height: 40),
               Container(
@@ -62,18 +63,19 @@ class _LoginPageState extends State<LoginPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Center(
-                        child: Text('Welcome Back',
+                        child: Text(AppLocalizations.of(context)!.loginWelcome,
                             style: TextStyle(
                                 fontSize: 24,
                                 fontStyle: FontStyle.italic,
                                 color: Colors.grey[700]))),
                     SizedBox(height: 32),
-                    Text('Username', style: TextStyle(color: Colors.grey[700])),
+                    Text(AppLocalizations.of(context)!.username,
+                        style: TextStyle(color: Colors.grey[700])),
                     SizedBox(height: 8),
                     TextField(
                       controller: _userCtrl,
                       decoration: InputDecoration(
-                        hintText: 'Enter your username',
+                        hintText: AppLocalizations.of(context)!.enterUsername,
                         hintStyle: TextStyle(color: Colors.grey[400]),
                         prefixIcon:
                             Icon(Icons.person_outline, color: Colors.grey[400]),
@@ -85,13 +87,14 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     SizedBox(height: 20),
-                    Text('Password', style: TextStyle(color: Colors.grey[700])),
+                    Text(AppLocalizations.of(context)!.password,
+                        style: TextStyle(color: Colors.grey[700])),
                     SizedBox(height: 8),
                     TextField(
                       controller: _passCtrl,
                       obscureText: true,
                       decoration: InputDecoration(
-                        hintText: 'Enter your password',
+                        hintText: AppLocalizations.of(context)!.enterPassword,
                         hintStyle: TextStyle(color: Colors.grey[400]),
                         prefixIcon:
                             Icon(Icons.lock_outline, color: Colors.grey[400]),
@@ -116,14 +119,10 @@ class _LoginPageState extends State<LoginPage> {
                                     onChanged: (v) =>
                                         setState(() => _remember = v!))),
                             SizedBox(width: 8),
-                            Text('Remember me',
+                            Text(AppLocalizations.of(context)!.rememberMe,
                                 style: TextStyle(color: Colors.grey[700])),
                           ],
                         ),
-                        TextButton(
-                            onPressed: () {},
-                            child: Text('Forgot password?',
-                                style: TextStyle(color: Color(0xFFCBA052)))),
                       ],
                     ),
                     SizedBox(height: 24),
@@ -150,7 +149,7 @@ class _LoginPageState extends State<LoginPage> {
                           }
                         },
                         size: ButtonSize.lg,
-                        child: const Text('Sign In'),
+                        child: Text(AppLocalizations.of(context)!.signIn),
                       ),
                     ),
                   ],
