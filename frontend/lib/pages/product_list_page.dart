@@ -61,16 +61,18 @@ class _ProductListPageState extends State<ProductListPage> {
       final bool matchesCategory = _selectedCategory == 'All Categories' ||
           product['category'] == _selectedCategory;
 
+      final int qty = product['qty'] ?? 0;
+      final int threshold = product['product_threshold'] ?? 0;
+
       final bool matchesStockLevel =
           _selectedStockLevel == 'All Stock Levels' ||
-              (_selectedStockLevel == 'In Stock' &&
-                  product['qty']! > product['product_threshold']!) ||
+              (_selectedStockLevel == 'In Stock' && qty > threshold) ||
               (_selectedStockLevel == 'Low Stock' &&
-                  product['qty']! <= product['product_threshold']! &&
-                  product['qty']! > product['product_threshold']! / 2) ||
+                  qty <= threshold &&
+                  qty > threshold / 2) ||
               (_selectedStockLevel == 'Very Low Stock' &&
-                  product['qty']! <= product['product_threshold']! / 2 &&
-                  product['qty']! > 0);
+                  qty <= threshold / 2 &&
+                  qty > 0);
 
       return matchesSearch && matchesCategory && matchesStockLevel;
     }).toList();
@@ -222,15 +224,15 @@ class _ProductListPageState extends State<ProductListPage> {
                                       _TableCell(Text(product['category'])),
                                       _TableCell(
                                         StockBadge(
-                                          stock: product['qty'],
+                                          stock: product['qty'] ?? 0,
                                           minStock:
-                                              product['product_threshold'],
+                                              product['product_threshold'] ?? 0,
                                         ),
                                       ),
                                       _TableCell(Text(
-                                          '\$${double.tryParse(product['buying_price'].toString()) ?? 0.0}')),
+                                          '${double.tryParse(product['buying_price'].toString()) ?? 0.0} DA')),
                                       _TableCell(Text(
-                                          '\$${double.tryParse(product['selling_price'].toString()) ?? 0.0}')),
+                                          '${double.tryParse(product['selling_price'].toString()) ?? 0.0} DA')),
                                       _TableCell(Text(product['supplier'])),
                                       _TableCell(
                                         Row(

@@ -26,13 +26,12 @@ class _EditProductPageState extends State<EditProductPage> {
   late TextEditingController _productNameController;
   late TextEditingController _barcodeController;
   late TextEditingController _quantityController;
-  late TextEditingController _minStockController;
   late TextEditingController _buyingPriceController;
   late TextEditingController _sellingPriceController;
   late TextEditingController _descriptionController;
+  late TextEditingController _supplierController;
 
   String? _selectedCategory;
-  String? _selectedSupplier;
 
   final List<String> _categories = [
     'Beverages',
@@ -46,19 +45,6 @@ class _EditProductPageState extends State<EditProductPage> {
     'Furniture',
   ];
 
-  final List<String> _suppliers = [
-    'Beverage Co.',
-    'Snack Corp',
-    'Dairy Farms',
-    'Local Bakery',
-    'Coffee Import',
-    'Supplier A',
-    'Supplier B',
-    'Supplier C',
-    'Supplier D',
-    'Local Farm',
-  ];
-
   Future<void> _loadProductData() async {
     try {
       final response = await ProductApi.getProductById(widget.productId);
@@ -68,12 +54,11 @@ class _EditProductPageState extends State<EditProductPage> {
         _productNameController.text = product["name"];
         _barcodeController.text = product["barcode"];
         _quantityController.text = product["qty"].toString();
-        _minStockController.text = product["product_threshold"].toString();
         _buyingPriceController.text = product["buying_price"].toString();
         _sellingPriceController.text = product["selling_price"].toString();
         _descriptionController.text = product["description"] ?? "";
+        _supplierController.text = product["supplier"];
         _selectedCategory = product["category"];
-        _selectedSupplier = product["supplier"];
       });
     } catch (e) {
       if (mounted) {
@@ -95,10 +80,10 @@ class _EditProductPageState extends State<EditProductPage> {
     _productNameController = TextEditingController();
     _barcodeController = TextEditingController();
     _quantityController = TextEditingController();
-    _minStockController = TextEditingController();
     _sellingPriceController = TextEditingController();
     _buyingPriceController = TextEditingController();
     _descriptionController = TextEditingController();
+    _supplierController = TextEditingController();
 
     // Load product data
     _loadProductData();
@@ -109,20 +94,20 @@ class _EditProductPageState extends State<EditProductPage> {
     _productNameController.dispose();
     _barcodeController.dispose();
     _quantityController.dispose();
-    _minStockController.dispose();
     _sellingPriceController.dispose();
     _buyingPriceController.dispose();
     _descriptionController.dispose();
+    _supplierController.dispose();
     super.dispose();
   }
 
   void _handleSave() async {
     if (!_formKey.currentState!.validate()) return;
 
-    if (_selectedCategory == null || _selectedSupplier == null) {
+    if (_selectedCategory == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Please select a category and supplier'),
+          content: Text('Please select a category'),
           backgroundColor: Colors.red,
         ),
       );
@@ -133,9 +118,8 @@ class _EditProductPageState extends State<EditProductPage> {
       "name": _productNameController.text,
       "barcode": _barcodeController.text,
       "category": _selectedCategory,
-      "supplier": _selectedSupplier,
+      "supplier": _supplierController.text,
       "qty": int.parse(_quantityController.text),
-      "product_threshold": int.parse(_minStockController.text),
       "buying_price": double.parse(_buyingPriceController.text),
       "selling_price": double.parse(_sellingPriceController.text),
       "description": _descriptionController.text,
@@ -227,16 +211,10 @@ class _EditProductPageState extends State<EditProductPage> {
                                 isRequired: true,
                               ),
                               const SizedBox(height: 20),
-                              _buildDropdown(
+                              _buildTextField(
+                                controller: _supplierController,
                                 label: 'Supplier',
-                                value: _selectedSupplier,
-                                items: _suppliers,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _selectedSupplier = value;
-                                  });
-                                },
-                                isRequired: true,
+                                hint: 'Enter supplier name',
                               ),
                             ],
                           ),
@@ -263,25 +241,8 @@ class _EditProductPageState extends State<EditProductPage> {
                               ),
                               const SizedBox(height: 20),
                               _buildTextField(
-                                controller: _minStockController,
-                                label: 'Minimum Stock Level',
-                                hint: '10',
-                                keyboardType: TextInputType.number,
-                                isRequired: true,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter minimum stock level';
-                                  }
-                                  if (int.tryParse(value) == null) {
-                                    return 'Please enter a valid number';
-                                  }
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(height: 20),
-                              _buildTextField(
                                 controller: _sellingPriceController,
-                                label: 'Selling Price (\$)',
+                                label: 'Selling Price (DA)',
                                 hint: '0.00',
                                 keyboardType:
                                     const TextInputType.numberWithOptions(
@@ -300,7 +261,7 @@ class _EditProductPageState extends State<EditProductPage> {
                               const SizedBox(height: 20),
                               _buildTextField(
                                 controller: _buyingPriceController,
-                                label: 'Buying Price (\$)',
+                                label: 'Buying Price (DA)',
                                 hint: '0.00',
                                 keyboardType:
                                     const TextInputType.numberWithOptions(

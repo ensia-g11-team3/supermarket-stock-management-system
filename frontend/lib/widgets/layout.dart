@@ -96,7 +96,7 @@ class Layout extends StatelessWidget {
                       ),
                       _NavItem(
                         icon: Icons.notifications_active,
-                        label: 'Alerts',
+                        label: 'Low Stock Alerts',
                         isSelected: currentPage == 'alerts',
                         onTap: () => onNavigate('alerts'),
                       ),
@@ -105,14 +105,6 @@ class Layout extends StatelessWidget {
                         label: 'Stock Movement',
                         isSelected: currentPage == 'movements',
                         onTap: () => onNavigate('movements'),
-                      ),
-                      _NavItem(
-                        icon: Icons.tune,
-                        label: 'Thresholds',
-                        isSelected: currentPage == 'thresholds' ||
-                            currentPage == 'add-threshold' ||
-                            currentPage == 'edit-threshold',
-                        onTap: () => onNavigate('thresholds'),
                       ),
                       _NavItem(
                         icon: Icons.people,

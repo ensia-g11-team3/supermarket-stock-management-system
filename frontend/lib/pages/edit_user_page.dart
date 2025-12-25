@@ -28,6 +28,7 @@ class _EditUserPageState extends State<EditUserPage> {
   late TextEditingController _phoneController;
   late TextEditingController _emailController;
   String? createdAt;
+  int? status;
 
   String? _selectedRole;
   bool? _resetPassword;
@@ -55,6 +56,7 @@ class _EditUserPageState extends State<EditUserPage> {
         _emailController.text = user["email"]!;
         _selectedRole = user["role"]!;
         createdAt = user["created_at"]!;
+        status = user["is_active"]!;
       });
     } catch (e) {
       if (mounted) {
@@ -192,7 +194,7 @@ class _EditUserPageState extends State<EditUserPage> {
                                         color: AppTheme.textSecondary,
                                       ),
                                     ),
-                                    const StatusBadge(isActive: true),
+                                    StatusBadge(isActive: status == 1),
                                     const SizedBox(width: 24),
                                     const Text(
                                       'Created: ',
@@ -305,7 +307,7 @@ class _EditUserPageState extends State<EditUserPage> {
                         ),
                       ),
                     ),
-                    
+
                     const SizedBox(height: 24),
                     // Role & Permissions Card
                     Card(

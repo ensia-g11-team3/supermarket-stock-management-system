@@ -60,5 +60,88 @@ class ApiService {
       throw Exception('Error creating transaction: $e');
     }
   }
+
+  // GET /api/transactions - Fetch transactions with optional filters
+  static Future<Map<String, dynamic>> getTransactions({
+    int page = 1,
+    int limit = 10,
+    String? search,
+    String? date,
+    String? paymentMethod,
+    int? workerId,
+  }) async {
+    try {
+      // Build query parameters
+      final queryParams = {
+        'page': page.toString(),
+        'limit': limit.toString(),
+      };
+
+      if (search != null && search.isNotEmpty) {
+        queryParams['search'] = search;
+      }
+      if (date != null && date.isNotEmpty) {
+        queryParams['date'] = date;
+      }
+      if (paymentMethod != null && paymentMethod != 'All Methods') {
+        queryParams['payment_method'] = paymentMethod;
+      }
+      if (workerId != null) {
+        queryParams['worker_id'] = workerId.toString();
+      }
+
+      final uri = Uri.parse('$baseUrl/api/transactions').replace(
+        queryParameters: queryParams,
+      );
+
+      final response = await http.get(uri, headers: _headers);
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        throw Exception('Failed to load transactions: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Error fetching transactions: $e');
+    }
+  }
+
+  // GET /api/transactions/<id> - Fetch transaction details
+  static Future<Map<String, dynamic>> getTransactionDetails(int transactionId) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/api/transactions/$transactionId'),
+        headers: _headers,
+      );
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        final errorData = json.decode(response.body);
+        throw Exception(errorData['error'] ?? 'Failed to load transaction details');
+      }
+    } catch (e) {
+      throw Exception('Error fetching transaction details: $e');
+    }
+  }
+
+  // POST /api/transactions/<id>/return - Process transaction return
+  static Future<Map<String, dynamic>> returnTransaction(int transactionId) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/api/transactions/$transactionId/return'),
+        headers: _headers,
+      );
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        final errorData = json.decode(response.body);
+        throw Exception(errorData['error'] ?? 'Failed to return transaction');
+      }
+    } catch (e) {
+      throw Exception('Error returning transaction: $e');
+    }
+  }
 }
 
