@@ -82,8 +82,60 @@ class _CategoriesPageState extends State<CategoriesPage> {
 
   void _deleteCategory(int index) async {
     final cat = _categories[index];
-    await CategoryApi.deleteCategory(cat['category_id']);
-    _fetchCategories();
+
+    // Show confirmation dialog
+    bool? shouldDelete = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Confirm Delete'),
+        content: Text(
+          'Are you sure you want to delete "${cat['category_name']}"? '
+          'This action cannot be undone.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(
+              'Cancel',
+              style: TextStyle(color: Colors.grey[700]),
+            ),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(
+              'Delete',
+              style: TextStyle(color: Colors.red),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    // If user confirms deletion (returns true), proceed with delete
+    if (shouldDelete == true) {
+      try {
+        await CategoryApi.deleteCategory(cat['category_id']);
+        _fetchCategories();
+
+        // Optional: Show a success snackbar
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Category deleted successfully'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } catch (e) {
+        debugPrint("Error deleting category: $e");
+
+        // Optional: Show error snackbar
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to delete category'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   @override
