@@ -32,7 +32,7 @@
   "cartEmpty": "Le panier est vide",
   "addProductsToStart": "Ajoutez des produits pour commencer une vente",
   "barcodeInput": "Entrée code-barres",
-  "orderSummary": "Récapitulatif de la commande",
+  "orderSummary": "Récapitulatif de l'achat ",
   "subtotal": "Sous-total",
   "tax_10": "Taxe(10%)",
   "cash":"Espèces",

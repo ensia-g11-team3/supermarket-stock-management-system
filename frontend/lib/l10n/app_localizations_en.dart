@@ -96,7 +96,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get barcodeInput => 'Barcode Input';
 
   @override
-  String get orderSummary => 'Order Summary';
+  String get orderSummary => 'Purchase Summary';
 
   @override
   String get subtotal => 'Subtotal';
