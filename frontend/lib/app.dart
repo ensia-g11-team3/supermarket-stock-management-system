@@ -17,6 +17,10 @@ import 'pages/user_list_page.dart';
 import 'pages/create_user_page.dart';
 import 'pages/edit_user_page.dart';
 
+//localization: added by Nour
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'l10n/app_localizations.dart';
+
 class StockifyApp extends StatelessWidget {
   const StockifyApp({super.key});
 
@@ -24,6 +28,19 @@ class StockifyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Stockify',
+      supportedLocales: const [
+        Locale('fr'),
+        Locale('en'),
+      ],
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      //Make french default (client request)
+      locale: const Locale('fr'),
+      //Make french default (client request)
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       home: const AppRouter(),
@@ -144,4 +161,3 @@ class _AppRouterState extends State<AppRouter> {
     );
   }
 }
-

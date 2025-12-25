@@ -1,0 +1,113 @@
+{
+  "@@locale": "en",
+  "appName": "Stockify",
+  "posSubtitle": "Inventory Management System",
+  
+  "loginWelcome": "Welcome Back",
+  "username": "Username",
+  "enterUsername": "Enter your username",
+  "password": "Password",
+  "enterPassword": "Enter your password",
+  "rememberMe": "Remember me",
+  "forgotPassword": "Forgot password?",
+  "signIn": "Sign In",
+
+  "navDashboard": "Dashboard",
+  "navPos": "Sales (POS)",
+  "navSalesHistory": "Sales History",
+  "navProductList": "Product List",
+  "navAddProduct": "Add Product",
+  "navCategories": "Categories",
+  "navSuppliers": "Suppliers & Orders",
+  "navLowStock": "Low Stock Alerts",
+  "navStockMovement": "Stock Movement",
+  "navUserManagement": "User Management",
+  "logout": "Logout",
+  "loggedInAs": "Logged in as {role}",
+  "@loggedInAs": {
+    "placeholders": {
+      "role": { "type": "String" }
+    }
+  },
+
+  "posTitle": "Point of Sale",
+  "posScanSearch": "Scan or search for products to add to cart",
+  "searchItem": "Scan or search item...",
+  "cartItems": "Cart Items",
+  "cartEmpty": "Cart is empty",
+  "addProductsToStart": "Add products to start a sale",
+  "barcodeInput": "Barcode Input",
+  "orderSummary": "Order Summary",
+  "subtotal": "Subtotal",
+
+  "productTitle": "Product List",
+  "productSubtitle": "Manage your inventory products.",
+  "addNewProduct": "Add New Product",
+  "editProduct": "Edit Product",
+  "updateDetails": "Update product details",
+  "filters": "Filters",
+  "nameOrBarcode": "Name or barcode...",
+  "allCategories": "All Categories",
+  "allStockLevels": "All Stock Levels",
+
+  "productName": "Product Name",
+  "enterProductName": "Enter product name",
+  "barcode": "Barcode",
+  "barcodeNumber": "Barcode Number",
+  "enterBarcode": "Enter barcode number",
+  "category": "Category",
+  "selectCategory": "Select category",
+  "supplier": "Supplier",
+  "enterSupplier": "Enter supplier name",
+  "initialQuantity": "Initial Quantity",
+  "buyingPrice": "Buying Price (DA)",
+  "sellingPrice": "Selling Price (DA)",
+  "description": "Description",
+  "enterDescription": "Enter product description (optional)",
+  "stock": "Stock",
+  "actions": "Actions",
+
+  "saveChanges": "Save Changes",
+  "saveProduct": "Save Product",
+  "cancel": "Cancel",
+  "resetForm": "Reset Form",
+  "backToProductList": "Back to Product List",
+
+  "categoryTitle": "Category Management",
+  "categorySubtitle": "Organize products by categories",
+  "addCategory": "Add Category",
+  "editCategory": "Edit Category",
+  "categoryName": "Category Name",
+  "productCount": "Product Count",
+  "items": "{count} items",
+  "@items": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "salesHistoryTitle": "Sales History",
+  "salesHistorySubtitle": "View and manage all transactions",
+  "exportReport": "Export Report",
+  "searchTransaction": "Search Transaction",
+  "transactionId": "Transaction ID",
+  "date": "Date",
+  "paymentMethod": "Payment Method",
+  "allMethods": "All Methods",
+  "cashier": "Cashier",
+  "allCashiers": "All Cashiers",
+  "totalTransactions": "Total Transactions",
+  "totalSales": "Total Sales",
+  "averageTransaction": "Average Transaction",
+  "dateTime": "Date & Time",
+  "status": "Status",
+
+  "deleteProduct": "Delete Product",
+  "deleteConfirm": "Are you sure you want to delete {productName}?",
+  "@deleteConfirm": {
+    "placeholders": {
+      "productName": { "type": "String" }
+    }
+  },
+  "delete": "Delete"
+}
