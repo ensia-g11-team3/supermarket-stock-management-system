@@ -96,10 +96,22 @@ class AppLocalizationsFr extends AppLocalizations {
   String get barcodeInput => 'Entrée code-barres';
 
   @override
-  String get orderSummary => 'Récapitulatif de la commande';
+  String get orderSummary => 'Récapitulatif de l\'achat ';
 
   @override
   String get subtotal => 'Sous-total';
+
+  @override
+  String get tax_10 => 'Taxe(10%)';
+
+  @override
+  String get cash => 'Espèces';
+
+  @override
+  String get card => 'Carte';
+
+  @override
+  String get complete_transaction => 'Finaliser la transaction';
 
   @override
   String get productTitle => 'Liste des Produits';

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:se_project/l10n/app_localizations.dart';
 import 'dart:convert';
 import '../theme/app_theme.dart';
 import '../widgets/page_header.dart';
@@ -410,9 +411,9 @@ class _POSPageState extends State<POSPage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const PageHeader(
-            title: 'Point of Sale',
-            description: 'Scan or search for products to add to cart',
+          PageHeader(
+            title: AppLocalizations.of(context)!.posTitle,
+            description: AppLocalizations.of(context)!.posScanSearch,
           ),
           Expanded(
             child: Padding(
@@ -439,7 +440,8 @@ class _POSPageState extends State<POSPage> {
                                   focusNode: _searchFocusNode,
                                   onChanged: _onSearchChanged,
                                   decoration: InputDecoration(
-                                    hintText: 'Scan or search item...',
+                                    hintText: AppLocalizations.of(context)!
+                                        .searchItem,
                                     prefixIcon: const Icon(
                                       Icons.search,
                                       color: Color(0xFF9CA3AF),
@@ -595,8 +597,8 @@ class _POSPageState extends State<POSPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Cart Items',
+          Text(
+            AppLocalizations.of(context)!.cartItems,
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w600,
@@ -606,20 +608,20 @@ class _POSPageState extends State<POSPage> {
           const SizedBox(height: 16),
           Expanded(
             child: cart.isEmpty
-                ? const Center(
+                ? Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.shopping_cart_outlined,
                             size: 64, color: AppTheme.textSecondary),
                         SizedBox(height: 16),
-                        Text('Cart is empty',
+                        Text(AppLocalizations.of(context)!.cartEmpty,
                             style: TextStyle(
                                 fontSize: 16,
                                 color: AppTheme.textSecondary,
                                 fontWeight: FontWeight.w500)),
                         SizedBox(height: 8),
-                        Text('Add products to start a sale',
+                        Text(AppLocalizations.of(context)!.addProductsToStart,
                             style: TextStyle(
                                 fontSize: 14, color: AppTheme.textSecondary)),
                       ],
@@ -656,8 +658,8 @@ class _POSPageState extends State<POSPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Barcode Input',
+        Text(
+          AppLocalizations.of(context)!.barcodeInput,
           style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
@@ -667,7 +669,7 @@ class _POSPageState extends State<POSPage> {
         TextField(
           controller: _barcodeController,
           decoration: InputDecoration(
-            hintText: 'Enter barcode...',
+            hintText: AppLocalizations.of(context)!.enterBarcode,
             hintStyle: const TextStyle(color: AppTheme.textSecondary),
             filled: true,
             fillColor: AppTheme.inputBackground,
@@ -704,39 +706,32 @@ class _POSPageState extends State<POSPage> {
       children: [
         Row(children: [
           _KeypadButton('7', onTap: () => _handleKeypadTap('7')),
-          const SizedBox(width: 12),
+          const SizedBox(width: 10),
           _KeypadButton('8', onTap: () => _handleKeypadTap('8')),
-          const SizedBox(width: 12),
+          const SizedBox(width: 10),
           _KeypadButton('9', onTap: () => _handleKeypadTap('9')),
-          const SizedBox(width: 12),
+          const SizedBox(width: 10),
           _KeypadButton('←', onTap: () => _handleKeypadTap('←')),
         ]),
-        const SizedBox(height: 12),
+        const SizedBox(height: 10),
         Row(children: [
           _KeypadButton('4', onTap: () => _handleKeypadTap('4')),
-          const SizedBox(width: 12),
+          const SizedBox(width: 10),
           _KeypadButton('5', onTap: () => _handleKeypadTap('5')),
-          const SizedBox(width: 12),
+          const SizedBox(width: 10),
           _KeypadButton('6', onTap: () => _handleKeypadTap('6')),
-          const SizedBox(width: 12),
+          const SizedBox(width: 10),
           _KeypadButton('C', onTap: () => _handleKeypadTap('C')),
         ]),
-        const SizedBox(height: 12),
+        const SizedBox(height: 10),
         Row(children: [
           _KeypadButton('1', onTap: () => _handleKeypadTap('1')),
-          const SizedBox(width: 12),
+          const SizedBox(width: 10),
           _KeypadButton('2', onTap: () => _handleKeypadTap('2')),
-          const SizedBox(width: 12),
+          const SizedBox(width: 10),
           _KeypadButton('3', onTap: () => _handleKeypadTap('3')),
-          const SizedBox(width: 60),
-        ]),
-        const SizedBox(height: 12),
-        Row(children: [
-          const SizedBox(width: 60),
-          const SizedBox(width: 12),
+          const SizedBox(width: 10),
           _KeypadButton('0', onTap: () => _handleKeypadTap('0')),
-          const SizedBox(width: 12),
-          const SizedBox(width: 60),
         ]),
       ],
     );
@@ -747,17 +742,20 @@ class _POSPageState extends State<POSPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Text(
-            'Order Summary',
+          Text(
+            AppLocalizations.of(context)!.orderSummary,
             style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
                 color: AppTheme.textPrimary),
           ),
           const SizedBox(height: 24),
-          _SummaryRow(label: 'Subtotal', value: _state.subtotal),
+          _SummaryRow(
+              label: AppLocalizations.of(context)!.subtotal,
+              value: _state.subtotal),
           const SizedBox(height: 8),
-          _SummaryRow(label: 'Tax (10%)', value: _state.tax),
+          _SummaryRow(
+              label: AppLocalizations.of(context)!.tax_10, value: _state.tax),
           const Divider(height: 32),
           _SummaryRow(label: 'Total', value: _state.total, isTotal: true),
           const SizedBox(height: 24),
@@ -776,13 +774,13 @@ class _POSPageState extends State<POSPage> {
                         valueColor:
                             AlwaysStoppedAnimation<Color>(Colors.white)),
                   )
-                : const Row(
+                : Row(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(Icons.check_circle, size: 20),
                       SizedBox(width: 8),
-                      Text('Complete Transaction'),
+                      Text(AppLocalizations.of(context)!.complete_transaction),
                     ],
                   ),
           ),
@@ -825,10 +823,10 @@ class _POSPageState extends State<POSPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            'Payment Method',
+            AppLocalizations.of(context)!.paymentMethod,
             style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
@@ -838,9 +836,9 @@ class _POSPageState extends State<POSPage> {
         const SizedBox(height: 12),
         Row(
           children: [
-            buildOption('cash', 'Cash'),
+            buildOption('cash', AppLocalizations.of(context)!.cash),
             const SizedBox(width: 12),
-            buildOption('card', 'Card'),
+            buildOption('card', AppLocalizations.of(context)!.card),
           ],
         ),
       ],
@@ -862,7 +860,7 @@ class _KeypadButton extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(8),
         child: Container(
-          height: 50,
+          height: 40,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(8),
