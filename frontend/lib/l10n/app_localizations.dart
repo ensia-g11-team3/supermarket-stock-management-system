@@ -281,6 +281,30 @@ abstract class AppLocalizations {
   /// **'Subtotal'**
   String get subtotal;
 
+  /// No description provided for @tax_10.
+  ///
+  /// In en, this message translates to:
+  /// **'Tax(10%)'**
+  String get tax_10;
+
+  /// No description provided for @cash.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash'**
+  String get cash;
+
+  /// No description provided for @card.
+  ///
+  /// In en, this message translates to:
+  /// **'Card'**
+  String get card;
+
+  /// No description provided for @complete_transaction.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete Transaction'**
+  String get complete_transaction;
+
   /// No description provided for @productTitle.
   ///
   /// In en, this message translates to:

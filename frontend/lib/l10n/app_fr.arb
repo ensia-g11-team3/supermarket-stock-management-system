@@ -24,7 +24,7 @@
   "navUserManagement": "Gestion des utilisateurs",
   "logout": "Déconnexion",
   "loggedInAs": "Connecté en tant que ",
-  
+
   "posTitle": "Point de Vente",
   "posScanSearch": "Scannez ou recherchez des produits à ajouter au panier",
   "searchItem": "Scanner ou rechercher un article...",
@@ -34,6 +34,10 @@
   "barcodeInput": "Entrée code-barres",
   "orderSummary": "Récapitulatif de la commande",
   "subtotal": "Sous-total",
+  "tax_10": "Taxe(10%)",
+  "cash":"Espèces",
+  "card":"Carte",
+  "complete_transaction": "Finaliser la transaction",
 
   "productTitle": "Liste des Produits",
   "productSubtitle": "Gérez vos produits en stock.",

@@ -102,6 +102,18 @@ class AppLocalizationsFr extends AppLocalizations {
   String get subtotal => 'Sous-total';
 
   @override
+  String get tax_10 => 'Taxe(10%)';
+
+  @override
+  String get cash => 'Espèces';
+
+  @override
+  String get card => 'Carte';
+
+  @override
+  String get complete_transaction => 'Finaliser la transaction';
+
+  @override
   String get productTitle => 'Liste des Produits';
 
   @override

@@ -34,6 +34,10 @@
   "barcodeInput": "Barcode Input",
   "orderSummary": "Order Summary",
   "subtotal": "Subtotal",
+  "tax_10": "Tax(10%)",
+  "cash":"Cash",
+  "card":"Card",
+  "complete_transaction": "Complete Transaction",
 
   "productTitle": "Product List",
   "productSubtitle": "Manage your inventory products.",
