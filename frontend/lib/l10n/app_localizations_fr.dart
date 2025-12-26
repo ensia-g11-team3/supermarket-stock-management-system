@@ -141,6 +141,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get allStockLevels => 'Tous les niveaux de stock';
 
   @override
+  String get edit => 'Modifier';
+
+  @override
   String get productName => 'Nom du produit';
 
   @override
@@ -154,6 +157,18 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get enterBarcode => 'Entrez le numéro de code-barres';
+
+  @override
+  String get stockLevel => 'Niveau de stock';
+
+  @override
+  String get inStock => 'En stock';
+
+  @override
+  String get lowStock => 'Stock faible';
+
+  @override
+  String get veryLowStock => 'Stock très faible';
 
   @override
   String get category => 'Catégorie';
@@ -187,6 +202,42 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get actions => 'Actions';
+
+  @override
+  String get selectCategoryMsg => 'Veuillez sélectionner une catégorie';
+
+  @override
+  String get productAddedMsg => 'Produit ajouté avec succès';
+
+  @override
+  String get failedToLoadProductMsg => 'Échec de l’ajout du produit : ';
+
+  @override
+  String get enterProductDetails => 'Entrez les détails du produit à ajouter à l’inventaire';
+
+  @override
+  String get plzEnterProductName => 'Veuillez saisir le nom du produit';
+
+  @override
+  String get plzEnterInitialQty => 'Veuillez saisir la quantité initiale';
+
+  @override
+  String get plzEnterValidNum => 'Veuillez saisir un nombre valide';
+
+  @override
+  String get plzEnterPrice => 'Veuillez saisir le prix';
+
+  @override
+  String get plzEnterValidPrice => 'Veuillez saisir un prix valide';
+
+  @override
+  String get plzSelectCategory => 'Veuillez sélectionner une catégorie';
+
+  @override
+  String get productUpdatedMsg => 'Produit mis à jour avec succès !';
+
+  @override
+  String get failedToUpdateProductMsg => 'Échec de la mise à jour du produit :';
 
   @override
   String get saveChanges => 'Enregistrer les modifications';
@@ -275,10 +326,11 @@ class AppLocalizationsFr extends AppLocalizations {
   String get deleteProduct => 'Supprimer le produit';
 
   @override
-  String deleteConfirm(String productName) {
-    return 'Êtes-vous sûr de vouloir supprimer $productName ?';
-  }
+  String get deleteConfirm => 'Êtes-vous sûr de vouloir supprimer';
 
   @override
   String get delete => 'Supprimer';
+
+  @override
+  String get deleted => 'supprimé';
 }

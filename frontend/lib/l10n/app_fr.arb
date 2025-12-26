@@ -25,6 +25,19 @@
   "logout": "Déconnexion",
   "loggedInAs": "Connecté en tant que ",
 
+   "selectCategoryMsg": "Veuillez sélectionner une catégorie",
+  "productAddedMsg": "Produit ajouté avec succès",
+  "failedToLoadProductMsg": "Échec de l’ajout du produit : ",
+  "enterProductDetails": "Entrez les détails du produit à ajouter à l’inventaire",
+  "plzEnterProductName": "Veuillez saisir le nom du produit",
+  "plzEnterInitialQty": "Veuillez saisir la quantité initiale",
+  "plzEnterValidNum": "Veuillez saisir un nombre valide",
+  "plzEnterPrice": "Veuillez saisir le prix",
+  "plzEnterValidPrice": "Veuillez saisir un prix valide",
+  "plzSelectCategory": "Veuillez sélectionner une catégorie",
+  "productUpdatedMsg": "Produit mis à jour avec succès !",
+  "failedToUpdateProductMsg": "Échec de la mise à jour du produit :",
+
   "posTitle": "Point de Vente",
   "posScanSearch": "Scannez ou recherchez des produits à ajouter au panier",
   "searchItem": "Scanner ou rechercher un article...",
@@ -48,12 +61,17 @@
   "nameOrBarcode": "Nom ou code-barres...",
   "allCategories": "Toutes les catégories",
   "allStockLevels": "Tous les niveaux de stock",
+  "edit":"Modifier",
 
   "productName": "Nom du produit",
   "enterProductName": "Entrez le nom du produit",
   "barcode": "Code-barres",
   "barcodeNumber": "Numéro de code-barres",
   "enterBarcode": "Entrez le numéro de code-barres",
+  "stockLevel": "Niveau de stock",
+  "inStock": "En stock",
+  "lowStock": "Stock faible",
+  "veryLowStock": "Stock très faible",
   "category": "Catégorie",
   "selectCategory": "Sélectionner une catégorie",
   "supplier": "Fournisseur",
@@ -97,6 +115,7 @@
   "status": "Statut",
 
   "deleteProduct": "Supprimer le produit",
-  "deleteConfirm": "Êtes-vous sûr de vouloir supprimer {productName} ?",
-  "delete": "Supprimer"
+  "deleteConfirm": "Êtes-vous sûr de vouloir supprimer",
+  "delete": "Supprimer",
+  "deleted": "supprimé"
 }

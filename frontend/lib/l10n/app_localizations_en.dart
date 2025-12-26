@@ -141,6 +141,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get allStockLevels => 'All Stock Levels';
 
   @override
+  String get edit => 'Edit';
+
+  @override
   String get productName => 'Product Name';
 
   @override
@@ -154,6 +157,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get enterBarcode => 'Enter barcode number';
+
+  @override
+  String get stockLevel => 'Stock Level';
+
+  @override
+  String get inStock => 'In Stock';
+
+  @override
+  String get lowStock => 'Low Stock';
+
+  @override
+  String get veryLowStock => 'Very Low Stock';
 
   @override
   String get category => 'Category';
@@ -187,6 +202,42 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get actions => 'Actions';
+
+  @override
+  String get selectCategoryMsg => 'Please select a category';
+
+  @override
+  String get productAddedMsg => 'Product added successfully';
+
+  @override
+  String get failedToLoadProductMsg => 'Failed to add product: ';
+
+  @override
+  String get enterProductDetails => 'Enter product details to add to inventory';
+
+  @override
+  String get plzEnterProductName => 'Please enter product name';
+
+  @override
+  String get plzEnterInitialQty => 'Please enter initial quantity';
+
+  @override
+  String get plzEnterValidNum => 'Please enter a valid number';
+
+  @override
+  String get plzEnterPrice => 'Please enter price';
+
+  @override
+  String get plzEnterValidPrice => 'Please enter a valid price';
+
+  @override
+  String get plzSelectCategory => 'Please select a category';
+
+  @override
+  String get productUpdatedMsg => 'Product updated successfully!';
+
+  @override
+  String get failedToUpdateProductMsg => 'Failed to update product:';
 
   @override
   String get saveChanges => 'Save Changes';
@@ -275,10 +326,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deleteProduct => 'Delete Product';
 
   @override
-  String deleteConfirm(String productName) {
-    return 'Are you sure you want to delete $productName?';
-  }
+  String get deleteConfirm => 'Are you sure you want to delete';
 
   @override
   String get delete => 'Delete';
+
+  @override
+  String get deleted => 'deleted';
 }
