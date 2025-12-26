@@ -9,11 +9,14 @@ import '../services/product_api.dart';
 class ProductListPage extends StatefulWidget {
   final ValueChanged<String>? onNavigateToEdit;
   final VoidCallback? onNavigateToAdd;
+  final Function(String productId, String productName)? onNavigateToBatches;
+
 
   const ProductListPage({
     super.key,
     this.onNavigateToEdit,
     this.onNavigateToAdd,
+    this.onNavigateToBatches,
   });
 
   @override
@@ -195,7 +198,8 @@ class _ProductListPageState extends State<ProductListPage> {
                               3: FlexColumnWidth(1),
                               4: FlexColumnWidth(1),
                               5: FlexColumnWidth(2),
-                              6: FlexColumnWidth(1.5),
+                              6: FlexColumnWidth(2),
+                              7: FlexColumnWidth(1.5),
                             },
                             children: [
                               // Header Row
@@ -308,6 +312,17 @@ class _ProductListPageState extends State<ProductListPage> {
                                               },
                                               color: Colors.red,
                                               tooltip: 'Delete',
+                                            ),
+                                            IconButton(
+                                              icon: const Icon(Icons.inventory_2, size: 20),
+                                              onPressed: () {
+                                                widget.onNavigateToBatches?.call(
+                                                  product['product_id'].toString(),
+                                                  product['name'],
+                                                );
+                                              },
+                                              color: Colors.purple,
+                                              tooltip: 'View Batches',
                                             ),
                                           ],
                                         ),
