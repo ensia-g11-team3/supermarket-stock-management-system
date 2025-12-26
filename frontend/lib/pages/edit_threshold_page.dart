@@ -43,7 +43,8 @@ class _EditThresholdPageState extends State<EditThresholdPage> {
 
   Future<void> _loadThreshold() async {
     try {
-      final threshold = await ThresholdApi.getThresholdById(int.parse(widget.thresholdId));
+      final data = await ThresholdApi.getThresholdById(int.parse(widget.thresholdId));
+      final threshold = data['threshold'];
       setState(() {
         _threshold = threshold;
         _thresholdValueController.text = threshold['threshold_value'].toString();

@@ -33,8 +33,6 @@ class _AddThresholdPageState extends State<AddThresholdPage> {
   List<Map<String, dynamic>> _categories = [];
   bool _isLoading = true;
   bool _isSaving = false;
-  bool _categoryHasThreshold = false;
-  Map<String, dynamic>? _existingCategoryThreshold;
 
   @override
   void initState() {
@@ -83,46 +81,7 @@ class _AddThresholdPageState extends State<AddThresholdPage> {
     }
   }
 
-  Future<void> _checkCategoryThreshold(String categoryName) async {
-    try {
-      final result = await ThresholdApi.getCategoryThreshold(categoryName);
-      setState(() {
-        _categoryHasThreshold = result['exists'] ?? false;
-        _existingCategoryThreshold = result['threshold'];
-      });
 
-      if (_categoryHasThreshold && mounted) {
-        _showCategoryThresholdWarning();
-      }
-    } catch (e) {
-      print("Error checking category threshold: $e");
-    }
-  }
-
-  void _showCategoryThresholdWarning() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Row(
-          children: [
-            Icon(Icons.warning_amber_rounded, color: AppColors.orange),
-            SizedBox(width: 8),
-            Text('Category Threshold Exists'),
-          ],
-        ),
-        content: Text(
-          'This category already has a threshold of ${_existingCategoryThreshold?['threshold_value']}. '
-          'If you proceed, it will be updated to the new value and applied to all products in this category.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('OK'),
-          ),
-        ],
-      ),
-    );
-  }
 
   Future<void> _saveThreshold() async {
     if (!_formKey.currentState!.validate()) {
@@ -141,34 +100,6 @@ class _AddThresholdPageState extends State<AddThresholdPage> {
         const SnackBar(content: Text('Please select a category')),
       );
       return;
-    }
-
-    // If category has threshold, ask for confirmation
-    if (_thresholdType == 'category' && _categoryHasThreshold) {
-      final confirmed = await showDialog<bool>(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Confirm Update'),
-          content: Text(
-            'Are you sure you want to update the threshold for "${_selectedCategory}" '
-            'from ${_existingCategoryThreshold?['threshold_value']} to ${_thresholdValueController.text}?',
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: const Text('Update'),
-            ),
-          ],
-        ),
-      );
-
-      if (confirmed != true) {
-        return;
-      }
     }
 
     setState(() {
@@ -299,7 +230,6 @@ class _AddThresholdPageState extends State<AddThresholdPage> {
                     _thresholdType = value!;
                     _selectedProduct = null;
                     _selectedCategory = null;
-                    _categoryHasThreshold = false;
                   });
                 },
                 activeColor: AppTheme.primaryBlue,
@@ -316,7 +246,6 @@ class _AddThresholdPageState extends State<AddThresholdPage> {
                     _thresholdType = value!;
                     _selectedProduct = null;
                     _selectedCategory = null;
-                    _categoryHasThreshold = false;
                   });
                 },
                 activeColor: AppTheme.primaryBlue,
@@ -425,9 +354,6 @@ class _AddThresholdPageState extends State<AddThresholdPage> {
           onChanged: (value) {
             setState(() {
               _selectedCategory = value;
-              if (value != null) {
-                _checkCategoryThreshold(value);
-              }
             });
           },
           validator: (value) {

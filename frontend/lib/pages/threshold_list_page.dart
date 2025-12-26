@@ -24,7 +24,6 @@ class _ThresholdListPageState extends State<ThresholdListPage> {
   List<Map<String, dynamic>> _thresholds = [];
   bool _isLoading = true;
   String _searchQuery = '';
-  String _selectedType = 'All Types';
 
   @override
   void initState() {
@@ -35,8 +34,15 @@ class _ThresholdListPageState extends State<ThresholdListPage> {
   Future<void> _fetchThresholds() async {
     try {
       final data = await ThresholdApi.getThresholds();
+      final allThresholds = List<Map<String, dynamic>>.from(data['thresholds'] ?? []);
+      
+      // Filter to only show products with thresholds set (not null)
+      final thresholdsWithValues = allThresholds
+          .where((t) => t['threshold_value'] != null)
+          .toList();
+      
       setState(() {
-        _thresholds = List<Map<String, dynamic>>.from(data['thresholds'] ?? []);
+        _thresholds = thresholdsWithValues;
         _isLoading = false;
       });
     } catch (e) {
@@ -60,10 +66,7 @@ class _ThresholdListPageState extends State<ThresholdListPage> {
               .toLowerCase()
               .contains(_searchQuery.toLowerCase());
 
-      final matchesType = _selectedType == 'All Types' ||
-          threshold['threshold_type'] == _selectedType.toLowerCase();
-
-      return matchesSearch && matchesType;
+      return matchesSearch;
     }).toList();
   }
 
@@ -154,18 +157,7 @@ class _ThresholdListPageState extends State<ThresholdListPage> {
                                   ),
                                 ),
                                 const SizedBox(height: 16),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      flex: 2,
-                                      child: _buildSearchField(),
-                                    ),
-                                    const SizedBox(width: 16),
-                                    Expanded(
-                                      child: _buildTypeFilter(),
-                                    ),
-                                  ],
-                                ),
+                                _buildSearchField(),
                               ],
                             ),
                           ),
@@ -281,57 +273,9 @@ class _ThresholdListPageState extends State<ThresholdListPage> {
     );
   }
 
-  Widget _buildTypeFilter() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Type',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: AppTheme.textPrimary,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Container(
-          decoration: BoxDecoration(
-            color: AppTheme.inputBackground,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: AppTheme.borderColor),
-          ),
-          child: DropdownButtonFormField<String>(
-            value: _selectedType,
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: AppTheme.inputBackground,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide.none,
-              ),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            ),
-            items: ['All Types', 'Product', 'Category'].map((item) {
-              return DropdownMenuItem<String>(
-                value: item,
-                child: Text(item),
-              );
-            }).toList(),
-            onChanged: (value) {
-              setState(() {
-                _selectedType = value!;
-              });
-            },
-          ),
-        ),
-      ],
-    );
-  }
+
 
   Widget _buildStatsCard() {
-    final productThresholds = _thresholds.where((t) => t['threshold_type'] == 'product').length;
-    final categoryThresholds = _thresholds.where((t) => t['threshold_type'] == 'category').length;
-
     return Row(
       children: [
         Expanded(
@@ -339,27 +283,7 @@ class _ThresholdListPageState extends State<ThresholdListPage> {
             icon: Icons.inventory_2_outlined,
             iconColor: AppColors.primaryBlue,
             iconBgColor: AppColors.primaryBlue.withOpacity(0.1),
-            title: 'Product Thresholds',
-            value: productThresholds.toString(),
-          ),
-        ),
-        const SizedBox(width: 24),
-        Expanded(
-          child: _buildStatCard(
-            icon: Icons.category_outlined,
-            iconColor: AppColors.brownGold,
-            iconBgColor: AppColors.brownGold.withOpacity(0.1),
-            title: 'Category Thresholds',
-            value: categoryThresholds.toString(),
-          ),
-        ),
-        const SizedBox(width: 24),
-        Expanded(
-          child: _buildStatCard(
-            icon: Icons.analytics_outlined,
-            iconColor: AppColors.green,
-            iconBgColor: AppColors.green.withOpacity(0.1),
-            title: 'Total Thresholds',
+            title: 'Total Product Thresholds',
             value: _thresholds.length.toString(),
           ),
         ),
