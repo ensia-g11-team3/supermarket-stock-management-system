@@ -359,6 +359,12 @@ abstract class AppLocalizations {
   /// **'All Stock Levels'**
   String get allStockLevels;
 
+  /// No description provided for @edit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get edit;
+
   /// No description provided for @productName.
   ///
   /// In en, this message translates to:
@@ -478,6 +484,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Actions'**
   String get actions;
+
+  /// No description provided for @selectCategoryMsg.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a category'**
+  String get selectCategoryMsg;
+
+  /// No description provided for @productAddedMsg.
+  ///
+  /// In en, this message translates to:
+  /// **'Product added successfully'**
+  String get productAddedMsg;
+
+  /// No description provided for @failedToLoadProductMsg.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to add product: '**
+  String get failedToLoadProductMsg;
+
+  /// No description provided for @enterProductDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter product details to add to inventory'**
+  String get enterProductDetails;
+
+  /// No description provided for @plzEnterProductName.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter product name'**
+  String get plzEnterProductName;
+
+  /// No description provided for @plzEnterInitialQty.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter initial quantity'**
+  String get plzEnterInitialQty;
+
+  /// No description provided for @plzEnterValidNum.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid number'**
+  String get plzEnterValidNum;
+
+  /// No description provided for @plzEnterPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter price'**
+  String get plzEnterPrice;
+
+  /// No description provided for @plzEnterValidPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid price'**
+  String get plzEnterValidPrice;
+
+  /// No description provided for @plzSelectCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a category'**
+  String get plzSelectCategory;
+
+  /// No description provided for @productUpdatedMsg.
+  ///
+  /// In en, this message translates to:
+  /// **'Product updated successfully!'**
+  String get productUpdatedMsg;
+
+  /// No description provided for @failedToUpdateProductMsg.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update product:'**
+  String get failedToUpdateProductMsg;
 
   /// No description provided for @saveChanges.
   ///

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:se_project/l10n/app_localizations.dart';
 import '../widgets/page_header.dart';
 import '../widgets/primary_button.dart';
 import '../theme/app_theme.dart';
@@ -51,8 +52,8 @@ class _AddProductPageState extends State<AddProductPage> {
 
     if (_selectedCategory == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please select a category'),
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.selectCategoryMsg),
           backgroundColor: Colors.red,
         ),
       );
@@ -75,8 +76,8 @@ class _AddProductPageState extends State<AddProductPage> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Product added successfully'),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.productAddedMsg),
             backgroundColor: Colors.green,
           ),
         );
@@ -87,7 +88,8 @@ class _AddProductPageState extends State<AddProductPage> {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to add product: $e'),
+          content:
+              Text(AppLocalizations.of(context)!.failedToLoadProductMsg + '$e'),
           backgroundColor: Colors.red,
         ),
       );
@@ -114,9 +116,9 @@ class _AddProductPageState extends State<AddProductPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const PageHeader(
-          title: 'Add New Product',
-          description: 'Enter product details to add to inventory',
+        PageHeader(
+          title: AppLocalizations.of(context)!.addNewProduct,
+          description: AppLocalizations.of(context)!.enterProductDetails,
         ),
         Expanded(
           child: SingleChildScrollView(
@@ -136,11 +138,14 @@ class _AddProductPageState extends State<AddProductPage> {
                             children: [
                               _buildTextField(
                                 controller: _productNameController,
-                                label: 'Product Name',
-                                hint: 'Enter product name',
+                                label:
+                                    AppLocalizations.of(context)!.productName,
+                                hint: AppLocalizations.of(context)!
+                                    .enterProductName,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return 'Please enter product name';
+                                    return AppLocalizations.of(context)!
+                                        .plzEnterProductName;
                                   }
                                   return null;
                                 },
@@ -148,12 +153,14 @@ class _AddProductPageState extends State<AddProductPage> {
                               const SizedBox(height: 20),
                               _buildTextField(
                                 controller: _barcodeController,
-                                label: 'Barcode Number',
-                                hint: 'Enter barcode number',
+                                label:
+                                    AppLocalizations.of(context)!.barcodeNumber,
+                                hint:
+                                    AppLocalizations.of(context)!.enterBarcode,
                               ),
                               const SizedBox(height: 20),
                               _buildDropdown(
-                                label: 'Category',
+                                label: AppLocalizations.of(context)!.category,
                                 value: _selectedCategory,
                                 items: _categories,
                                 onChanged: (value) {
@@ -166,8 +173,9 @@ class _AddProductPageState extends State<AddProductPage> {
                               const SizedBox(height: 20),
                               _buildTextField(
                                 controller: _supplierController,
-                                label: 'Supplier',
-                                hint: 'Enter supplier name',
+                                label: AppLocalizations.of(context)!.supplier,
+                                hint:
+                                    AppLocalizations.of(context)!.enterSupplier,
                               ),
                             ],
                           ),
@@ -178,16 +186,19 @@ class _AddProductPageState extends State<AddProductPage> {
                             children: [
                               _buildTextField(
                                 controller: _quantityController,
-                                label: 'Initial Quantity',
+                                label: AppLocalizations.of(context)!
+                                    .initialQuantity,
                                 hint: '0',
                                 keyboardType: TextInputType.number,
                                 isRequired: true,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return 'Please enter initial quantity';
+                                    return AppLocalizations.of(context)!
+                                        .plzEnterInitialQty;
                                   }
                                   if (int.tryParse(value) == null) {
-                                    return 'Please enter a valid number';
+                                    return AppLocalizations.of(context)!
+                                        .plzEnterValidNum;
                                   }
                                   return null;
                                 },
@@ -195,7 +206,8 @@ class _AddProductPageState extends State<AddProductPage> {
                               const SizedBox(height: 20),
                               _buildTextField(
                                 controller: _buyingPriceController,
-                                label: 'Buying Price (DA)',
+                                label:
+                                    AppLocalizations.of(context)!.buyingPrice,
                                 hint: '0.00',
                                 keyboardType:
                                     const TextInputType.numberWithOptions(
@@ -203,10 +215,12 @@ class _AddProductPageState extends State<AddProductPage> {
                                 isRequired: true,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return 'Please enter price';
+                                    return AppLocalizations.of(context)!
+                                        .plzEnterPrice;
                                   }
                                   if (double.tryParse(value) == null) {
-                                    return 'Please enter a valid price';
+                                    return AppLocalizations.of(context)!
+                                        .plzEnterValidPrice;
                                   }
                                   return null;
                                 },
@@ -214,7 +228,8 @@ class _AddProductPageState extends State<AddProductPage> {
                               const SizedBox(height: 20),
                               _buildTextField(
                                 controller: _sellingPriceController,
-                                label: 'Selling Price (DA)',
+                                label:
+                                    AppLocalizations.of(context)!.sellingPrice,
                                 hint: '0.00',
                                 keyboardType:
                                     const TextInputType.numberWithOptions(
@@ -222,10 +237,12 @@ class _AddProductPageState extends State<AddProductPage> {
                                 isRequired: true,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return 'Please enter price';
+                                    return AppLocalizations.of(context)!
+                                        .plzEnterPrice;
                                   }
                                   if (double.tryParse(value) == null) {
-                                    return 'Please enter a valid price';
+                                    return AppLocalizations.of(context)!
+                                        .plzEnterValidPrice;
                                   }
                                   return null;
                                 },
@@ -233,8 +250,10 @@ class _AddProductPageState extends State<AddProductPage> {
                               const SizedBox(height: 20),
                               _buildTextField(
                                 controller: _descriptionController,
-                                label: 'Description',
-                                hint: 'Enter product description (optional)',
+                                label:
+                                    AppLocalizations.of(context)!.description,
+                                hint: AppLocalizations.of(context)!
+                                    .enterDescription,
                                 maxLines: 4,
                               ),
                             ],
@@ -247,12 +266,13 @@ class _AddProductPageState extends State<AddProductPage> {
                       children: [
                         PrimaryButton(
                           onPressed: _handleSave,
-                          child: const Text('Save Product'),
+                          child:
+                              Text(AppLocalizations.of(context)!.saveProduct),
                         ),
                         const SizedBox(width: 12),
                         TextButton(
                           onPressed: _resetForm,
-                          child: const Text('Reset Form'),
+                          child: Text(AppLocalizations.of(context)!.resetForm),
                         ),
                       ],
                     ),
@@ -303,6 +323,9 @@ class _AddProductPageState extends State<AddProductPage> {
           validator: validator,
           decoration: InputDecoration(
             hintText: hint,
+            hintStyle: const TextStyle(
+              color: Colors.grey, // ← this is what you want
+            ),
             filled: true,
             fillColor: AppTheme.inputBackground,
             border: OutlineInputBorder(

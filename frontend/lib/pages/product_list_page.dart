@@ -281,7 +281,9 @@ class _ProductListPageState extends State<ProductListPage> {
                                                         .toString());
                                               },
                                               color: AppTheme.primaryBlue,
-                                              tooltip: 'Edit',
+                                              tooltip:
+                                                  AppLocalizations.of(context)!
+                                                      .edit,
                                             ),
                                             IconButton(
                                               icon: const Icon(Icons.delete,
@@ -304,8 +306,10 @@ class _ProductListPageState extends State<ProductListPage> {
                                                         onPressed: () =>
                                                             Navigator.pop(
                                                                 context),
-                                                        child: const Text(
-                                                            'Cancel'),
+                                                        child: Text(
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .cancel),
                                                       ),
                                                       TextButton(
                                                         onPressed: () async {

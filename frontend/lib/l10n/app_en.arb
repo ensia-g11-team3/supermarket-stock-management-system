@@ -48,6 +48,7 @@
   "nameOrBarcode": "Name or barcode...",
   "allCategories": "All Categories",
   "allStockLevels": "All Stock Levels",
+  "edit":"Edit",
 
   "productName": "Product Name",
   "enterProductName": "Enter product name",
@@ -70,6 +71,21 @@
   "stock": "Stock",
   "actions": "Actions",
 
+  
+  "selectCategoryMsg":"Please select a category",
+  "productAddedMsg":"Product added successfully",
+  "failedToLoadProductMsg":"Failed to add product: ",
+  "enterProductDetails":"Enter product details to add to inventory",
+  "plzEnterProductName":"Please enter product name",
+  "plzEnterInitialQty":"Please enter initial quantity",
+  "plzEnterValidNum":"Please enter a valid number",
+  "plzEnterPrice":"Please enter price",
+  "plzEnterValidPrice":"Please enter a valid price",
+  
+  "plzSelectCategory":"Please select a category",
+  "productUpdatedMsg":"Product updated successfully!",
+  "failedToUpdateProductMsg":"Failed to update product:",
+ 
   "saveChanges": "Save Changes",
   "saveProduct": "Save Product",
   "cancel": "Cancel",

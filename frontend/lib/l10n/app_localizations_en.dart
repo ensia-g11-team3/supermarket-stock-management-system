@@ -141,6 +141,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get allStockLevels => 'All Stock Levels';
 
   @override
+  String get edit => 'Edit';
+
+  @override
   String get productName => 'Product Name';
 
   @override
@@ -199,6 +202,42 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get actions => 'Actions';
+
+  @override
+  String get selectCategoryMsg => 'Please select a category';
+
+  @override
+  String get productAddedMsg => 'Product added successfully';
+
+  @override
+  String get failedToLoadProductMsg => 'Failed to add product: ';
+
+  @override
+  String get enterProductDetails => 'Enter product details to add to inventory';
+
+  @override
+  String get plzEnterProductName => 'Please enter product name';
+
+  @override
+  String get plzEnterInitialQty => 'Please enter initial quantity';
+
+  @override
+  String get plzEnterValidNum => 'Please enter a valid number';
+
+  @override
+  String get plzEnterPrice => 'Please enter price';
+
+  @override
+  String get plzEnterValidPrice => 'Please enter a valid price';
+
+  @override
+  String get plzSelectCategory => 'Please select a category';
+
+  @override
+  String get productUpdatedMsg => 'Product updated successfully!';
+
+  @override
+  String get failedToUpdateProductMsg => 'Failed to update product:';
 
   @override
   String get saveChanges => 'Save Changes';
