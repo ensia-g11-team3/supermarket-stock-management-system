@@ -16,6 +16,9 @@ import 'pages/stock_movement_page.dart';
 import 'pages/user_list_page.dart';
 import 'pages/create_user_page.dart';
 import 'pages/edit_user_page.dart';
+import 'pages/threshold_list_page.dart';
+import 'pages/add_threshold_page.dart';
+import 'pages/edit_threshold_page.dart';
 
 class StockifyApp extends StatelessWidget {
   const StockifyApp({super.key});
@@ -44,6 +47,7 @@ class _AppRouterState extends State<AppRouter> {
   String _currentPage = 'dashboard';
   String? _editUserId;
   String? _editProductId;
+  String? _editThresholdId;
 
   void _handleLogin(String username) {
     setState(() {
@@ -121,6 +125,27 @@ class _AppRouterState extends State<AppRouter> {
           userId: _editUserId ?? '1',
           onNavigateBack: () => _navigateToPage('users'),
           onUserUpdated: () => _navigateToPage('users'),
+        );
+      case 'thresholds':
+        return ThresholdListPage(
+          onNavigateToAdd: () => _navigateToPage('add-threshold'),
+          onNavigateToEdit: (String thresholdId) {
+            setState(() {
+              _editThresholdId = thresholdId;
+              _currentPage = 'edit-threshold';
+            });
+          },
+        );
+      case 'add-threshold':
+        return AddThresholdPage(
+          onNavigateBack: () => _navigateToPage('thresholds'),
+          onThresholdCreated: () => _navigateToPage('thresholds'),
+        );
+      case 'edit-threshold':
+        return EditThresholdPage(
+          thresholdId: _editThresholdId ?? '1',
+          onNavigateBack: () => _navigateToPage('thresholds'),
+          onThresholdUpdated: () => _navigateToPage('thresholds'),
         );
       default:
         return const DashboardPage();
