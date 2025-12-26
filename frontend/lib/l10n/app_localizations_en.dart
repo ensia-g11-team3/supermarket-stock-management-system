@@ -156,6 +156,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enterBarcode => 'Enter barcode number';
 
   @override
+  String get stockLevel => 'Stock Level';
+
+  @override
+  String get inStock => 'In Stock';
+
+  @override
+  String get lowStock => 'Low Stock';
+
+  @override
+  String get veryLowStock => 'Very Low Stock';
+
+  @override
   String get category => 'Category';
 
   @override
@@ -275,10 +287,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deleteProduct => 'Delete Product';
 
   @override
-  String deleteConfirm(String productName) {
-    return 'Are you sure you want to delete $productName?';
-  }
+  String get deleteConfirm => 'Are you sure you want to delete';
 
   @override
   String get delete => 'Delete';
+
+  @override
+  String get deleted => 'deleted';
 }

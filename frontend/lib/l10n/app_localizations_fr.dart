@@ -156,6 +156,18 @@ class AppLocalizationsFr extends AppLocalizations {
   String get enterBarcode => 'Entrez le numéro de code-barres';
 
   @override
+  String get stockLevel => 'Niveau de stock';
+
+  @override
+  String get inStock => 'En stock';
+
+  @override
+  String get lowStock => 'Stock faible';
+
+  @override
+  String get veryLowStock => 'Stock très faible';
+
+  @override
   String get category => 'Catégorie';
 
   @override
@@ -275,10 +287,11 @@ class AppLocalizationsFr extends AppLocalizations {
   String get deleteProduct => 'Supprimer le produit';
 
   @override
-  String deleteConfirm(String productName) {
-    return 'Êtes-vous sûr de vouloir supprimer $productName ?';
-  }
+  String get deleteConfirm => 'Êtes-vous sûr de vouloir supprimer';
 
   @override
   String get delete => 'Supprimer';
+
+  @override
+  String get deleted => 'supprimé';
 }

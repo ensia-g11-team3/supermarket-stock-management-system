@@ -54,6 +54,10 @@
   "barcode": "Code-barres",
   "barcodeNumber": "Numéro de code-barres",
   "enterBarcode": "Entrez le numéro de code-barres",
+  "stockLevel": "Niveau de stock",
+  "inStock": "En stock",
+  "lowStock": "Stock faible",
+  "veryLowStock": "Stock très faible",
   "category": "Catégorie",
   "selectCategory": "Sélectionner une catégorie",
   "supplier": "Fournisseur",
@@ -97,6 +101,7 @@
   "status": "Statut",
 
   "deleteProduct": "Supprimer le produit",
-  "deleteConfirm": "Êtes-vous sûr de vouloir supprimer {productName} ?",
-  "delete": "Supprimer"
+  "deleteConfirm": "Êtes-vous sûr de vouloir supprimer",
+  "delete": "Supprimer",
+  "deleted": "supprimé"
 }

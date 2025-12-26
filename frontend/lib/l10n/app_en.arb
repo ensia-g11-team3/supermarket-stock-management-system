@@ -54,6 +54,10 @@
   "barcode": "Barcode",
   "barcodeNumber": "Barcode Number",
   "enterBarcode": "Enter barcode number",
+  "stockLevel":"Stock Level",
+  "inStock":"In Stock",
+  "lowStock":"Low Stock",
+  "veryLowStock":"Very Low Stock",
   "category": "Category",
   "selectCategory": "Select category",
   "supplier": "Supplier",
@@ -102,11 +106,7 @@
   "status": "Status",
 
   "deleteProduct": "Delete Product",
-  "deleteConfirm": "Are you sure you want to delete {productName}?",
-  "@deleteConfirm": {
-    "placeholders": {
-      "productName": { "type": "String" }
-    }
-  },
-  "delete": "Delete"
+  "deleteConfirm": "Are you sure you want to delete",
+  "delete": "Delete",
+  "deleted":"deleted"
 }

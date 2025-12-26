@@ -389,6 +389,30 @@ abstract class AppLocalizations {
   /// **'Enter barcode number'**
   String get enterBarcode;
 
+  /// No description provided for @stockLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Stock Level'**
+  String get stockLevel;
+
+  /// No description provided for @inStock.
+  ///
+  /// In en, this message translates to:
+  /// **'In Stock'**
+  String get inStock;
+
+  /// No description provided for @lowStock.
+  ///
+  /// In en, this message translates to:
+  /// **'Low Stock'**
+  String get lowStock;
+
+  /// No description provided for @veryLowStock.
+  ///
+  /// In en, this message translates to:
+  /// **'Very Low Stock'**
+  String get veryLowStock;
+
   /// No description provided for @category.
   ///
   /// In en, this message translates to:
@@ -626,14 +650,20 @@ abstract class AppLocalizations {
   /// No description provided for @deleteConfirm.
   ///
   /// In en, this message translates to:
-  /// **'Are you sure you want to delete {productName}?'**
-  String deleteConfirm(String productName);
+  /// **'Are you sure you want to delete'**
+  String get deleteConfirm;
 
   /// No description provided for @delete.
   ///
   /// In en, this message translates to:
   /// **'Delete'**
   String get delete;
+
+  /// No description provided for @deleted.
+  ///
+  /// In en, this message translates to:
+  /// **'deleted'**
+  String get deleted;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
