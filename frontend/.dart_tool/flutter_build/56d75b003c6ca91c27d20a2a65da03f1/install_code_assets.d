@@ -1,1 +1,0 @@
- C:\\xampp\\htdocs\\supermarket-sctock-management-system\\frontend\\.dart_tool\\flutter_build\\56d75b003c6ca91c27d20a2a65da03f1\\native_assets.json: 

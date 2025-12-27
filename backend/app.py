@@ -13,6 +13,9 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
+# CRITICAL FIX: Disable strict slashes to accept both /api/transactions and /api/transactions/
+app.url_map.strict_slashes = False
+
 @app.route("/")
 def home():
     return "Flask backend is running!"

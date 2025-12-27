@@ -16,6 +16,11 @@ import 'pages/stock_movement_page.dart';
 import 'pages/user_list_page.dart';
 import 'pages/create_user_page.dart';
 import 'pages/edit_user_page.dart';
+import 'pages/threshold_list_page.dart';
+import 'pages/add_threshold_page.dart';
+import 'pages/edit_threshold_page.dart';
+import 'pages/product_batch_list.dart';
+import 'pages/edit_batch_page.dart';
 import 'pages/product_batch_list.dart';
 import 'pages/edit_batch_page.dart';
 
@@ -63,6 +68,15 @@ class _AppRouterState extends State<AppRouter> {
   String _currentPage = 'dashboard';
   String? _editUserId;
   String? _editProductId;
+  String? _editThresholdId;
+
+  Key _productListKey = UniqueKey();
+  Key _batchListKey = UniqueKey();
+
+  // Add batch-related state
+  String? _batchProductId;
+  String? _batchProductName;
+  String? _editBatchId;
 
   Key _productListKey = UniqueKey();
   Key _batchListKey = UniqueKey();
@@ -150,7 +164,7 @@ class _AppRouterState extends State<AppRouter> {
           },
           onNavigateToCreate: () => _navigateToPage('create-batch'),
         );
-      
+
       case 'create-batch':
         return CreateBatchPage(
           productId: _batchProductId ?? '1',
@@ -158,7 +172,7 @@ class _AppRouterState extends State<AppRouter> {
           onNavigateBack: () => _navigateToPage('batches'),
           onBatchSaved: () => _navigateToPage('batches'),
         );
-      
+
       case 'edit-batch':
         return CreateBatchPage(
           productId: _batchProductId ?? '1',
@@ -195,6 +209,27 @@ class _AppRouterState extends State<AppRouter> {
           userId: _editUserId ?? '1',
           onNavigateBack: () => _navigateToPage('users'),
           onUserUpdated: () => _navigateToPage('users'),
+        );
+      case 'thresholds':
+        return ThresholdListPage(
+          onNavigateToAdd: () => _navigateToPage('add-threshold'),
+          onNavigateToEdit: (String thresholdId) {
+            setState(() {
+              _editThresholdId = thresholdId;
+              _currentPage = 'edit-threshold';
+            });
+          },
+        );
+      case 'add-threshold':
+        return AddThresholdPage(
+          onNavigateBack: () => _navigateToPage('thresholds'),
+          onThresholdCreated: () => _navigateToPage('thresholds'),
+        );
+      case 'edit-threshold':
+        return EditThresholdPage(
+          thresholdId: _editThresholdId ?? '1',
+          onNavigateBack: () => _navigateToPage('thresholds'),
+          onThresholdUpdated: () => _navigateToPage('thresholds'),
         );
       default:
         return const DashboardPage();
