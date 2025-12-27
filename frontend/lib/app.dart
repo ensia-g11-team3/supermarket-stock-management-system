@@ -77,15 +77,6 @@ class _AppRouterState extends State<AppRouter> {
   String? _batchProductId;
   String? _batchProductName;
   String? _editBatchId;
-
-  Key _productListKey = UniqueKey();
-  Key _batchListKey = UniqueKey();
-  
-  // Add batch-related state
-  String? _batchProductId;
-  String? _batchProductName;
-  String? _editBatchId;
-
   void _handleLogin(String username) {
     setState(() {
       _isAuthenticated = true;
