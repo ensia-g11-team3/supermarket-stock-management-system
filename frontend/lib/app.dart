@@ -21,6 +21,9 @@ import 'pages/add_threshold_page.dart';
 import 'pages/edit_threshold_page.dart';
 import 'pages/product_batch_list.dart';
 import 'pages/edit_batch_page.dart';
+import 'pages/product_batch_list.dart';
+import 'pages/edit_batch_page.dart';
+
 //localization: added by Nour
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'l10n/app_localizations.dart';
@@ -70,6 +73,14 @@ class _AppRouterState extends State<AppRouter> {
   Key _productListKey = UniqueKey();
   Key _batchListKey = UniqueKey();
 
+  // Add batch-related state
+  String? _batchProductId;
+  String? _batchProductName;
+  String? _editBatchId;
+
+  Key _productListKey = UniqueKey();
+  Key _batchListKey = UniqueKey();
+  
   // Add batch-related state
   String? _batchProductId;
   String? _batchProductName;
