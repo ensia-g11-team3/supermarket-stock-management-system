@@ -197,6 +197,12 @@ abstract class AppLocalizations {
   /// **'Suppliers & Orders'**
   String get navSuppliers;
 
+  /// No description provided for @navThresholds.
+  ///
+  /// In en, this message translates to:
+  /// **'Suppliers & Orders'**
+  String get navThresholds;
+
   /// No description provided for @navLowStock.
   ///
   /// In en, this message translates to:
