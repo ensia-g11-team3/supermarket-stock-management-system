@@ -9,8 +9,10 @@
       "dependencies": [
         "fl_chart",
         "flutter",
+        "flutter_localizations",
         "google_fonts",
-        "http"
+        "http",
+        "intl"
       ],
       "devDependencies": [
         "flutter_lints",
@@ -68,6 +70,24 @@
       "dependencies": [
         "equatable",
         "flutter"
+      ]
+    },
+    {
+      "name": "intl",
+      "version": "0.20.2",
+      "dependencies": [
+        "clock",
+        "meta",
+        "path"
+      ]
+    },
+    {
+      "name": "flutter_localizations",
+      "version": "0.0.0",
+      "dependencies": [
+        "flutter",
+        "intl",
+        "path"
       ]
     },
     {
