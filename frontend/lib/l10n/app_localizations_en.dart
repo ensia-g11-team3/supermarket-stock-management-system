@@ -60,6 +60,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navSuppliers => 'Suppliers & Orders';
 
   @override
+  String get navThresholds => 'Thresholds';
+
+  @override
   String get navLowStock => 'Low Stock Alerts';
 
   @override
