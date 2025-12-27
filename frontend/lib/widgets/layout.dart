@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:se_project/l10n/app_localizations.dart';
 import '../theme/app_theme.dart';
 
 class Layout extends StatelessWidget {
@@ -54,69 +55,61 @@ class Layout extends StatelessWidget {
                     children: [
                       _NavItem(
                         icon: Icons.dashboard,
-                        label: 'Dashboard',
+                        label: AppLocalizations.of(context)!.navDashboard,
                         isSelected: currentPage == 'dashboard',
                         onTap: () => onNavigate('dashboard'),
                       ),
                       _NavItem(
                         icon: Icons.point_of_sale,
-                        label: 'Sales (POS)',
+                        label: AppLocalizations.of(context)!.navPos,
                         isSelected: currentPage == 'pos',
                         onTap: () => onNavigate('pos'),
                       ),
                       _NavItem(
                         icon: Icons.history,
-                        label: 'Sales History',
+                        label: AppLocalizations.of(context)!.navSalesHistory,
                         isSelected: currentPage == 'history',
                         onTap: () => onNavigate('history'),
                       ),
                       _NavItem(
                         icon: Icons.inventory_2,
-                        label: 'Product List',
+                        label: AppLocalizations.of(context)!.navProductList,
                         isSelected: currentPage == 'products',
                         onTap: () => onNavigate('products'),
                       ),
                       _NavItem(
                         icon: Icons.add_box,
-                        label: 'Add Product',
+                        label: AppLocalizations.of(context)!.navAddProduct,
                         isSelected: currentPage == 'add-product',
                         onTap: () => onNavigate('add-product'),
                       ),
                       _NavItem(
                         icon: Icons.category,
-                        label: 'Categories',
+                        label: AppLocalizations.of(context)!.navCategories,
                         isSelected: currentPage == 'categories',
                         onTap: () => onNavigate('categories'),
                       ),
                       _NavItem(
                         icon: Icons.local_shipping,
-                        label: 'Suppliers & Orders',
+                        label: AppLocalizations.of(context)!.navSuppliers,
                         isSelected: currentPage == 'suppliers',
                         onTap: () => onNavigate('suppliers'),
                       ),
                       _NavItem(
                         icon: Icons.notifications_active,
-                        label: 'Alerts',
+                        label: AppLocalizations.of(context)!.navLowStock,
                         isSelected: currentPage == 'alerts',
                         onTap: () => onNavigate('alerts'),
                       ),
                       _NavItem(
                         icon: Icons.swap_horiz,
-                        label: 'Stock Movement',
+                        label: AppLocalizations.of(context)!.navStockMovement,
                         isSelected: currentPage == 'movements',
                         onTap: () => onNavigate('movements'),
                       ),
                       _NavItem(
-                        icon: Icons.tune,
-                        label: 'Thresholds',
-                        isSelected: currentPage == 'thresholds' ||
-                            currentPage == 'add-threshold' ||
-                            currentPage == 'edit-threshold',
-                        onTap: () => onNavigate('thresholds'),
-                      ),
-                      _NavItem(
                         icon: Icons.people,
-                        label: 'User Management',
+                        label: AppLocalizations.of(context)!.navUserManagement,
                         isSelected: currentPage == 'users' ||
                             currentPage == 'create-user' ||
                             currentPage == 'edit-user',
@@ -132,7 +125,7 @@ class Layout extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(
-                        'Logged in as $username',
+                        AppLocalizations.of(context)!.loggedInAs + '$username',
                         style: const TextStyle(
                           color: Colors.white70,
                           fontSize: 14,
@@ -142,15 +135,17 @@ class Layout extends StatelessWidget {
                       InkWell(
                         onTap: onLogout,
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 12),
                           decoration: BoxDecoration(
                             color: Colors.red.withOpacity(0.2),
                             borderRadius: BorderRadius.circular(6),
-                            border: Border.all(color: Colors.red.withOpacity(0.5), width: 1),
+                            border: Border.all(
+                                color: Colors.red.withOpacity(0.5), width: 1),
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
+                            children: [
                               Icon(
                                 Icons.logout,
                                 color: Colors.white,
@@ -158,7 +153,7 @@ class Layout extends StatelessWidget {
                               ),
                               SizedBox(width: 8),
                               Text(
-                                'Logout',
+                                AppLocalizations.of(context)!.logout,
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 14,
@@ -239,4 +234,3 @@ class _NavItem extends StatelessWidget {
     );
   }
 }
-

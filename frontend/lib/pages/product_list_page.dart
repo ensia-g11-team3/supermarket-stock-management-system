@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:se_project/l10n/app_localizations.dart';
 import '../widgets/page_header.dart';
 import '../widgets/search_bar.dart';
 import '../widgets/primary_button.dart';
@@ -9,11 +10,14 @@ import '../services/product_api.dart';
 class ProductListPage extends StatefulWidget {
   final ValueChanged<String>? onNavigateToEdit;
   final VoidCallback? onNavigateToAdd;
+  final Function(String productId, String productName)? onNavigateToBatches;
+
 
   const ProductListPage({
     super.key,
     this.onNavigateToEdit,
     this.onNavigateToAdd,
+    this.onNavigateToBatches,
   });
 
   @override
@@ -22,8 +26,8 @@ class ProductListPage extends StatefulWidget {
 
 class _ProductListPageState extends State<ProductListPage> {
   String _searchQuery = '';
-  String _selectedCategory = 'All Categories';
-  String _selectedStockLevel = 'All Stock Levels';
+  late String _selectedCategory;
+  late String _selectedStockLevel;
 
   List<Map<String, dynamic>> _products = [];
   bool _isLoading = true;
@@ -51,31 +55,42 @@ class _ProductListPageState extends State<ProductListPage> {
 
   List<Map<String, dynamic>> get _filteredProducts {
     return _products.where((Map<String, dynamic> product) {
-      final bool matchesSearch = _searchQuery.isEmpty ||
-          product['name']
-              .toString()
-              .toLowerCase()
-              .contains(_searchQuery.toLowerCase()) ||
-          product['barcode'].toString().contains(_searchQuery);
-
-      final bool matchesCategory = _selectedCategory == 'All Categories' ||
-          product['category'] == _selectedCategory;
-
+      final String name = product['name']?.toString().toLowerCase() ?? '';
+      final String barcode = product['barcode']?.toString() ?? '';
       final int qty = product['qty'] ?? 0;
-      final int threshold = product['product_threshold'] ?? 0;
+      final int? threshold = product['product_threshold'];
 
-      final bool matchesStockLevel =
-          _selectedStockLevel == 'All Stock Levels' ||
-              (_selectedStockLevel == 'In Stock' && qty > threshold) ||
-              (_selectedStockLevel == 'Low Stock' &&
-                  qty <= threshold &&
-                  qty > threshold / 2) ||
-              (_selectedStockLevel == 'Very Low Stock' &&
-                  qty <= threshold / 2 &&
-                  qty > 0);
+      final bool matchesSearch = _searchQuery.isEmpty ||
+          name.contains(_searchQuery.toLowerCase()) ||
+          barcode.contains(_searchQuery);
+
+      final bool matchesCategory =
+          _selectedCategory == AppLocalizations.of(context)!.allCategories ||
+              product['category'] == _selectedCategory;
+
+      final bool matchesStockLevel = _selectedStockLevel ==
+              AppLocalizations.of(context)!.allStockLevels ||
+          (_selectedStockLevel == AppLocalizations.of(context)!.inStock &&
+              (threshold != null ? qty > threshold : qty > 10)) ||
+          (_selectedStockLevel == AppLocalizations.of(context)!.lowStock &&
+              (threshold != null
+                  ? (qty <= threshold && qty > threshold / 2)
+                  : (qty <= 10 && qty > 5))) ||
+          (_selectedStockLevel == AppLocalizations.of(context)!.veryLowStock &&
+              (threshold != null
+                  ? (qty <= threshold / 2 && qty > 0)
+                  : (qty <= 5 && qty > 0)));
 
       return matchesSearch && matchesCategory && matchesStockLevel;
     }).toList();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    _selectedCategory = AppLocalizations.of(context)!.allCategories;
+    _selectedStockLevel = AppLocalizations.of(context)!.allStockLevels;
   }
 
   @override
@@ -84,17 +99,17 @@ class _ProductListPageState extends State<ProductListPage> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         PageHeader(
-          title: 'Product List',
-          description: 'Manage your inventory products.',
+          title: AppLocalizations.of(context)!.productTitle,
+          description: AppLocalizations.of(context)!.productSubtitle,
           actions: [
             PrimaryButton(
               onPressed: widget.onNavigateToAdd,
-              child: const Row(
+              child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(Icons.add, size: 20),
                   SizedBox(width: 8),
-                  Text('Add New Product'),
+                  Text(AppLocalizations.of(context)!.addNewProduct),
                 ],
               ),
             ),
@@ -130,7 +145,9 @@ class _ProductListPageState extends State<ProductListPage> {
                                   children: [
                                     Expanded(
                                       child: AppSearchBar(
-                                        placeholder: 'Name or barcode...',
+                                        placeholder:
+                                            AppLocalizations.of(context)!
+                                                .nameOrBarcode,
                                         value: _searchQuery,
                                         onChanged: (value) {
                                           setState(() {
@@ -142,10 +159,12 @@ class _ProductListPageState extends State<ProductListPage> {
                                     const SizedBox(width: 16),
                                     Expanded(
                                       child: _buildDropdown(
-                                        label: 'Category',
+                                        label: AppLocalizations.of(context)!
+                                            .category,
                                         value: _selectedCategory,
                                         items: [
-                                          'All Categories',
+                                          AppLocalizations.of(context)!
+                                              .allCategories,
                                           'Beverages',
                                           'Snacks',
                                           'Dairy',
@@ -161,13 +180,17 @@ class _ProductListPageState extends State<ProductListPage> {
                                     const SizedBox(width: 16),
                                     Expanded(
                                       child: _buildDropdown(
-                                        label: 'Stock Level',
+                                        label: AppLocalizations.of(context)!
+                                            .stockLevel,
                                         value: _selectedStockLevel,
                                         items: [
-                                          'All Stock Levels',
-                                          'In Stock',
-                                          'Low Stock',
-                                          'Very Low Stock',
+                                          AppLocalizations.of(context)!
+                                              .allStockLevels,
+                                          AppLocalizations.of(context)!.inStock,
+                                          AppLocalizations.of(context)!
+                                              .lowStock,
+                                          AppLocalizations.of(context)!
+                                              .veryLowStock,
                                         ],
                                         onChanged: (value) {
                                           setState(() {
@@ -193,11 +216,12 @@ class _ProductListPageState extends State<ProductListPage> {
                               3: FlexColumnWidth(1),
                               4: FlexColumnWidth(1),
                               5: FlexColumnWidth(2),
-                              6: FlexColumnWidth(1.5),
+                              6: FlexColumnWidth(2),
+                              7: FlexColumnWidth(1.5),
                             },
                             children: [
                               // Header Row
-                              const TableRow(
+                              TableRow(
                                 decoration: BoxDecoration(
                                   color: AppTheme.brownGold,
                                   border: Border(
@@ -206,14 +230,25 @@ class _ProductListPageState extends State<ProductListPage> {
                                   ),
                                 ),
                                 children: [
-                                  _TableHeaderCell(Text('Product Name')),
-                                  _TableHeaderCell(Text('Barcode')),
-                                  _TableHeaderCell(Text('Category')),
-                                  _TableHeaderCell(Text('Stock')),
-                                  _TableHeaderCell(Text('Buying Price')),
-                                  _TableHeaderCell(Text('Selling Price')),
-                                  _TableHeaderCell(Text('Supplier')),
-                                  _TableHeaderCell(Text('Actions')),
+                                  _TableHeaderCell(Text(
+                                      AppLocalizations.of(context)!
+                                          .productName)),
+                                  _TableHeaderCell(Text(
+                                      AppLocalizations.of(context)!.barcode)),
+                                  _TableHeaderCell(Text(
+                                      AppLocalizations.of(context)!.category)),
+                                  _TableHeaderCell(Text(
+                                      AppLocalizations.of(context)!.stock)),
+                                  _TableHeaderCell(Text(
+                                      AppLocalizations.of(context)!
+                                          .buyingPrice)),
+                                  _TableHeaderCell(Text(
+                                      AppLocalizations.of(context)!
+                                          .sellingPrice)),
+                                  _TableHeaderCell(Text(
+                                      AppLocalizations.of(context)!.supplier)),
+                                  _TableHeaderCell(Text(
+                                      AppLocalizations.of(context)!.actions)),
                                 ],
                               ),
                               // Data Rows
@@ -224,9 +259,12 @@ class _ProductListPageState extends State<ProductListPage> {
                                       _TableCell(Text(product['category'])),
                                       _TableCell(
                                         StockBadge(
-                                          stock: product['qty'] ?? 0,
+                                          stock: product['qty'],
                                           minStock:
-                                              product['product_threshold'] ?? 0,
+                                              product['product_threshold'] !=
+                                                      null
+                                                  ? product['product_threshold']
+                                                  : 0,
                                         ),
                                       ),
                                       _TableCell(Text(
@@ -247,7 +285,9 @@ class _ProductListPageState extends State<ProductListPage> {
                                                         .toString());
                                               },
                                               color: AppTheme.primaryBlue,
-                                              tooltip: 'Edit',
+                                              tooltip:
+                                                  AppLocalizations.of(context)!
+                                                      .edit,
                                             ),
                                             IconButton(
                                               icon: const Icon(Icons.delete,
@@ -257,17 +297,23 @@ class _ProductListPageState extends State<ProductListPage> {
                                                   context: context,
                                                   builder: (context) =>
                                                       AlertDialog(
-                                                    title: const Text(
-                                                        'Delete Product'),
-                                                    content: Text(
-                                                        'Are you sure you want to delete ${product['name']}?'),
+                                                    title: Text(
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .deleteProduct),
+                                                    content: Text(AppLocalizations
+                                                                .of(context)!
+                                                            .deleteConfirm +
+                                                        ' ${product['name']}?'),
                                                     actions: [
                                                       TextButton(
                                                         onPressed: () =>
                                                             Navigator.pop(
                                                                 context),
-                                                        child: const Text(
-                                                            'Cancel'),
+                                                        child: Text(
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .cancel),
                                                       ),
                                                       TextButton(
                                                         onPressed: () async {
@@ -283,8 +329,10 @@ class _ProductListPageState extends State<ProductListPage> {
                                                                   context)
                                                               .showSnackBar(
                                                             SnackBar(
-                                                                content: Text(
-                                                                    '${product['name']} deleted')),
+                                                                content: Text('${product['name']} ' +
+                                                                    AppLocalizations.of(
+                                                                            context)!
+                                                                        .deleted)),
                                                           );
 
                                                           _fetchProducts(); // Refresh list
@@ -294,15 +342,30 @@ class _ProductListPageState extends State<ProductListPage> {
                                                           foregroundColor:
                                                               Colors.red,
                                                         ),
-                                                        child: const Text(
-                                                            'Delete'),
+                                                        child: Text(
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .delete),
                                                       ),
                                                     ],
                                                   ),
                                                 );
                                               },
                                               color: Colors.red,
-                                              tooltip: 'Delete',
+                                              tooltip:
+                                                  AppLocalizations.of(context)!
+                                                      .delete,
+                                            ),
+                                            IconButton(
+                                              icon: const Icon(Icons.inventory_2, size: 20),
+                                              onPressed: () {
+                                                widget.onNavigateToBatches?.call(
+                                                  product['product_id'].toString(),
+                                                  product['name'],
+                                                );
+                                              },
+                                              color: Colors.purple,
+                                              tooltip: 'View Batches',
                                             ),
                                           ],
                                         ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:se_project/l10n/app_localizations.dart';
 import '../widgets/page_header.dart';
 import '../widgets/primary_button.dart';
 import '../theme/app_theme.dart';
@@ -64,7 +65,8 @@ class _EditProductPageState extends State<EditProductPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text("Failed to load product: $e"),
+            content: Text(
+                AppLocalizations.of(context)!.failedToLoadProductMsg + "$e"),
             backgroundColor: Colors.red,
           ),
         );
@@ -106,8 +108,8 @@ class _EditProductPageState extends State<EditProductPage> {
 
     if (_selectedCategory == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please select a category'),
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.plzSelectCategory),
           backgroundColor: Colors.red,
         ),
       );
@@ -131,8 +133,8 @@ class _EditProductPageState extends State<EditProductPage> {
       widget.onProductUpdated();
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Product updated successfully!'),
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.productUpdatedMsg),
           backgroundColor: Colors.green,
         ),
       );
@@ -141,7 +143,8 @@ class _EditProductPageState extends State<EditProductPage> {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Failed to update product: $e"),
+          content: Text(
+              AppLocalizations.of(context)!.failedToUpdateProductMsg + "$e"),
           backgroundColor: Colors.red,
         ),
       );
@@ -154,13 +157,13 @@ class _EditProductPageState extends State<EditProductPage> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         PageHeader(
-          title: 'Edit Product',
-          description: 'Update product details',
+          title: AppLocalizations.of(context)!.editProduct,
+          description: AppLocalizations.of(context)!.updateDetails,
           actions: [
             TextButton.icon(
               onPressed: widget.onNavigateBack,
               icon: const Icon(Icons.arrow_back),
-              label: const Text('Back to Product List'),
+              label: Text(AppLocalizations.of(context)!.backToProductList),
             ),
           ],
         ),
@@ -183,11 +186,14 @@ class _EditProductPageState extends State<EditProductPage> {
                             children: [
                               _buildTextField(
                                 controller: _productNameController,
-                                label: 'Product Name',
-                                hint: 'Enter product name',
+                                label:
+                                    AppLocalizations.of(context)!.productName,
+                                hint: AppLocalizations.of(context)!
+                                    .enterProductName,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return 'Please enter product name';
+                                    return AppLocalizations.of(context)!
+                                        .plzEnterProductName;
                                   }
                                   return null;
                                 },
@@ -195,12 +201,14 @@ class _EditProductPageState extends State<EditProductPage> {
                               const SizedBox(height: 20),
                               _buildTextField(
                                 controller: _barcodeController,
-                                label: 'Barcode Number',
-                                hint: 'Enter barcode number',
+                                label:
+                                    AppLocalizations.of(context)!.barcodeNumber,
+                                hint:
+                                    AppLocalizations.of(context)!.enterBarcode,
                               ),
                               const SizedBox(height: 20),
                               _buildDropdown(
-                                label: 'Category',
+                                label: AppLocalizations.of(context)!.category,
                                 value: _selectedCategory,
                                 items: _categories,
                                 onChanged: (value) {
@@ -213,8 +221,9 @@ class _EditProductPageState extends State<EditProductPage> {
                               const SizedBox(height: 20),
                               _buildTextField(
                                 controller: _supplierController,
-                                label: 'Supplier',
-                                hint: 'Enter supplier name',
+                                label: AppLocalizations.of(context)!.supplier,
+                                hint:
+                                    AppLocalizations.of(context)!.enterSupplier,
                               ),
                             ],
                           ),
@@ -225,16 +234,19 @@ class _EditProductPageState extends State<EditProductPage> {
                             children: [
                               _buildTextField(
                                 controller: _quantityController,
-                                label: 'Initial Quantity',
+                                label: AppLocalizations.of(context)!
+                                    .initialQuantity,
                                 hint: '0',
                                 keyboardType: TextInputType.number,
                                 isRequired: true,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return 'Please enter initial quantity';
+                                    return AppLocalizations.of(context)!
+                                        .plzEnterInitialQty;
                                   }
                                   if (int.tryParse(value) == null) {
-                                    return 'Please enter a valid number';
+                                    return AppLocalizations.of(context)!
+                                        .plzEnterValidNum;
                                   }
                                   return null;
                                 },
@@ -242,7 +254,8 @@ class _EditProductPageState extends State<EditProductPage> {
                               const SizedBox(height: 20),
                               _buildTextField(
                                 controller: _sellingPriceController,
-                                label: 'Selling Price (DA)',
+                                label:
+                                    AppLocalizations.of(context)!.sellingPrice,
                                 hint: '0.00',
                                 keyboardType:
                                     const TextInputType.numberWithOptions(
@@ -250,10 +263,12 @@ class _EditProductPageState extends State<EditProductPage> {
                                 isRequired: true,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return 'Please enter price';
+                                    return AppLocalizations.of(context)!
+                                        .plzEnterPrice;
                                   }
                                   if (double.tryParse(value) == null) {
-                                    return 'Please enter a valid price';
+                                    return AppLocalizations.of(context)!
+                                        .plzEnterValidPrice;
                                   }
                                   return null;
                                 },
@@ -261,7 +276,8 @@ class _EditProductPageState extends State<EditProductPage> {
                               const SizedBox(height: 20),
                               _buildTextField(
                                 controller: _buyingPriceController,
-                                label: 'Buying Price (DA)',
+                                label:
+                                    AppLocalizations.of(context)!.buyingPrice,
                                 hint: '0.00',
                                 keyboardType:
                                     const TextInputType.numberWithOptions(
@@ -269,10 +285,12 @@ class _EditProductPageState extends State<EditProductPage> {
                                 isRequired: true,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return 'Please enter price';
+                                    return AppLocalizations.of(context)!
+                                        .plzEnterPrice;
                                   }
                                   if (double.tryParse(value) == null) {
-                                    return 'Please enter a valid price';
+                                    return AppLocalizations.of(context)!
+                                        .plzEnterValidPrice;
                                   }
                                   return null;
                                 },
@@ -280,8 +298,10 @@ class _EditProductPageState extends State<EditProductPage> {
                               const SizedBox(height: 20),
                               _buildTextField(
                                 controller: _descriptionController,
-                                label: 'Description',
-                                hint: 'Enter product description (optional)',
+                                label:
+                                    AppLocalizations.of(context)!.description,
+                                hint: AppLocalizations.of(context)!
+                                    .enterDescription,
                                 maxLines: 4,
                               ),
                             ],
@@ -295,7 +315,8 @@ class _EditProductPageState extends State<EditProductPage> {
                       children: [
                         PrimaryButton(
                           onPressed: _handleSave,
-                          child: const Text('Save Changes'),
+                          child:
+                              Text(AppLocalizations.of(context)!.saveChanges),
                         ),
                         const SizedBox(width: 12),
                         TextButton(
@@ -306,7 +327,7 @@ class _EditProductPageState extends State<EditProductPage> {
                               vertical: 12,
                             ),
                           ),
-                          child: const Text('Cancel'),
+                          child: Text(AppLocalizations.of(context)!.cancel),
                         ),
                       ],
                     ),
@@ -362,6 +383,9 @@ class _EditProductPageState extends State<EditProductPage> {
           validator: validator,
           decoration: InputDecoration(
             hintText: hint,
+            hintStyle: const TextStyle(
+              color: Colors.grey, // ← this is what you want
+            ),
             filled: true,
             fillColor: AppTheme.inputBackground,
             border: OutlineInputBorder(

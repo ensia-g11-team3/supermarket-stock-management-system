@@ -19,6 +19,11 @@ import 'pages/edit_user_page.dart';
 import 'pages/threshold_list_page.dart';
 import 'pages/add_threshold_page.dart';
 import 'pages/edit_threshold_page.dart';
+import 'pages/product_batch_list.dart';
+import 'pages/edit_batch_page.dart';
+//localization: added by Nour
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'l10n/app_localizations.dart';
 
 class StockifyApp extends StatelessWidget {
   const StockifyApp({super.key});
@@ -27,6 +32,19 @@ class StockifyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Stockify',
+      supportedLocales: const [
+        Locale('fr'),
+        Locale('en'),
+      ],
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      //Make french default (client request)
+      locale: const Locale('fr'),
+      //Make french default (client request)
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       home: const AppRouter(),
@@ -49,6 +67,14 @@ class _AppRouterState extends State<AppRouter> {
   String? _editProductId;
   String? _editThresholdId;
 
+  Key _productListKey = UniqueKey();
+  Key _batchListKey = UniqueKey();
+
+  // Add batch-related state
+  String? _batchProductId;
+  String? _batchProductName;
+  String? _editBatchId;
+
   void _handleLogin(String username) {
     setState(() {
       _isAuthenticated = true;
@@ -67,6 +93,14 @@ class _AppRouterState extends State<AppRouter> {
 
   void _navigateToPage(String page) {
     setState(() {
+      if (page == 'products') {
+        // Regenerate key to force rebuild of ProductListPage
+        _productListKey = UniqueKey();
+      }
+      if (page == 'batches') {
+        // Regenerate key to force rebuild of BatchListPage
+        _batchListKey = UniqueKey();
+      }
       _currentPage = page;
     });
   }
@@ -88,6 +122,13 @@ class _AppRouterState extends State<AppRouter> {
               _currentPage = 'edit-product';
             });
           },
+          onNavigateToBatches: (String productId, String productName) {
+            setState(() {
+              _batchProductId = productId;
+              _batchProductName = productName;
+              _currentPage = 'batches';
+            });
+          },
         );
       case 'add-product':
         return const AddProductPage();
@@ -96,6 +137,38 @@ class _AppRouterState extends State<AppRouter> {
           productId: _editProductId ?? '1',
           onNavigateBack: () => _navigateToPage('products'),
           onProductUpdated: () => _navigateToPage('products'),
+        );
+
+      case 'batches':
+        return ProductBatchListPage(
+          key: _batchListKey,
+          productId: _batchProductId ?? '1',
+          productName: _batchProductName ?? 'Product',
+          onNavigateBack: () => _navigateToPage('products'),
+          onNavigateToEdit: (String batchId) {
+            setState(() {
+              _editBatchId = batchId;
+              _currentPage = 'edit-batch';
+            });
+          },
+          onNavigateToCreate: () => _navigateToPage('create-batch'),
+        );
+
+      case 'create-batch':
+        return CreateBatchPage(
+          productId: _batchProductId ?? '1',
+          productName: _batchProductName ?? 'Product',
+          onNavigateBack: () => _navigateToPage('batches'),
+          onBatchSaved: () => _navigateToPage('batches'),
+        );
+
+      case 'edit-batch':
+        return CreateBatchPage(
+          productId: _batchProductId ?? '1',
+          productName: _batchProductName ?? 'Product',
+          batchId: _editBatchId,
+          onNavigateBack: () => _navigateToPage('batches'),
+          onBatchSaved: () => _navigateToPage('batches'),
         );
       case 'categories':
         return const CategoriesPage();
@@ -169,4 +242,3 @@ class _AppRouterState extends State<AppRouter> {
     );
   }
 }
-
