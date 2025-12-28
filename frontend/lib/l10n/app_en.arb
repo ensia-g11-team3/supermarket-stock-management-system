@@ -125,5 +125,41 @@
   "deleteProduct": "Delete Product",
   "deleteConfirm": "Are you sure you want to delete",
   "delete": "Delete",
-  "deleted":"deleted"
+  "deleted":"deleted",
+
+
+
+  "viewBatches":"View Batches",
+  "productBatchesTitle": "Product Batches",
+  "manageBatchesDescription": "Manage batches for this product",
+  "backToProducts": "Back to Products",
+  "createNewBatch": "Create New Batch",
+  "totalBatches": "Total Batches",
+  "totalQuantity": "Total Quantity",
+  "expired": "Expired",
+  "nearExpiry": "Near Expiry",
+  "noBatchesFound": "No batches found for this product",
+  "createFirstBatch": "Create your first batch",
+  "batchId": "Batch ID",
+  "quantity": "Quantity",
+  "mfgDate": "Mfg. Date",
+  "expiryDate": "Expiry Date",
+  "status": "Status",
+  "actions": "Actions",
+  "units": "units",
+  "noExpiry": "No Expiry",
+  "expiresIn": "Expires in",
+  "days": "days",
+  "valid": "Valid",
+  "unknown": "Unknown",
+  "editBatch": "Edit Batch",
+  "deleteBatch": "Delete Batch",
+  "deleteConfirmation": "Are you sure you want to delete this batch?",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "deleteSuccess": "deleted successfully",
+  "loadError": "Failed to load batches",
+  "deleteError": "Failed to delete batch",
+  "na": "N/A"
+
 }

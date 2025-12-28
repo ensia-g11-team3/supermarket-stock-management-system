@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:se_project/l10n/app_localizations.dart';
 import '../widgets/page_header.dart';
 import '../widgets/primary_button.dart';
 import '../theme/app_theme.dart';
@@ -37,7 +38,8 @@ class _ProductBatchListPageState extends State<ProductBatchListPage> {
   Future<void> _fetchBatches() async {
     setState(() => _isLoading = true);
     try {
-      final batches = await BatchApi.getBatchesByProduct(int.parse(widget.productId));
+      final batches =
+          await BatchApi.getBatchesByProduct(int.parse(widget.productId));
       print("Fetched ${batches.length} batches"); // Debug print
       print("Batch data: $batches"); // Debug print
       setState(() {
@@ -48,7 +50,8 @@ class _ProductBatchListPageState extends State<ProductBatchListPage> {
       print("Error loading batches: $e");
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to load batches: $e')),
+          SnackBar(
+              content: Text(AppLocalizations.of(context)!.loadError + ' $e')),
         );
       }
       setState(() => _isLoading = false);
@@ -56,7 +59,7 @@ class _ProductBatchListPageState extends State<ProductBatchListPage> {
   }
 
   String _formatDate(dynamic date) {
-    if (date == null) return 'N/A';
+    if (date == null) return AppLocalizations.of(context)!.na;
     try {
       // Handle both string and DateTime
       if (date is String) {
@@ -71,7 +74,7 @@ class _ProductBatchListPageState extends State<ProductBatchListPage> {
 
   String _getExpiryStatus(dynamic expiryDate) {
     if (expiryDate == null) return 'no_expiry';
-    
+
     try {
       String dateStr = expiryDate.toString();
       final expiry = DateTime.parse(dateStr);
@@ -101,22 +104,26 @@ class _ProductBatchListPageState extends State<ProductBatchListPage> {
   }
 
   String _getExpiryLabel(String status, dynamic expiryDate) {
-    if (expiryDate == null) return 'No Expiry';
-    
+    if (expiryDate == null) return AppLocalizations.of(context)!.noExpiry;
+
     switch (status) {
       case 'expired':
         return 'Expired';
       case 'near_expiry':
         try {
-          final daysLeft = DateTime.parse(expiryDate.toString()).difference(DateTime.now()).inDays;
-          return 'Expires in $daysLeft days';
+          final daysLeft = DateTime.parse(expiryDate.toString())
+              .difference(DateTime.now())
+              .inDays;
+          return AppLocalizations.of(context)!.expiresIn +
+              ' $daysLeft ' +
+              AppLocalizations.of(context)!.days;
         } catch (e) {
           return 'Near Expiry';
         }
       case 'normal':
-        return 'Valid';
+        return AppLocalizations.of(context)!.valid;
       default:
-        return 'Unknown';
+        return AppLocalizations.of(context)!.unknown;
     }
   }
 
@@ -125,14 +132,18 @@ class _ProductBatchListPageState extends State<ProductBatchListPage> {
       await BatchApi.deleteBatch(batchId);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('$batchName deleted successfully')),
+          SnackBar(
+              content: Text(
+                  '$batchName ' + AppLocalizations.of(context)!.deleteSuccess)),
         );
         _fetchBatches(); // Refresh list
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to delete batch: $e'), backgroundColor: Colors.red),
+          SnackBar(
+              content: Text(AppLocalizations.of(context)!.deleteError + ' $e'),
+              backgroundColor: Colors.red),
         );
       }
     }
@@ -140,31 +151,37 @@ class _ProductBatchListPageState extends State<ProductBatchListPage> {
 
   @override
   Widget build(BuildContext context) {
-    final totalQuantity = _batches.fold<int>(0, (sum, b) => sum + ((b['quantity'] as num?)?.toInt() ?? 0));
-    final expiredCount = _batches.where((b) => _getExpiryStatus(b['expiry_date']) == 'expired').length;
-    final nearExpiryCount = _batches.where((b) => _getExpiryStatus(b['expiry_date']) == 'near_expiry').length;
+    final totalQuantity = _batches.fold<int>(
+        0, (sum, b) => sum + ((b['quantity'] as num?)?.toInt() ?? 0));
+    final expiredCount = _batches
+        .where((b) => _getExpiryStatus(b['expiry_date']) == 'expired')
+        .length;
+    final nearExpiryCount = _batches
+        .where((b) => _getExpiryStatus(b['expiry_date']) == 'near_expiry')
+        .length;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         PageHeader(
-          title: 'Product Batches - ${widget.productName}',
-          description: 'Manage batches for this product',
+          title: AppLocalizations.of(context)!.productBatchesTitle +
+              ' - ${widget.productName}',
+          description: AppLocalizations.of(context)!.manageBatchesDescription,
           actions: [
             TextButton.icon(
               onPressed: widget.onNavigateBack,
               icon: const Icon(Icons.arrow_back),
-              label: const Text('Back to Products'),
+              label: Text(AppLocalizations.of(context)!.backToProducts),
             ),
             const SizedBox(width: 12),
             PrimaryButton(
               onPressed: widget.onNavigateToCreate,
-              child: const Row(
+              child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(Icons.add, size: 20),
                   SizedBox(width: 8),
-                  Text('Create New Batch'),
+                  Text(AppLocalizations.of(context)!.createNewBatch),
                 ],
               ),
             ),
@@ -192,25 +209,25 @@ class _ProductBatchListPageState extends State<ProductBatchListPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
                                 _buildSummaryCard(
-                                  'Total Batches',
+                                  AppLocalizations.of(context)!.totalBatches,
                                   _batches.length.toString(),
                                   Icons.inventory_2,
                                   Colors.blue,
                                 ),
                                 _buildSummaryCard(
-                                  'Total Quantity',
+                                  AppLocalizations.of(context)!.totalQuantity,
                                   totalQuantity.toString(),
                                   Icons.warehouse,
                                   Colors.green,
                                 ),
                                 _buildSummaryCard(
-                                  'Expired',
+                                  AppLocalizations.of(context)!.expired,
                                   expiredCount.toString(),
                                   Icons.warning,
                                   Colors.red,
                                 ),
                                 _buildSummaryCard(
-                                  'Near Expiry',
+                                  AppLocalizations.of(context)!.nearExpiry,
                                   nearExpiryCount.toString(),
                                   Icons.access_time,
                                   Colors.orange,
@@ -224,17 +241,23 @@ class _ProductBatchListPageState extends State<ProductBatchListPage> {
                                   padding: const EdgeInsets.all(48.0),
                                   child: Column(
                                     children: [
-                                      Icon(Icons.inventory_2_outlined, size: 64, color: Colors.grey[400]),
+                                      Icon(Icons.inventory_2_outlined,
+                                          size: 64, color: Colors.grey[400]),
                                       const SizedBox(height: 16),
                                       Text(
-                                        'No batches found for this product',
-                                        style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                                        AppLocalizations.of(context)!
+                                            .noBatchesFound,
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.grey[600]),
                                       ),
                                       const SizedBox(height: 8),
                                       TextButton.icon(
                                         onPressed: widget.onNavigateToCreate,
                                         icon: const Icon(Icons.add),
-                                        label: const Text('Create your first batch'),
+                                        label: Text(
+                                            AppLocalizations.of(context)!
+                                                .createFirstBatch),
                                       ),
                                     ],
                                   ),
@@ -250,46 +273,77 @@ class _ProductBatchListPageState extends State<ProductBatchListPage> {
                                   },
                                   children: [
                                     // Header Row
-                                    const TableRow(
+                                    TableRow(
                                       decoration: BoxDecoration(
                                         color: AppTheme.brownGold,
                                       ),
                                       children: [
-                                        _TableHeaderCell(Text('Batch ID')),
-                                        _TableHeaderCell(Text('Quantity')),
-                                        _TableHeaderCell(Text('Mfg. Date')),
-                                        _TableHeaderCell(Text('Expiry Date')),
-                                        _TableHeaderCell(Text('Status')),
-                                        _TableHeaderCell(Text('Actions')),
+                                        _TableHeaderCell(Text(
+                                            AppLocalizations.of(context)!
+                                                .batchId)),
+                                        _TableHeaderCell(Text(
+                                            AppLocalizations.of(context)!
+                                                .quantity)),
+                                        _TableHeaderCell(Text(
+                                            AppLocalizations.of(context)!
+                                                .mfgDate)),
+                                        _TableHeaderCell(Text(
+                                            AppLocalizations.of(context)!
+                                                .expiryDate)),
+                                        _TableHeaderCell(Text(
+                                            AppLocalizations.of(context)!
+                                                .status)),
+                                        _TableHeaderCell(Text(
+                                            AppLocalizations.of(context)!
+                                                .actions)),
                                       ],
                                     ),
                                     // Data Rows
                                     ..._batches.map((batch) {
-                                      final expiryStatus = _getExpiryStatus(batch['expiry_date']);
-                                      final expiryColor = _getExpiryColor(expiryStatus);
-                                      final expiryLabel = _getExpiryLabel(expiryStatus, batch['expiry_date']);
-                                      
+                                      final expiryStatus = _getExpiryStatus(
+                                          batch['expiry_date']);
+                                      final expiryColor =
+                                          _getExpiryColor(expiryStatus);
+                                      final expiryLabel = _getExpiryLabel(
+                                          expiryStatus, batch['expiry_date']);
+
                                       // Handle both 'manufacture_date' and 'manifacture_date' (typo in DB)
-                                      final mfgDate = batch['manufacture_date'] ?? batch['manifacture_date'];
+                                      final mfgDate =
+                                          batch['manufacture_date'] ??
+                                              batch['manifacture_date'];
 
                                       return TableRow(
                                         decoration: BoxDecoration(
                                           border: Border(
-                                            bottom: BorderSide(color: AppTheme.borderColor.withOpacity(0.3)),
+                                            bottom: BorderSide(
+                                                color: AppTheme.borderColor
+                                                    .withOpacity(0.3)),
                                           ),
                                         ),
                                         children: [
-                                          _TableCell(Text('#${batch['batch_id']}')),
-                                          _TableCell(Text('${batch['quantity']} units')),
-                                          _TableCell(Text(_formatDate(mfgDate))),
-                                          _TableCell(Text(_formatDate(batch['expiry_date']))),
+                                          _TableCell(
+                                              Text('#${batch['batch_id']}')),
+                                          _TableCell(Text(
+                                              '${batch['quantity']} ' +
+                                                  AppLocalizations.of(context)!
+                                                      .units)),
+                                          _TableCell(
+                                              Text(_formatDate(mfgDate))),
+                                          _TableCell(Text(_formatDate(
+                                              batch['expiry_date']))),
                                           _TableCell(
                                             Container(
-                                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 12,
+                                                      vertical: 6),
                                               decoration: BoxDecoration(
-                                                color: expiryColor.withOpacity(0.1),
-                                                borderRadius: BorderRadius.circular(12),
-                                                border: Border.all(color: expiryColor),
+                                                color: expiryColor
+                                                    .withOpacity(0.1),
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                                border: Border.all(
+                                                    color: expiryColor),
                                               ),
                                               child: Text(
                                                 expiryLabel,
@@ -306,45 +360,70 @@ class _ProductBatchListPageState extends State<ProductBatchListPage> {
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
                                                 IconButton(
-                                                  icon: const Icon(Icons.edit, size: 20),
+                                                  icon: const Icon(Icons.edit,
+                                                      size: 20),
                                                   onPressed: () {
-                                                    widget.onNavigateToEdit?.call(batch['batch_id'].toString());
+                                                    widget.onNavigateToEdit
+                                                        ?.call(batch['batch_id']
+                                                            .toString());
                                                   },
                                                   color: AppTheme.primaryBlue,
                                                   tooltip: 'Edit Batch',
                                                 ),
                                                 IconButton(
-                                                  icon: const Icon(Icons.delete, size: 20),
+                                                  icon: const Icon(Icons.delete,
+                                                      size: 20),
                                                   onPressed: () {
                                                     showDialog(
                                                       context: context,
-                                                      builder: (context) => AlertDialog(
-                                                        title: const Text('Delete Batch'),
-                                                        content: Text('Are you sure you want to delete Batch #${batch['batch_id']}?'),
+                                                      builder: (context) =>
+                                                          AlertDialog(
+                                                        title: Text(
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .deleteBatch),
+                                                        content: Text(AppLocalizations
+                                                                    .of(context)!
+                                                                .deleteConfirmation +
+                                                            ' #${batch['batch_id']}?'),
                                                         actions: [
                                                           TextButton(
-                                                            onPressed: () => Navigator.pop(context),
-                                                            child: const Text('Cancel'),
+                                                            onPressed: () =>
+                                                                Navigator.pop(
+                                                                    context),
+                                                            child: Text(
+                                                                AppLocalizations.of(
+                                                                        context)!
+                                                                    .cancel),
                                                           ),
                                                           TextButton(
                                                             onPressed: () {
-                                                              Navigator.pop(context);
+                                                              Navigator.pop(
+                                                                  context);
                                                               _deleteBatch(
-                                                                batch['batch_id'] as int,
+                                                                batch['batch_id']
+                                                                    as int,
                                                                 'Batch #${batch['batch_id']}',
                                                               );
                                                             },
-                                                            style: TextButton.styleFrom(
-                                                              foregroundColor: Colors.red,
+                                                            style: TextButton
+                                                                .styleFrom(
+                                                              foregroundColor:
+                                                                  Colors.red,
                                                             ),
-                                                            child: const Text('Delete'),
+                                                            child: Text(
+                                                                AppLocalizations.of(
+                                                                        context)!
+                                                                    .delete),
                                                           ),
                                                         ],
                                                       ),
                                                     );
                                                   },
                                                   color: Colors.red,
-                                                  tooltip: 'Delete Batch',
+                                                  tooltip: AppLocalizations.of(
+                                                          context)!
+                                                      .deleteBatch,
                                                 ),
                                               ],
                                             ),
@@ -364,7 +443,8 @@ class _ProductBatchListPageState extends State<ProductBatchListPage> {
     );
   }
 
-  Widget _buildSummaryCard(String label, String value, IconData icon, Color color) {
+  Widget _buildSummaryCard(
+      String label, String value, IconData icon, Color color) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(

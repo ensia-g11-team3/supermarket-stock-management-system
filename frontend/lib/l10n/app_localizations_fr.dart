@@ -336,4 +336,88 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get deleted => 'supprimé';
+
+  @override
+  String get viewBatches => 'Voir les lots';
+
+  @override
+  String get productBatchesTitle => 'Lots de produit';
+
+  @override
+  String get manageBatchesDescription => 'Gérer les lots pour ce produit';
+
+  @override
+  String get backToProducts => 'Retour aux produits';
+
+  @override
+  String get createNewBatch => 'Créer un nouveau lot';
+
+  @override
+  String get totalBatches => 'Total des lots';
+
+  @override
+  String get totalQuantity => 'Quantité totale';
+
+  @override
+  String get expired => 'Expiré';
+
+  @override
+  String get nearExpiry => 'Expiration proche';
+
+  @override
+  String get noBatchesFound => 'Aucun lot trouvé pour ce produit';
+
+  @override
+  String get createFirstBatch => 'Créez votre premier lot';
+
+  @override
+  String get batchId => 'ID du lot';
+
+  @override
+  String get quantity => 'Quantité';
+
+  @override
+  String get mfgDate => 'Date de fab.';
+
+  @override
+  String get expiryDate => 'Date d\'exp.';
+
+  @override
+  String get units => 'unités';
+
+  @override
+  String get noExpiry => 'Pas d\'expiration';
+
+  @override
+  String get expiresIn => 'Expire dans';
+
+  @override
+  String get days => 'jours';
+
+  @override
+  String get valid => 'Valide';
+
+  @override
+  String get unknown => 'Inconnu';
+
+  @override
+  String get editBatch => 'Modifier le lot';
+
+  @override
+  String get deleteBatch => 'Supprimer le lot';
+
+  @override
+  String get deleteConfirmation => 'Êtes-vous sûr de vouloir supprimer ce lot ?';
+
+  @override
+  String get deleteSuccess => 'supprimé avec succès';
+
+  @override
+  String get loadError => 'Échec du chargement des lots';
+
+  @override
+  String get deleteError => 'Échec de la suppression du lot';
+
+  @override
+  String get na => 'N/A';
 }
