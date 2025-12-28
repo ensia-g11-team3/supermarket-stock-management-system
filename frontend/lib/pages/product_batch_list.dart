@@ -368,7 +368,9 @@ class _ProductBatchListPageState extends State<ProductBatchListPage> {
                                                             .toString());
                                                   },
                                                   color: AppTheme.primaryBlue,
-                                                  tooltip: 'Edit Batch',
+                                                  tooltip: AppLocalizations.of(
+                                                          context)!
+                                                      .editBatch,
                                                 ),
                                                 IconButton(
                                                   icon: const Icon(Icons.delete,

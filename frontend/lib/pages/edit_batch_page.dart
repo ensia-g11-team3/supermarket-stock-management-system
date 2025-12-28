@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:se_project/l10n/app_localizations.dart';
 import '../widgets/page_header.dart';
 import '../widgets/primary_button.dart';
 import '../theme/app_theme.dart';
@@ -28,7 +29,7 @@ class CreateBatchPage extends StatefulWidget {
 class _CreateBatchPageState extends State<CreateBatchPage> {
   final _formKey = GlobalKey<FormState>();
   final _quantityController = TextEditingController(text: '0');
-  
+
   DateTime? _manufactureDate;
   DateTime? _expiryDate;
   bool _isLoading = false;
@@ -49,24 +50,27 @@ class _CreateBatchPageState extends State<CreateBatchPage> {
       final batch = await BatchApi.getBatchById(int.parse(widget.batchId!));
       setState(() {
         _quantityController.text = batch['quantity'].toString();
-        
+
         // Handle both 'manufacture_date' and 'manifacture_date' (typo in DB)
         final mfgDate = batch['manufacture_date'] ?? batch['manifacture_date'];
         if (mfgDate != null) {
           _manufactureDate = HttpDate.parse(mfgDate.toString());
         }
-        
+
         if (batch['expiry_date'] != null) {
           _expiryDate = HttpDate.parse(batch['expiry_date'].toString());
         }
-        
+
         _isLoading = false;
       });
     } catch (e) {
-      print("Error loading batch: $e");
+      print(AppLocalizations.of(context)!.failedToLoadBatch + " $e");
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to load batch: $e'), backgroundColor: Colors.red),
+          SnackBar(
+              content:
+                  Text(AppLocalizations.of(context)!.failedToLoadBatch + ' $e'),
+              backgroundColor: Colors.red),
         );
       }
       setState(() => _isLoading = false);
@@ -82,13 +86,13 @@ class _CreateBatchPageState extends State<CreateBatchPage> {
   Future<void> _selectDate(BuildContext context, bool isManufactureDate) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: isManufactureDate 
-          ? (_manufactureDate ?? DateTime.now()) 
+      initialDate: isManufactureDate
+          ? (_manufactureDate ?? DateTime.now())
           : (_expiryDate ?? DateTime.now().add(const Duration(days: 365))),
       firstDate: DateTime(2000),
       lastDate: DateTime(2100),
     );
-    
+
     if (picked != null) {
       setState(() {
         if (isManufactureDate) {
@@ -125,7 +129,9 @@ class _CreateBatchPageState extends State<CreateBatchPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(_isEditMode ? 'Batch updated successfully!' : 'Batch created successfully!'),
+            content: Text(_isEditMode
+                ? AppLocalizations.of(context)!.batchUpdatedSuccess
+                : AppLocalizations.of(context)!.batchCreatedSuccess),
             backgroundColor: Colors.green,
           ),
         );
@@ -134,11 +140,13 @@ class _CreateBatchPageState extends State<CreateBatchPage> {
         widget.onBatchSaved?.call();
       }
     } catch (e) {
-      print("Error saving batch: $e"); // Debug print
+      print(AppLocalizations.of(context)!.failedToSaveBatch +
+          "$e"); // Debug print
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to save batch: $e'),
+            content:
+                Text(AppLocalizations.of(context)!.failedToSaveBatch + ' $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -151,7 +159,7 @@ class _CreateBatchPageState extends State<CreateBatchPage> {
   }
 
   String _formatDate(DateTime? date) {
-    if (date == null) return 'Not selected';
+    if (date == null) return AppLocalizations.of(context)!.notSelected;
     return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
   }
 
@@ -161,13 +169,16 @@ class _CreateBatchPageState extends State<CreateBatchPage> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         PageHeader(
-          title: _isEditMode ? 'Edit Batch' : 'Create New Batch',
-          description: 'Product: ${widget.productName}',
+          title: _isEditMode
+              ? AppLocalizations.of(context)!.editBatch
+              : AppLocalizations.of(context)!.createNewBatch,
+          description: AppLocalizations.of(context)!.productLabel +
+              ' ${widget.productName}',
           actions: [
             TextButton.icon(
               onPressed: widget.onNavigateBack,
               icon: const Icon(Icons.arrow_back),
-              label: const Text('Back to Batches'),
+              label: Text(AppLocalizations.of(context)!.backToBatches),
             ),
           ],
         ),
@@ -190,19 +201,23 @@ class _CreateBatchPageState extends State<CreateBatchPage> {
                                 // Quantity Field
                                 _buildTextField(
                                   controller: _quantityController,
-                                  label: 'Quantity',
-                                  hint: 'Enter batch quantity',
+                                  label: AppLocalizations.of(context)!.quantity,
+                                  hint: AppLocalizations.of(context)!
+                                      .enterQuantityHint,
                                   keyboardType: TextInputType.number,
                                   isRequired: true,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'Please enter quantity';
+                                      return AppLocalizations.of(context)!
+                                          .pleaseEnterQuantity;
                                     }
                                     if (int.tryParse(value) == null) {
-                                      return 'Please enter a valid number';
+                                      return AppLocalizations.of(context)!
+                                          .enterValidNumber;
                                     }
                                     if (int.parse(value) <= 0) {
-                                      return 'Quantity must be greater than 0';
+                                      return AppLocalizations.of(context)!
+                                          .quantityGreaterThanZero;
                                     }
                                     return null;
                                   },
@@ -211,7 +226,8 @@ class _CreateBatchPageState extends State<CreateBatchPage> {
 
                                 // Manufacture Date
                                 _buildDateField(
-                                  label: 'Manufacture Date',
+                                  label: AppLocalizations.of(context)!
+                                      .manufactureDate,
                                   date: _manufactureDate,
                                   onTap: () => _selectDate(context, true),
                                   isRequired: false,
@@ -220,7 +236,8 @@ class _CreateBatchPageState extends State<CreateBatchPage> {
 
                                 // Expiry Date
                                 _buildDateField(
-                                  label: 'Expiry Date',
+                                  label:
+                                      AppLocalizations.of(context)!.expiryDate,
                                   date: _expiryDate,
                                   onTap: () => _selectDate(context, false),
                                   isRequired: false,
@@ -231,28 +248,38 @@ class _CreateBatchPageState extends State<CreateBatchPage> {
                                 Row(
                                   children: [
                                     PrimaryButton(
-                                      onPressed: _isLoading ? null : _handleSave,
+                                      onPressed:
+                                          _isLoading ? null : _handleSave,
                                       child: _isLoading
                                           ? const SizedBox(
                                               width: 20,
                                               height: 20,
                                               child: CircularProgressIndicator(
                                                 strokeWidth: 2,
-                                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                                valueColor:
+                                                    AlwaysStoppedAnimation<
+                                                        Color>(Colors.white),
                                               ),
                                             )
-                                          : Text(_isEditMode ? 'Update Batch' : 'Create Batch'),
+                                          : Text(_isEditMode
+                                              ? AppLocalizations.of(context)!
+                                                  .updateBatch
+                                              : AppLocalizations.of(context)!
+                                                  .createBatch),
                                     ),
                                     const SizedBox(width: 12),
                                     TextButton(
-                                      onPressed: _isLoading ? null : widget.onNavigateBack,
+                                      onPressed: _isLoading
+                                          ? null
+                                          : widget.onNavigateBack,
                                       style: TextButton.styleFrom(
                                         padding: const EdgeInsets.symmetric(
                                           horizontal: 24,
                                           vertical: 12,
                                         ),
                                       ),
-                                      child: const Text('Cancel'),
+                                      child: Text(
+                                          AppLocalizations.of(context)!.cancel),
                                     ),
                                   ],
                                 ),
@@ -316,7 +343,8 @@ class _CreateBatchPageState extends State<CreateBatchPage> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: AppTheme.primaryBlue, width: 2),
+              borderSide:
+                  const BorderSide(color: AppTheme.primaryBlue, width: 2),
             ),
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,
@@ -371,10 +399,13 @@ class _CreateBatchPageState extends State<CreateBatchPage> {
                   _formatDate(date),
                   style: TextStyle(
                     fontSize: 14,
-                    color: date == null ? AppTheme.textSecondary : AppTheme.textPrimary,
+                    color: date == null
+                        ? AppTheme.textSecondary
+                        : AppTheme.textPrimary,
                   ),
                 ),
-                const Icon(Icons.calendar_today, size: 20, color: AppTheme.primaryBlue),
+                const Icon(Icons.calendar_today,
+                    size: 20, color: AppTheme.primaryBlue),
               ],
             ),
           ),

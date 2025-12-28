@@ -420,4 +420,46 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get na => 'N/A';
+
+  @override
+  String get productLabel => 'Product';
+
+  @override
+  String get backToBatches => 'Back to Batches';
+
+  @override
+  String get enterQuantityHint => 'Enter batch quantity';
+
+  @override
+  String get pleaseEnterQuantity => 'Please enter quantity';
+
+  @override
+  String get enterValidNumber => 'Please enter a valid number';
+
+  @override
+  String get quantityGreaterThanZero => 'Quantity must be greater than 0';
+
+  @override
+  String get manufactureDate => 'Manufacture Date';
+
+  @override
+  String get notSelected => 'Not selected';
+
+  @override
+  String get updateBatch => 'Update Batch';
+
+  @override
+  String get createBatch => 'Create Batch';
+
+  @override
+  String get batchUpdatedSuccess => 'Batch updated successfully!';
+
+  @override
+  String get batchCreatedSuccess => 'Batch created successfully!';
+
+  @override
+  String get failedToLoadBatch => 'Failed to load batch';
+
+  @override
+  String get failedToSaveBatch => 'Failed to save batch';
 }

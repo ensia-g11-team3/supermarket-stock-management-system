@@ -916,6 +916,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'N/A'**
   String get na;
+
+  /// No description provided for @productLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Product'**
+  String get productLabel;
+
+  /// No description provided for @backToBatches.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Batches'**
+  String get backToBatches;
+
+  /// No description provided for @enterQuantityHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter batch quantity'**
+  String get enterQuantityHint;
+
+  /// No description provided for @pleaseEnterQuantity.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter quantity'**
+  String get pleaseEnterQuantity;
+
+  /// No description provided for @enterValidNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid number'**
+  String get enterValidNumber;
+
+  /// No description provided for @quantityGreaterThanZero.
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity must be greater than 0'**
+  String get quantityGreaterThanZero;
+
+  /// No description provided for @manufactureDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Manufacture Date'**
+  String get manufactureDate;
+
+  /// No description provided for @notSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'Not selected'**
+  String get notSelected;
+
+  /// No description provided for @updateBatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Batch'**
+  String get updateBatch;
+
+  /// No description provided for @createBatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Batch'**
+  String get createBatch;
+
+  /// No description provided for @batchUpdatedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Batch updated successfully!'**
+  String get batchUpdatedSuccess;
+
+  /// No description provided for @batchCreatedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Batch created successfully!'**
+  String get batchCreatedSuccess;
+
+  /// No description provided for @failedToLoadBatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load batch'**
+  String get failedToLoadBatch;
+
+  /// No description provided for @failedToSaveBatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save batch'**
+  String get failedToSaveBatch;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

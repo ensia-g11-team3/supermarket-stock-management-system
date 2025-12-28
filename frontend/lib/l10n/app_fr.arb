@@ -151,5 +151,26 @@
   "deleteSuccess": "supprimé avec succès",
   "loadError": "Échec du chargement des lots",
   "deleteError": "Échec de la suppression du lot",
-  "na": "N/A"
+  "na": "N/A",
+
+
+  "editBatch": "Modifier le lot",
+  "createNewBatch": "Créer un nouveau lot",
+  "productLabel": "Produit",
+  "backToBatches": "Retour aux lots",
+  "quantity": "Quantité",
+  "enterQuantityHint": "Entrez la quantité du lot",
+  "pleaseEnterQuantity": "Veuillez entrer une quantité",
+  "enterValidNumber": "Veuillez entrer un nombre valide",
+  "quantityGreaterThanZero": "La quantité doit être supérieure à 0",
+  "manufactureDate": "Date de fabrication",
+  "expiryDate": "Date d'expiration",
+  "notSelected": "Non sélectionné",
+  "updateBatch": "Mettre à jour le lot",
+  "createBatch": "Créer le lot",
+  "cancel": "Annuler",
+  "batchUpdatedSuccess": "Lot mis à jour avec succès !",
+  "batchCreatedSuccess": "Lot créé avec succès !",
+  "failedToLoadBatch": "Échec du chargement du lot",
+  "failedToSaveBatch": "Échec de l'enregistrement du lot"
 }

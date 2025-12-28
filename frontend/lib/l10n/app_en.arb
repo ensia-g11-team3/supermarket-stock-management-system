@@ -160,6 +160,27 @@
   "deleteSuccess": "deleted successfully",
   "loadError": "Failed to load batches",
   "deleteError": "Failed to delete batch",
-  "na": "N/A"
+  "na": "N/A",
+
+
+  "editBatch": "Edit Batch",
+  "createNewBatch": "Create New Batch",
+  "productLabel": "Product",
+  "backToBatches": "Back to Batches",
+  "quantity": "Quantity",
+  "enterQuantityHint": "Enter batch quantity",
+  "pleaseEnterQuantity": "Please enter quantity",
+  "enterValidNumber": "Please enter a valid number",
+  "quantityGreaterThanZero": "Quantity must be greater than 0",
+  "manufactureDate": "Manufacture Date",
+  "expiryDate": "Expiry Date",
+  "notSelected": "Not selected",
+  "updateBatch": "Update Batch",
+  "createBatch": "Create Batch",
+  "cancel": "Cancel",
+  "batchUpdatedSuccess": "Batch updated successfully!",
+  "batchCreatedSuccess": "Batch created successfully!",
+  "failedToLoadBatch": "Failed to load batch",
+  "failedToSaveBatch": "Failed to save batch"
 
 }

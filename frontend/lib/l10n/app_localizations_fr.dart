@@ -380,7 +380,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get mfgDate => 'Date de fab.';
 
   @override
-  String get expiryDate => 'Date d\'exp.';
+  String get expiryDate => 'Date d\'expiration';
 
   @override
   String get units => 'unités';
@@ -420,4 +420,46 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get na => 'N/A';
+
+  @override
+  String get productLabel => 'Produit';
+
+  @override
+  String get backToBatches => 'Retour aux lots';
+
+  @override
+  String get enterQuantityHint => 'Entrez la quantité du lot';
+
+  @override
+  String get pleaseEnterQuantity => 'Veuillez entrer une quantité';
+
+  @override
+  String get enterValidNumber => 'Veuillez entrer un nombre valide';
+
+  @override
+  String get quantityGreaterThanZero => 'La quantité doit être supérieure à 0';
+
+  @override
+  String get manufactureDate => 'Date de fabrication';
+
+  @override
+  String get notSelected => 'Non sélectionné';
+
+  @override
+  String get updateBatch => 'Mettre à jour le lot';
+
+  @override
+  String get createBatch => 'Créer le lot';
+
+  @override
+  String get batchUpdatedSuccess => 'Lot mis à jour avec succès !';
+
+  @override
+  String get batchCreatedSuccess => 'Lot créé avec succès !';
+
+  @override
+  String get failedToLoadBatch => 'Échec du chargement du lot';
+
+  @override
+  String get failedToSaveBatch => 'Échec de l\'enregistrement du lot';
 }
