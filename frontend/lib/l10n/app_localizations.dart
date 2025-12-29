@@ -201,6 +201,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Thresholds'**
+  /// **'Suppliers & Orders'**
   String get navThresholds;
 
   /// No description provided for @navLowStock.
