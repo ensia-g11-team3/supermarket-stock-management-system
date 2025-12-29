@@ -92,6 +92,7 @@ class LowStockAlert:
     def get_all_active():
         """
         Data for the low_stock_alerts page
+        Fetches directly from products table where qty <= threshold
         """
         connection = get_connection()
         if not connection:
@@ -101,19 +102,11 @@ class LowStockAlert:
             cursor = connection.cursor(dictionary=True)
 
             query = """
-                SELECT 
-                    a.alert_id,
-                    a.created_at,
-                    p.product_id,
-                    p.name,
-                    p.category,
-                    p.qty,
-                    p.product_threshold,
-                    p.unit
-                FROM low_stock_alerts a
-                JOIN products p ON a.product_id = p.product_id
-                WHERE a.is_active = TRUE
-                ORDER BY a.created_at DESC
+                SELECT *
+                FROM products
+                WHERE qty <= product_threshold
+                AND product_threshold IS NOT NULL
+                ORDER BY created_at DESC
             """
             cursor.execute(query)
             alerts = cursor.fetchall()

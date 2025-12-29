@@ -21,8 +21,6 @@ import 'pages/add_threshold_page.dart';
 import 'pages/edit_threshold_page.dart';
 import 'pages/product_batch_list.dart';
 import 'pages/edit_batch_page.dart';
-import 'pages/product_batch_list.dart';
-import 'pages/edit_batch_page.dart';
 
 //localization: added by Nour
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -45,9 +43,7 @@ class StockifyApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      //Make french default (client request)
       locale: const Locale('fr'),
-      //Make french default (client request)
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       home: const AppRouter(),
@@ -73,7 +69,7 @@ class _AppRouterState extends State<AppRouter> {
   Key _productListKey = UniqueKey();
   Key _batchListKey = UniqueKey();
 
-  // Add batch-related state
+  // Batch-related state
   String? _batchProductId;
   String? _batchProductName;
   String? _editBatchId;
@@ -96,14 +92,8 @@ class _AppRouterState extends State<AppRouter> {
 
   void _navigateToPage(String page) {
     setState(() {
-      if (page == 'products') {
-        // Regenerate key to force rebuild of ProductListPage
-        _productListKey = UniqueKey();
-      }
-      if (page == 'batches') {
-        // Regenerate key to force rebuild of BatchListPage
-        _batchListKey = UniqueKey();
-      }
+      if (page == 'products') _productListKey = UniqueKey();
+      if (page == 'batches') _batchListKey = UniqueKey();
       _currentPage = page;
     });
   }
@@ -142,6 +132,30 @@ class _AppRouterState extends State<AppRouter> {
           onProductUpdated: () => _navigateToPage('products'),
         );
 
+      // Threshold pages
+      case 'thresholds':
+        return ThresholdListPage(
+          onNavigateToAdd: () => _navigateToPage('add-threshold'),
+          onNavigateToEdit: (String thresholdId) {
+            setState(() {
+              _editThresholdId = thresholdId;
+              _currentPage = 'edit-threshold';
+            });
+          },
+        );
+      case 'add-threshold':
+        return AddThresholdPage(
+          onNavigateBack: () => _navigateToPage('thresholds'),
+          onThresholdCreated: () => _navigateToPage('thresholds'),
+        );
+      case 'edit-threshold':
+        return EditThresholdPage(
+          thresholdId: _editThresholdId ?? '1',
+          onNavigateBack: () => _navigateToPage('thresholds'),
+          onThresholdUpdated: () => _navigateToPage('thresholds'),
+        );
+
+      // Batch pages
       case 'batches':
         return ProductBatchListPage(
           key: _batchListKey,
@@ -156,7 +170,6 @@ class _AppRouterState extends State<AppRouter> {
           },
           onNavigateToCreate: () => _navigateToPage('create-batch'),
         );
-
       case 'create-batch':
         return CreateBatchPage(
           productId: _batchProductId ?? '1',
@@ -164,7 +177,6 @@ class _AppRouterState extends State<AppRouter> {
           onNavigateBack: () => _navigateToPage('batches'),
           onBatchSaved: () => _navigateToPage('batches'),
         );
-
       case 'edit-batch':
         return CreateBatchPage(
           productId: _batchProductId ?? '1',
@@ -173,6 +185,8 @@ class _AppRouterState extends State<AppRouter> {
           onNavigateBack: () => _navigateToPage('batches'),
           onBatchSaved: () => _navigateToPage('batches'),
         );
+
+      // Other pages
       case 'categories':
         return const CategoriesPage();
       case 'suppliers':
@@ -202,27 +216,7 @@ class _AppRouterState extends State<AppRouter> {
           onNavigateBack: () => _navigateToPage('users'),
           onUserUpdated: () => _navigateToPage('users'),
         );
-      case 'thresholds':
-        return ThresholdListPage(
-          onNavigateToAdd: () => _navigateToPage('add-threshold'),
-          onNavigateToEdit: (String thresholdId) {
-            setState(() {
-              _editThresholdId = thresholdId;
-              _currentPage = 'edit-threshold';
-            });
-          },
-        );
-      case 'add-threshold':
-        return AddThresholdPage(
-          onNavigateBack: () => _navigateToPage('thresholds'),
-          onThresholdCreated: () => _navigateToPage('thresholds'),
-        );
-      case 'edit-threshold':
-        return EditThresholdPage(
-          thresholdId: _editThresholdId ?? '1',
-          onNavigateBack: () => _navigateToPage('thresholds'),
-          onThresholdUpdated: () => _navigateToPage('thresholds'),
-        );
+
       default:
         return const DashboardPage();
     }
@@ -231,9 +225,7 @@ class _AppRouterState extends State<AppRouter> {
   @override
   Widget build(BuildContext context) {
     if (!_isAuthenticated) {
-      return LoginPage(
-        onLogin: _handleLogin,
-      );
+      return LoginPage(onLogin: _handleLogin);
     }
 
     return Layout(
