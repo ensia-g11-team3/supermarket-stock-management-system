@@ -336,4 +336,49 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deleted => 'deleted';
+
+  @override
+  String get lowStockDescription => 'Monitor products with low inventory levels';
+
+  @override
+  String get totalAlerts => 'Total Alerts';
+
+  @override
+  String get lowStockItems => 'Low stock items';
+
+  @override
+  String get searchAlertsHint => 'Search by product name or category...';
+
+  @override
+  String get refresh => 'Refresh';
+
+  @override
+  String get noLowStockAlerts => 'No low stock alerts';
+
+  @override
+  String get noAlertsMatch => 'No alerts match your search';
+
+  @override
+  String get allStockSufficient => 'All products have sufficient stock levels';
+
+  @override
+  String get tryDifferentSearch => 'Try a different search term';
+
+  @override
+  String get currentStock => 'Current Stock';
+
+  @override
+  String get threshold => 'Threshold';
+
+  @override
+  String get unknown => 'Unknown';
+
+  @override
+  String get notAvailable => 'N/A';
+
+  @override
+  String get critical => 'Critical';
+
+  @override
+  String get warning => 'Warning';
 }

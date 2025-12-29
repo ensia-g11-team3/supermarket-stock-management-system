@@ -200,7 +200,7 @@ abstract class AppLocalizations {
   /// No description provided for @navThresholds.
   ///
   /// In en, this message translates to:
-  /// **'Suppliers & Orders'**
+  /// **'Thresholds'**
   String get navThresholds;
 
   /// No description provided for @navLowStock.
@@ -748,6 +748,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'deleted'**
   String get deleted;
+
+  /// No description provided for @lowStockDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Monitor products with low inventory levels'**
+  String get lowStockDescription;
+
+  /// No description provided for @totalAlerts.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Alerts'**
+  String get totalAlerts;
+
+  /// No description provided for @lowStockItems.
+  ///
+  /// In en, this message translates to:
+  /// **'Low stock items'**
+  String get lowStockItems;
+
+  /// No description provided for @searchAlertsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by product name or category...'**
+  String get searchAlertsHint;
+
+  /// No description provided for @refresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get refresh;
+
+  /// No description provided for @noLowStockAlerts.
+  ///
+  /// In en, this message translates to:
+  /// **'No low stock alerts'**
+  String get noLowStockAlerts;
+
+  /// No description provided for @noAlertsMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'No alerts match your search'**
+  String get noAlertsMatch;
+
+  /// No description provided for @allStockSufficient.
+  ///
+  /// In en, this message translates to:
+  /// **'All products have sufficient stock levels'**
+  String get allStockSufficient;
+
+  /// No description provided for @tryDifferentSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Try a different search term'**
+  String get tryDifferentSearch;
+
+  /// No description provided for @currentStock.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Stock'**
+  String get currentStock;
+
+  /// No description provided for @threshold.
+  ///
+  /// In en, this message translates to:
+  /// **'Threshold'**
+  String get threshold;
+
+  /// No description provided for @unknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get unknown;
+
+  /// No description provided for @notAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'N/A'**
+  String get notAvailable;
+
+  /// No description provided for @critical.
+  ///
+  /// In en, this message translates to:
+  /// **'Critical'**
+  String get critical;
+
+  /// No description provided for @warning.
+  ///
+  /// In en, this message translates to:
+  /// **'Warning'**
+  String get warning;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
