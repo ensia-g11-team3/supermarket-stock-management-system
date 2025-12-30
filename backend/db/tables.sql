@@ -7,7 +7,7 @@ CREATE TABLE users (
     email VARCHAR(100) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
-    role VARCHAR(20) NOT NULL COMMENT 'Admin, Sales Clerk, Inventory Manager',
+    role VARCHAR(255) NOT NULL COMMENT 'Admin, Sales Clerk, Inventory Manager',
     can_view_products BOOLEAN DEFAULT FALSE,
     can_add_product BOOLEAN DEFAULT FALSE,
     can_edit_product BOOLEAN DEFAULT FALSE,
