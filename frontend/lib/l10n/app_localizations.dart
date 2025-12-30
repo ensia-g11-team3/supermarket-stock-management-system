@@ -750,6 +750,125 @@ abstract class AppLocalizations {
   /// **'deleted'**
   String get deleted;
 
+  /// No description provided for @viewBatches.
+  ///
+  /// In en, this message translates to:
+  /// **'View Batches'**
+  String get viewBatches;
+
+  /// No description provided for @productBatchesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Product Batches'**
+  String get productBatchesTitle;
+
+  /// No description provided for @manageBatchesDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage batches for this product'**
+  String get manageBatchesDescription;
+
+  /// No description provided for @backToProducts.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Products'**
+  String get backToProducts;
+
+  /// No description provided for @createNewBatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Create New Batch'**
+  String get createNewBatch;
+
+  /// No description provided for @totalBatches.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Batches'**
+  String get totalBatches;
+
+  /// No description provided for @totalQuantity.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Quantity'**
+  String get totalQuantity;
+
+  /// No description provided for @expired.
+  ///
+  /// In en, this message translates to:
+  /// **'Expired'**
+  String get expired;
+
+  /// No description provided for @nearExpiry.
+  ///
+  /// In en, this message translates to:
+  /// **'Near Expiry'**
+  String get nearExpiry;
+
+  /// No description provided for @noBatchesFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No batches found for this product'**
+  String get noBatchesFound;
+
+  /// No description provided for @createFirstBatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Create your first batch'**
+  String get createFirstBatch;
+
+  /// No description provided for @batchId.
+  ///
+  /// In en, this message translates to:
+  /// **'Batch ID'**
+  String get batchId;
+
+  /// No description provided for @quantity.
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity'**
+  String get quantity;
+
+  /// No description provided for @mfgDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Mfg. Date'**
+  String get mfgDate;
+
+  /// No description provided for @expiryDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Expiry Date'**
+  String get expiryDate;
+
+  /// No description provided for @units.
+  ///
+  /// In en, this message translates to:
+  /// **'units'**
+  String get units;
+
+  /// No description provided for @noExpiry.
+  ///
+  /// In en, this message translates to:
+  /// **'No Expiry'**
+  String get noExpiry;
+
+  /// No description provided for @expiresIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Expires in'**
+  String get expiresIn;
+
+  /// No description provided for @days.
+  ///
+  /// In en, this message translates to:
+  /// **'days'**
+  String get days;
+
+  /// No description provided for @valid.
+  ///
+  /// In en, this message translates to:
+  /// **'Valid'**
+  String get valid;
   /// No description provided for @lowStockDescription.
   ///
   /// In en, this message translates to:
@@ -822,6 +941,131 @@ abstract class AppLocalizations {
   /// **'Unknown'**
   String get unknown;
 
+  /// No description provided for @editBatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Batch'**
+  String get editBatch;
+
+  /// No description provided for @deleteBatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Batch'**
+  String get deleteBatch;
+
+  /// No description provided for @deleteConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this batch?'**
+  String get deleteConfirmation;
+
+  /// No description provided for @deleteSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'deleted successfully'**
+  String get deleteSuccess;
+
+  /// No description provided for @loadError.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load batches'**
+  String get loadError;
+
+  /// No description provided for @deleteError.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete batch'**
+  String get deleteError;
+
+  /// No description provided for @na.
+  ///
+  /// In en, this message translates to:
+  /// **'N/A'**
+  String get na;
+
+  /// No description provided for @productLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Product'**
+  String get productLabel;
+
+  /// No description provided for @backToBatches.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Batches'**
+  String get backToBatches;
+
+  /// No description provided for @enterQuantityHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter batch quantity'**
+  String get enterQuantityHint;
+
+  /// No description provided for @pleaseEnterQuantity.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter quantity'**
+  String get pleaseEnterQuantity;
+
+  /// No description provided for @enterValidNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid number'**
+  String get enterValidNumber;
+
+  /// No description provided for @quantityGreaterThanZero.
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity must be greater than 0'**
+  String get quantityGreaterThanZero;
+
+  /// No description provided for @manufactureDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Manufacture Date'**
+  String get manufactureDate;
+
+  /// No description provided for @notSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'Not selected'**
+  String get notSelected;
+
+  /// No description provided for @updateBatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Batch'**
+  String get updateBatch;
+
+  /// No description provided for @createBatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Batch'**
+  String get createBatch;
+
+  /// No description provided for @batchUpdatedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Batch updated successfully!'**
+  String get batchUpdatedSuccess;
+
+  /// No description provided for @batchCreatedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Batch created successfully!'**
+  String get batchCreatedSuccess;
+
+  /// No description provided for @failedToLoadBatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load batch'**
+  String get failedToLoadBatch;
+
+  /// No description provided for @failedToSaveBatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save batch'**
+  String get failedToSaveBatch;
   /// No description provided for @notAvailable.
   ///
   /// In en, this message translates to:

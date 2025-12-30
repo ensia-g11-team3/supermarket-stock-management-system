@@ -338,6 +338,64 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deleted => 'deleted';
 
   @override
+  String get viewBatches => 'View Batches';
+
+  @override
+  String get productBatchesTitle => 'Product Batches';
+
+  @override
+  String get manageBatchesDescription => 'Manage batches for this product';
+
+  @override
+  String get backToProducts => 'Back to Products';
+
+  @override
+  String get createNewBatch => 'Create New Batch';
+
+  @override
+  String get totalBatches => 'Total Batches';
+
+  @override
+  String get totalQuantity => 'Total Quantity';
+
+  @override
+  String get expired => 'Expired';
+
+  @override
+  String get nearExpiry => 'Near Expiry';
+
+  @override
+  String get noBatchesFound => 'No batches found for this product';
+
+  @override
+  String get createFirstBatch => 'Create your first batch';
+
+  @override
+  String get batchId => 'Batch ID';
+
+  @override
+  String get quantity => 'Quantity';
+
+  @override
+  String get mfgDate => 'Mfg. Date';
+
+  @override
+  String get expiryDate => 'Expiry Date';
+
+  @override
+  String get units => 'units';
+
+  @override
+  String get noExpiry => 'No Expiry';
+
+  @override
+  String get expiresIn => 'Expires in';
+
+  @override
+  String get days => 'days';
+
+  @override
+  String get valid => 'Valid';
   String get lowStockDescription => 'Monitor products with low inventory levels';
 
   @override
@@ -374,6 +432,67 @@ class AppLocalizationsEn extends AppLocalizations {
   String get unknown => 'Unknown';
 
   @override
+  String get editBatch => 'Edit Batch';
+
+  @override
+  String get deleteBatch => 'Delete Batch';
+
+  @override
+  String get deleteConfirmation => 'Are you sure you want to delete this batch?';
+
+  @override
+  String get deleteSuccess => 'deleted successfully';
+
+  @override
+  String get loadError => 'Failed to load batches';
+
+  @override
+  String get deleteError => 'Failed to delete batch';
+
+  @override
+  String get na => 'N/A';
+
+  @override
+  String get productLabel => 'Product';
+
+  @override
+  String get backToBatches => 'Back to Batches';
+
+  @override
+  String get enterQuantityHint => 'Enter batch quantity';
+
+  @override
+  String get pleaseEnterQuantity => 'Please enter quantity';
+
+  @override
+  String get enterValidNumber => 'Please enter a valid number';
+
+  @override
+  String get quantityGreaterThanZero => 'Quantity must be greater than 0';
+
+  @override
+  String get manufactureDate => 'Manufacture Date';
+
+  @override
+  String get notSelected => 'Not selected';
+
+  @override
+  String get updateBatch => 'Update Batch';
+
+  @override
+  String get createBatch => 'Create Batch';
+
+  @override
+  String get batchUpdatedSuccess => 'Batch updated successfully!';
+
+  @override
+  String get batchCreatedSuccess => 'Batch created successfully!';
+
+  @override
+  String get failedToLoadBatch => 'Failed to load batch';
+
+  @override
+  String get failedToSaveBatch => 'Failed to save batch';
   String get notAvailable => 'N/A';
 
   @override
