@@ -18,16 +18,16 @@ class AppLocalizationsFr extends AppLocalizations {
   String get loginWelcome => 'Bienvenue';
 
   @override
-  String get username => 'Nom d\'utilisateur';
+  String get username => 'Nom d’utilisateur';
 
   @override
-  String get enterUsername => 'Entrez votre nom d\'utilisateur';
+  String get enterUsername => 'Entrez le nom d’utilisateur';
 
   @override
   String get password => 'Mot de passe';
 
   @override
-  String get enterPassword => 'Entrez votre mot de passe';
+  String get enterPassword => 'Entrez le mot de passe';
 
   @override
   String get rememberMe => 'Se souvenir de moi';
@@ -407,7 +407,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get deleteBatch => 'Supprimer le lot';
 
   @override
-  String get deleteConfirmation => 'Êtes-vous sûr de vouloir supprimer ce lot ?';
+  String get deleteConfirmation => 'Êtes-vous sûr de vouloir supprimer cet utilisateur ?';
 
   @override
   String get deleteSuccess => 'supprimé avec succès';
@@ -723,4 +723,205 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get remove => 'Supprimer';
+
+  @override
+  String get userManagement => 'Gestion des Utilisateurs';
+
+  @override
+  String get userManagementDesc => 'Gérer les utilisateurs du système et leurs permissions.';
+
+  @override
+  String get addUser => 'Ajouter un Utilisateur';
+
+  @override
+  String get filtersAndSearch => 'Filtres et Recherche';
+
+  @override
+  String get userSearchPlaceholder => 'Rechercher par nom, email, téléphone ou rôle...';
+
+  @override
+  String get filterByRole => 'Filtrer par Rôle';
+
+  @override
+  String get filterByStatus => 'Filtrer par Statut';
+
+  @override
+  String get sortBy => 'Trier par';
+
+  @override
+  String get allRoles => 'Tous les Rôles';
+
+  @override
+  String get allStatus => 'Tous les Statuts';
+
+  @override
+  String get active => 'Actif';
+
+  @override
+  String get inactive => 'Inactif';
+
+  @override
+  String get sortName => 'Nom';
+
+  @override
+  String get sortDate => 'Date';
+
+  @override
+  String get fullName => 'Nom complet';
+
+  @override
+  String get email => 'E-mail';
+
+  @override
+  String get phone => 'Téléphone';
+
+  @override
+  String get role => 'Rôle';
+
+  @override
+  String get deleteUser => 'Supprimer l\'utilisateur';
+
+  @override
+  String get cannotBeUndone => 'Cette action est irréversible.';
+
+  @override
+  String get userDeleted => 'supprimé';
+
+  @override
+  String get name => 'Nom';
+
+  @override
+  String get errorLoadingUsers => 'Échec du chargement des utilisateurs: ';
+
+  @override
+  String get errorDeletingUser => 'Impossible de supprimer l\'utilisateur. Vérifiez votre connexion.';
+
+  @override
+  String get errorUnexpected => 'Une erreur inattendue est survenue : ';
+
+  @override
+  String get noUsersFound => 'Aucun utilisateur ne correspond à vos critères.';
+
+  @override
+  String get createNewUser => 'Créer un nouvel utilisateur';
+
+  @override
+  String get addNewUserDescription => 'Ajouter un nouvel utilisateur au système';
+
+  @override
+  String get backToUserList => 'Retour à la liste des utilisateurs';
+
+  @override
+  String get basicInformation => 'Informations de base';
+
+  @override
+  String get enterFullName => 'Entrez le nom complet';
+
+  @override
+  String get phoneNumber => 'Numéro de téléphone';
+
+  @override
+  String get emailHint => 'utilisateur@exemple.com';
+
+  @override
+  String get passwordRules => 'Doit contenir au moins 8 caractères, une majuscule et un chiffre';
+
+  @override
+  String get rolePermissions => 'Rôle et permissions';
+
+  @override
+  String get roleAutoFill => 'La sélection d’un rôle remplira automatiquement les permissions par défaut';
+
+  @override
+  String get permissions => 'Permissions';
+
+  @override
+  String get createUser => 'Créer l’utilisateur';
+
+  @override
+  String get usernameRequired => 'Le nom d’utilisateur est requis';
+
+  @override
+  String get fullNameRequired => 'Le nom complet est requis';
+
+  @override
+  String get phoneRequired => 'Le numéro de téléphone est requis';
+
+  @override
+  String get passwordRequired => 'Le mot de passe est requis';
+
+  @override
+  String get emailInvalid => 'Entrez une adresse e-mail valide';
+
+  @override
+  String get passwordMinLength => 'Le mot de passe doit comporter au moins 8 caractères';
+
+  @override
+  String get passwordUppercase => 'Le mot de passe doit contenir au moins une lettre majuscule';
+
+  @override
+  String get passwordNumber => 'Le mot de passe doit contenir au moins un chiffre';
+
+  @override
+  String get userCreatedSuccess => 'Utilisateur créé avec succès';
+
+  @override
+  String get failedAddUser => 'Échec de l’ajout de l’utilisateur';
+
+  @override
+  String get editUser => 'Modifier l\'utilisateur';
+
+  @override
+  String get editingUser => 'Modification de l\'utilisateur :';
+
+  @override
+  String get userInformation => 'Informations de l\'utilisateur';
+
+  @override
+  String get userStatus => 'Statut : ';
+
+  @override
+  String get user_created => 'Créé le : ';
+
+  @override
+  String get pleaseEnterUsername => 'Veuillez entrer le nom d’utilisateur';
+
+  @override
+  String get pleaseEnterFullName => 'Veuillez entrer le nom complet';
+
+  @override
+  String get pleaseEnterPhoneNumber => 'Veuillez entrer le numéro de téléphone';
+
+  @override
+  String get pleaseEnterEmail => 'Veuillez entrer l’e-mail';
+
+  @override
+  String get pleaseEnterValidEmail => 'Veuillez entrer une adresse e-mail valide';
+
+  @override
+  String get selectRoleRequired => 'Veuillez sélectionner un rôle';
+
+  @override
+  String get roleResetPermissions => 'La sélection d’un rôle réinitialisera les permissions par défaut';
+
+  @override
+  String get userUpdatedSuccess => 'Utilisateur mis à jour avec succès !';
+
+  @override
+  String get failedLoadUser => 'Échec du chargement de l\'utilisateur : ';
+
+  @override
+  String get failedUpdateUser => 'Échec de la mise à jour de l\'utilisateur : ';
+
+  @override
+  String get roleAdmin => 'Admin';
+
+  @override
+  String get roleInventoryManager => 'Responsable des stocks';
+
+  @override
+  String get roleInventoryStaff => 'Employé des stocks';
+
+  @override
+  String get rolePOSWorker => 'Employé caisse';
 }

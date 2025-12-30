@@ -21,13 +21,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get username => 'Username';
 
   @override
-  String get enterUsername => 'Enter your username';
+  String get enterUsername => 'Enter username';
 
   @override
   String get password => 'Password';
 
   @override
-  String get enterPassword => 'Enter your password';
+  String get enterPassword => 'Enter password';
 
   @override
   String get rememberMe => 'Remember me';
@@ -407,7 +407,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deleteBatch => 'Delete Batch';
 
   @override
-  String get deleteConfirmation => 'Are you sure you want to delete this batch?';
+  String get deleteConfirmation => 'Are you sure you want to delete this user?';
 
   @override
   String get deleteSuccess => 'deleted successfully';
@@ -723,4 +723,205 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get remove => 'Remove';
+
+  @override
+  String get userManagement => 'User Management';
+
+  @override
+  String get userManagementDesc => 'Manage system users and their permissions.';
+
+  @override
+  String get addUser => 'Add User';
+
+  @override
+  String get filtersAndSearch => 'Filters & Search';
+
+  @override
+  String get userSearchPlaceholder => 'Search by name, email, phone, or role...';
+
+  @override
+  String get filterByRole => 'Filter by Role';
+
+  @override
+  String get filterByStatus => 'Filter by Status';
+
+  @override
+  String get sortBy => 'Sort By';
+
+  @override
+  String get allRoles => 'All Roles';
+
+  @override
+  String get allStatus => 'All Status';
+
+  @override
+  String get active => 'Active';
+
+  @override
+  String get inactive => 'Inactive';
+
+  @override
+  String get sortName => 'Name';
+
+  @override
+  String get sortDate => 'Date';
+
+  @override
+  String get fullName => 'Full Name';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get phone => 'Phone';
+
+  @override
+  String get role => 'Role';
+
+  @override
+  String get deleteUser => 'Delete User';
+
+  @override
+  String get cannotBeUndone => 'This action cannot be undone.';
+
+  @override
+  String get userDeleted => 'deleted';
+
+  @override
+  String get name => 'Name';
+
+  @override
+  String get errorLoadingUsers => 'Failed to load users: ';
+
+  @override
+  String get errorDeletingUser => 'Could not delete user. Check your connection.';
+
+  @override
+  String get errorUnexpected => 'An unexpected error occurred: ';
+
+  @override
+  String get noUsersFound => 'No users found matching your criteria.';
+
+  @override
+  String get createNewUser => 'Create New User';
+
+  @override
+  String get addNewUserDescription => 'Add a new user to the system';
+
+  @override
+  String get backToUserList => 'Back to User List';
+
+  @override
+  String get basicInformation => 'Basic Information';
+
+  @override
+  String get enterFullName => 'Enter full name';
+
+  @override
+  String get phoneNumber => 'Phone Number';
+
+  @override
+  String get emailHint => 'user@example.com';
+
+  @override
+  String get passwordRules => 'Must contain at least 8 characters, one uppercase letter, and one number';
+
+  @override
+  String get rolePermissions => 'Role & Permissions';
+
+  @override
+  String get roleAutoFill => 'Selecting a role will auto-fill default permissions';
+
+  @override
+  String get permissions => 'Permissions';
+
+  @override
+  String get createUser => 'Create User';
+
+  @override
+  String get usernameRequired => 'Username is required';
+
+  @override
+  String get fullNameRequired => 'Full name is required';
+
+  @override
+  String get phoneRequired => 'Phone number is required';
+
+  @override
+  String get passwordRequired => 'Password is required';
+
+  @override
+  String get emailInvalid => 'Enter a valid email address';
+
+  @override
+  String get passwordMinLength => 'Password must be at least 8 characters';
+
+  @override
+  String get passwordUppercase => 'Password must contain at least one uppercase letter';
+
+  @override
+  String get passwordNumber => 'Password must contain at least one number';
+
+  @override
+  String get userCreatedSuccess => 'User created successfully';
+
+  @override
+  String get failedAddUser => 'Failed to add user';
+
+  @override
+  String get editUser => 'Edit User';
+
+  @override
+  String get editingUser => 'Editing user:';
+
+  @override
+  String get userInformation => 'User Information';
+
+  @override
+  String get userStatus => 'Status: ';
+
+  @override
+  String get user_created => 'Created: ';
+
+  @override
+  String get pleaseEnterUsername => 'Please enter username';
+
+  @override
+  String get pleaseEnterFullName => 'Please enter full name';
+
+  @override
+  String get pleaseEnterPhoneNumber => 'Please enter phone number';
+
+  @override
+  String get pleaseEnterEmail => 'Please enter email';
+
+  @override
+  String get pleaseEnterValidEmail => 'Please enter a valid email';
+
+  @override
+  String get selectRoleRequired => 'Please select a role';
+
+  @override
+  String get roleResetPermissions => 'Selecting a role will reset permissions to defaults';
+
+  @override
+  String get userUpdatedSuccess => 'User updated successfully!';
+
+  @override
+  String get failedLoadUser => 'Failed to load user: ';
+
+  @override
+  String get failedUpdateUser => 'Failed to update user: ';
+
+  @override
+  String get roleAdmin => 'Admin';
+
+  @override
+  String get roleInventoryManager => 'Inventory Manager';
+
+  @override
+  String get roleInventoryStaff => 'Inventory Staff';
+
+  @override
+  String get rolePOSWorker => 'POS Worker';
 }

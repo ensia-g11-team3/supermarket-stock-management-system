@@ -122,7 +122,7 @@ abstract class AppLocalizations {
   /// No description provided for @enterUsername.
   ///
   /// In en, this message translates to:
-  /// **'Enter your username'**
+  /// **'Enter username'**
   String get enterUsername;
 
   /// No description provided for @password.
@@ -134,7 +134,7 @@ abstract class AppLocalizations {
   /// No description provided for @enterPassword.
   ///
   /// In en, this message translates to:
-  /// **'Enter your password'**
+  /// **'Enter password'**
   String get enterPassword;
 
   /// No description provided for @rememberMe.
@@ -890,7 +890,7 @@ abstract class AppLocalizations {
   /// No description provided for @deleteConfirmation.
   ///
   /// In en, this message translates to:
-  /// **'Are you sure you want to delete this batch?'**
+  /// **'Are you sure you want to delete this user?'**
   String get deleteConfirmation;
 
   /// No description provided for @deleteSuccess.
@@ -1522,6 +1522,408 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Remove'**
   String get remove;
+
+  /// No description provided for @userManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'User Management'**
+  String get userManagement;
+
+  /// No description provided for @userManagementDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage system users and their permissions.'**
+  String get userManagementDesc;
+
+  /// No description provided for @addUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Add User'**
+  String get addUser;
+
+  /// No description provided for @filtersAndSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Filters & Search'**
+  String get filtersAndSearch;
+
+  /// No description provided for @userSearchPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by name, email, phone, or role...'**
+  String get userSearchPlaceholder;
+
+  /// No description provided for @filterByRole.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter by Role'**
+  String get filterByRole;
+
+  /// No description provided for @filterByStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter by Status'**
+  String get filterByStatus;
+
+  /// No description provided for @sortBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort By'**
+  String get sortBy;
+
+  /// No description provided for @allRoles.
+  ///
+  /// In en, this message translates to:
+  /// **'All Roles'**
+  String get allRoles;
+
+  /// No description provided for @allStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'All Status'**
+  String get allStatus;
+
+  /// No description provided for @active.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get active;
+
+  /// No description provided for @inactive.
+  ///
+  /// In en, this message translates to:
+  /// **'Inactive'**
+  String get inactive;
+
+  /// No description provided for @sortName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get sortName;
+
+  /// No description provided for @sortDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get sortDate;
+
+  /// No description provided for @fullName.
+  ///
+  /// In en, this message translates to:
+  /// **'Full Name'**
+  String get fullName;
+
+  /// No description provided for @email.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get email;
+
+  /// No description provided for @phone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get phone;
+
+  /// No description provided for @role.
+  ///
+  /// In en, this message translates to:
+  /// **'Role'**
+  String get role;
+
+  /// No description provided for @deleteUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete User'**
+  String get deleteUser;
+
+  /// No description provided for @cannotBeUndone.
+  ///
+  /// In en, this message translates to:
+  /// **'This action cannot be undone.'**
+  String get cannotBeUndone;
+
+  /// No description provided for @userDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'deleted'**
+  String get userDeleted;
+
+  /// No description provided for @name.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get name;
+
+  /// No description provided for @errorLoadingUsers.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load users: '**
+  String get errorLoadingUsers;
+
+  /// No description provided for @errorDeletingUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not delete user. Check your connection.'**
+  String get errorDeletingUser;
+
+  /// No description provided for @errorUnexpected.
+  ///
+  /// In en, this message translates to:
+  /// **'An unexpected error occurred: '**
+  String get errorUnexpected;
+
+  /// No description provided for @noUsersFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No users found matching your criteria.'**
+  String get noUsersFound;
+
+  /// No description provided for @createNewUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Create New User'**
+  String get createNewUser;
+
+  /// No description provided for @addNewUserDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a new user to the system'**
+  String get addNewUserDescription;
+
+  /// No description provided for @backToUserList.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to User List'**
+  String get backToUserList;
+
+  /// No description provided for @basicInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Basic Information'**
+  String get basicInformation;
+
+  /// No description provided for @enterFullName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter full name'**
+  String get enterFullName;
+
+  /// No description provided for @phoneNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone Number'**
+  String get phoneNumber;
+
+  /// No description provided for @emailHint.
+  ///
+  /// In en, this message translates to:
+  /// **'user@example.com'**
+  String get emailHint;
+
+  /// No description provided for @passwordRules.
+  ///
+  /// In en, this message translates to:
+  /// **'Must contain at least 8 characters, one uppercase letter, and one number'**
+  String get passwordRules;
+
+  /// No description provided for @rolePermissions.
+  ///
+  /// In en, this message translates to:
+  /// **'Role & Permissions'**
+  String get rolePermissions;
+
+  /// No description provided for @roleAutoFill.
+  ///
+  /// In en, this message translates to:
+  /// **'Selecting a role will auto-fill default permissions'**
+  String get roleAutoFill;
+
+  /// No description provided for @permissions.
+  ///
+  /// In en, this message translates to:
+  /// **'Permissions'**
+  String get permissions;
+
+  /// No description provided for @createUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Create User'**
+  String get createUser;
+
+  /// No description provided for @usernameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Username is required'**
+  String get usernameRequired;
+
+  /// No description provided for @fullNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Full name is required'**
+  String get fullNameRequired;
+
+  /// No description provided for @phoneRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone number is required'**
+  String get phoneRequired;
+
+  /// No description provided for @passwordRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Password is required'**
+  String get passwordRequired;
+
+  /// No description provided for @emailInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid email address'**
+  String get emailInvalid;
+
+  /// No description provided for @passwordMinLength.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 8 characters'**
+  String get passwordMinLength;
+
+  /// No description provided for @passwordUppercase.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must contain at least one uppercase letter'**
+  String get passwordUppercase;
+
+  /// No description provided for @passwordNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must contain at least one number'**
+  String get passwordNumber;
+
+  /// No description provided for @userCreatedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'User created successfully'**
+  String get userCreatedSuccess;
+
+  /// No description provided for @failedAddUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to add user'**
+  String get failedAddUser;
+
+  /// No description provided for @editUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit User'**
+  String get editUser;
+
+  /// No description provided for @editingUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Editing user:'**
+  String get editingUser;
+
+  /// No description provided for @userInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'User Information'**
+  String get userInformation;
+
+  /// No description provided for @userStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Status: '**
+  String get userStatus;
+
+  /// No description provided for @user_created.
+  ///
+  /// In en, this message translates to:
+  /// **'Created: '**
+  String get user_created;
+
+  /// No description provided for @pleaseEnterUsername.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter username'**
+  String get pleaseEnterUsername;
+
+  /// No description provided for @pleaseEnterFullName.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter full name'**
+  String get pleaseEnterFullName;
+
+  /// No description provided for @pleaseEnterPhoneNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter phone number'**
+  String get pleaseEnterPhoneNumber;
+
+  /// No description provided for @pleaseEnterEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter email'**
+  String get pleaseEnterEmail;
+
+  /// No description provided for @pleaseEnterValidEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid email'**
+  String get pleaseEnterValidEmail;
+
+  /// No description provided for @selectRoleRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a role'**
+  String get selectRoleRequired;
+
+  /// No description provided for @roleResetPermissions.
+  ///
+  /// In en, this message translates to:
+  /// **'Selecting a role will reset permissions to defaults'**
+  String get roleResetPermissions;
+
+  /// No description provided for @userUpdatedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'User updated successfully!'**
+  String get userUpdatedSuccess;
+
+  /// No description provided for @failedLoadUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load user: '**
+  String get failedLoadUser;
+
+  /// No description provided for @failedUpdateUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update user: '**
+  String get failedUpdateUser;
+
+  /// No description provided for @roleAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin'**
+  String get roleAdmin;
+
+  /// No description provided for @roleInventoryManager.
+  ///
+  /// In en, this message translates to:
+  /// **'Inventory Manager'**
+  String get roleInventoryManager;
+
+  /// No description provided for @roleInventoryStaff.
+  ///
+  /// In en, this message translates to:
+  /// **'Inventory Staff'**
+  String get roleInventoryStaff;
+
+  /// No description provided for @rolePOSWorker.
+  ///
+  /// In en, this message translates to:
+  /// **'POS Worker'**
+  String get rolePOSWorker;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
