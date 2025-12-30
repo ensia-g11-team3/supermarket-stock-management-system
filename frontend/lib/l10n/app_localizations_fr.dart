@@ -396,6 +396,37 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get valid => 'Valide';
+  String get lowStockDescription => 'Surveiller les produits avec un niveau de stock bas';
+
+  @override
+  String get totalAlerts => 'Total des alertes';
+
+  @override
+  String get lowStockItems => 'Articles en stock bas';
+
+  @override
+  String get searchAlertsHint => 'Rechercher par nom ou catégorie...';
+
+  @override
+  String get refresh => 'Actualiser';
+
+  @override
+  String get noLowStockAlerts => 'Aucune alerte de stock bas';
+
+  @override
+  String get noAlertsMatch => 'Aucune alerte ne correspond à votre recherche';
+
+  @override
+  String get allStockSufficient => 'Tous les produits ont un niveau de stock suffisant';
+
+  @override
+  String get tryDifferentSearch => 'Essayez un autre terme de recherche';
+
+  @override
+  String get currentStock => 'Stock actuel';
+
+  @override
+  String get threshold => 'Seuil';
 
   @override
   String get unknown => 'Inconnu';
@@ -462,4 +493,11 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get failedToSaveBatch => 'Échec de l\'enregistrement du lot';
+  String get notAvailable => 'N/D';
+
+  @override
+  String get critical => 'Critique';
+
+  @override
+  String get warning => 'Avertissement';
 }

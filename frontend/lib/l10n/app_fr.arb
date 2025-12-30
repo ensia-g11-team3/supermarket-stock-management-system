@@ -173,4 +173,19 @@
   "batchCreatedSuccess": "Lot créé avec succès !",
   "failedToLoadBatch": "Échec du chargement du lot",
   "failedToSaveBatch": "Échec de l'enregistrement du lot"
+  "lowStockDescription": "Surveiller les produits avec un niveau de stock bas",
+  "totalAlerts": "Total des alertes",
+  "lowStockItems": "Articles en stock bas",
+  "searchAlertsHint": "Rechercher par nom ou catégorie...",
+  "refresh": "Actualiser",
+  "noLowStockAlerts": "Aucune alerte de stock bas",
+  "noAlertsMatch": "Aucune alerte ne correspond à votre recherche",
+  "allStockSufficient": "Tous les produits ont un niveau de stock suffisant",
+  "tryDifferentSearch": "Essayez un autre terme de recherche",
+  "currentStock": "Stock actuel",
+  "threshold": "Seuil",
+  "unknown": "Inconnu",
+  "notAvailable": "N/D",
+  "critical": "Critique",
+  "warning": "Avertissement"
 }

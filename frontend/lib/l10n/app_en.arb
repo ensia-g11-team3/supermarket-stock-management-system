@@ -183,4 +183,19 @@
   "failedToLoadBatch": "Failed to load batch",
   "failedToSaveBatch": "Failed to save batch"
 
+  "lowStockDescription": "Monitor products with low inventory levels",
+  "totalAlerts": "Total Alerts",
+  "lowStockItems": "Low stock items",
+  "searchAlertsHint": "Search by product name or category...",
+  "refresh": "Refresh",
+  "noLowStockAlerts": "No low stock alerts",
+  "noAlertsMatch": "No alerts match your search",
+  "allStockSufficient": "All products have sufficient stock levels",
+  "tryDifferentSearch": "Try a different search term",
+  "currentStock": "Current Stock",
+  "threshold": "Threshold",
+  "unknown": "Unknown",
+  "notAvailable": "N/A",
+  "critical": "Critical",
+  "warning": "Warning"
 }
