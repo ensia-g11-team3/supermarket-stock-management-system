@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:se_project/l10n/app_localizations.dart';
+import 'package:se_project/services/categories_api.dart';
 import '../widgets/page_header.dart';
 import '../widgets/primary_button.dart';
 import '../theme/app_theme.dart';
@@ -26,15 +27,30 @@ class _AddProductPageState extends State<AddProductPage> {
   final _descriptionController = TextEditingController();
   final _supplierController = TextEditingController();
 
-  String? _selectedCategory;
+  List<Map<String, dynamic>> _categories = [];
+  Map<String, dynamic>? _selectedCategory;
 
-  final List<String> _categories = [
-    'Electronics',
-    'Clothing',
-    'Food & Beverages',
-    'Office Supplies',
-    'Furniture',
-  ];
+  bool _loadingCategories = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCategories();
+  }
+
+  Future<void> _loadCategories() async {
+    try {
+      final data = await CategoryApi.getCategories();
+      setState(() {
+        _categories = data;
+        _loadingCategories = false;
+      });
+    } catch (e) {
+      setState(() {
+        _loadingCategories = false;
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -63,7 +79,7 @@ class _AddProductPageState extends State<AddProductPage> {
     final data = {
       "name": _productNameController.text,
       "barcode": _barcodeController.text,
-      "category": _selectedCategory,
+      "category_id": _selectedCategory!['category_id'],
       "supplier": _supplierController.text,
       "qty": int.parse(_quantityController.text),
       "buying_price": double.parse(_buyingPriceController.text),
@@ -159,17 +175,33 @@ class _AddProductPageState extends State<AddProductPage> {
                                     AppLocalizations.of(context)!.enterBarcode,
                               ),
                               const SizedBox(height: 20),
-                              _buildDropdown(
-                                label: AppLocalizations.of(context)!.category,
-                                value: _selectedCategory,
-                                items: _categories,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _selectedCategory = value;
-                                  });
-                                },
-                                isRequired: true,
+                              Row(
+                                children: [
+                                  Text(AppLocalizations.of(context)!.category),
+                                ],
                               ),
+                              const SizedBox(height: 8),
+                              _loadingCategories
+                                  ? const CircularProgressIndicator()
+                                  : DropdownButtonFormField<
+                                      Map<String, dynamic>>(
+                                      value: _selectedCategory,
+                                      hint: Text(AppLocalizations.of(context)!
+                                          .category),
+                                      items: _categories.map((cat) {
+                                        return DropdownMenuItem<
+                                            Map<String, dynamic>>(
+                                          value: cat,
+                                          child: Text(cat['category_name']),
+                                        );
+                                      }).toList(),
+                                      onChanged: (val) => setState(
+                                          () => _selectedCategory = val),
+                                      validator: (val) => val == null
+                                          ? AppLocalizations.of(context)!
+                                              .selectCategoryMsg
+                                          : null,
+                                    ),
                               const SizedBox(height: 20),
                               _buildTextField(
                                 controller: _supplierController,
@@ -341,57 +373,6 @@ class _AddProductPageState extends State<AddProductPage> {
               horizontal: 16,
               vertical: 12,
             ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildDropdown({
-    required String label,
-    required String? value,
-    required List<String> items,
-    required ValueChanged<String?> onChanged,
-    bool isRequired = false,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Text(
-              label,
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: AppTheme.textPrimary,
-              ),
-            ),
-            if (isRequired)
-              const Text('*', style: TextStyle(color: Colors.red)),
-          ],
-        ),
-        const SizedBox(height: 8),
-        Container(
-          decoration: BoxDecoration(
-            color: AppTheme.inputBackground,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: AppTheme.borderColor),
-          ),
-          child: DropdownButtonFormField<String>(
-            value: value,
-            decoration: InputDecoration(
-              hintText: 'Select ${label.toLowerCase()}',
-              border: OutlineInputBorder(borderSide: BorderSide.none),
-              filled: true,
-              fillColor: AppTheme.inputBackground,
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            ),
-            items: items.map((item) {
-              return DropdownMenuItem(value: item, child: Text(item));
-            }).toList(),
-            onChanged: onChanged,
           ),
         ),
       ],

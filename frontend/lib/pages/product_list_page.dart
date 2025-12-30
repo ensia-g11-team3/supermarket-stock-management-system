@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:se_project/l10n/app_localizations.dart';
+import 'package:se_project/services/categories_api.dart';
 import '../widgets/page_header.dart';
 import '../widgets/search_bar.dart';
 import '../widgets/primary_button.dart';
@@ -28,13 +29,29 @@ class _ProductListPageState extends State<ProductListPage> {
   late String _selectedCategory;
   late String _selectedStockLevel;
 
+  List<Map<String, dynamic>> _categories = [];
+
   List<Map<String, dynamic>> _products = [];
   bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
+    _fetchCategories();
     _fetchProducts();
+  }
+
+  Future<void> _fetchCategories() async {
+    try {
+      final data = await CategoryApi.getCategories();
+      setState(() {
+        _categories = data;
+        _selectedCategory =
+            AppLocalizations.of(context)!.allCategories; // safe init
+      });
+    } catch (e) {
+      print("Error loading categories: $e");
+    }
   }
 
   Future<void> _fetchProducts() async {
@@ -65,7 +82,7 @@ class _ProductListPageState extends State<ProductListPage> {
 
       final bool matchesCategory =
           _selectedCategory == AppLocalizations.of(context)!.allCategories ||
-              product['category'] == _selectedCategory;
+              (product['category_name']?.toString() ?? '') == _selectedCategory;
 
       final bool matchesStockLevel = _selectedStockLevel ==
               AppLocalizations.of(context)!.allStockLevels ||
@@ -164,10 +181,9 @@ class _ProductListPageState extends State<ProductListPage> {
                                         items: [
                                           AppLocalizations.of(context)!
                                               .allCategories,
-                                          'Beverages',
-                                          'Snacks',
-                                          'Dairy',
-                                          'Bakery',
+                                          ..._categories
+                                              .map((c) => c['category_name'])
+                                              .toList(),
                                         ],
                                         onChanged: (value) {
                                           setState(() {
@@ -255,7 +271,8 @@ class _ProductListPageState extends State<ProductListPage> {
                                     children: [
                                       _TableCell(Text(product['name'])),
                                       _TableCell(Text(product['barcode'])),
-                                      _TableCell(Text(product['category'])),
+                                      _TableCell(
+                                          Text(product['category_name'] ?? '')),
                                       _TableCell(
                                         StockBadge(
                                           stock: product['qty'],
