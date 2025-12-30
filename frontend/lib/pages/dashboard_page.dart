@@ -29,7 +29,7 @@ class DashboardPage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 32),
-          
+
           // Stats Cards
           Row(
             children: [
@@ -52,7 +52,7 @@ class DashboardPage extends StatelessWidget {
                   iconColor: Color(0xFF70AD47),
                   iconBgColor: Color(0xFFE2F0D9),
                   title: 'Today\'s Sales',
-                  value: '\$2,845',
+                  value: '2,845 DA',
                   change: '8%',
                   isPositive: true,
                   borderColor: Color(0xFF70AD47),
@@ -78,7 +78,7 @@ class DashboardPage extends StatelessWidget {
                   iconColor: Color(0xFFFFC000),
                   iconBgColor: Color(0xFFFFF2CC),
                   title: 'Monthly Profit',
-                  value: '\$12,450',
+                  value: '12,450 DA',
                   change: '15%',
                   isPositive: true,
                   borderColor: Color(0xFFFFC000),
@@ -86,9 +86,9 @@ class DashboardPage extends StatelessWidget {
               ),
             ],
           ),
-          
+
           const SizedBox(height: 32),
-          
+
           // Sales Overview and Quick Stats
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,9 +104,9 @@ class DashboardPage extends StatelessWidget {
               ),
             ],
           ),
-          
+
           const SizedBox(height: 32),
-          
+
           // Most Sold Items
           _MostSoldItems(),
         ],
@@ -260,7 +260,8 @@ class _SalesOverview extends StatelessWidget {
                       getTitlesWidget: (value, meta) {
                         return Text(
                           value.toInt().toString(),
-                          style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+                          style:
+                              TextStyle(fontSize: 11, color: Colors.grey[600]),
                         );
                       },
                     ),
@@ -269,13 +270,27 @@ class _SalesOverview extends StatelessWidget {
                     sideTitles: SideTitles(
                       showTitles: true,
                       getTitlesWidget: (value, meta) {
-                        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov'];
-                        if (value.toInt() >= 0 && value.toInt() < months.length) {
+                        const months = [
+                          'Jan',
+                          'Feb',
+                          'Mar',
+                          'Apr',
+                          'May',
+                          'Jun',
+                          'Jul',
+                          'Aug',
+                          'Sep',
+                          'Oct',
+                          'Nov'
+                        ];
+                        if (value.toInt() >= 0 &&
+                            value.toInt() < months.length) {
                           return Padding(
                             padding: const EdgeInsets.only(top: 8),
                             child: Text(
                               months[value.toInt()],
-                              style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+                              style: TextStyle(
+                                  fontSize: 11, color: Colors.grey[600]),
                             ),
                           );
                         }
@@ -283,8 +298,10 @@ class _SalesOverview extends StatelessWidget {
                       },
                     ),
                   ),
-                  rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  rightTitles:
+                      AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  topTitles:
+                      AxisTitles(sideTitles: SideTitles(showTitles: false)),
                 ),
                 borderData: FlBorderData(show: false),
                 minX: 0,
@@ -363,7 +380,7 @@ class _QuickStats extends StatelessWidget {
           const SizedBox(height: 24),
           _QuickStatItem(
             title: 'Total Revenue',
-            value: '\$87,450',
+            value: '87,450 DA',
             change: '+18% from last month',
             bgColor: Color(0xFFE2F0D9),
           ),
@@ -377,7 +394,7 @@ class _QuickStats extends StatelessWidget {
           const SizedBox(height: 16),
           _QuickStatItem(
             title: 'Avg Order Value',
-            value: '\$18.24',
+            value: '18.24 DA',
             change: '+5% from last week',
             bgColor: Color(0xFFFFF2CC),
           ),
@@ -538,119 +555,120 @@ class _MostSoldItems extends StatelessWidget {
                 ],
               ),
               ...items.map((item) => TableRow(
-                children: [
-                  _TableCell(
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 8,
-                          height: 8,
+                    children: [
+                      _TableCell(
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 8,
+                              height: 8,
+                              decoration: BoxDecoration(
+                                color: Colors.green,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Text(
+                              item['name'],
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey[800],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      _TableCell(
+                        child: Container(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                           decoration: BoxDecoration(
-                            color: Colors.green,
-                            shape: BoxShape.circle,
+                            color: Color(0xFFD9E9F7),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            '${item['quantity']} units',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.grey[800],
+                            ),
                           ),
                         ),
-                        const SizedBox(width: 12),
-                        Text(
-                          item['name'],
+                      ),
+                      _TableCell(
+                        child: Text(
+                          '${item['profit'].toStringAsFixed(2)} DA',
                           style: TextStyle(
                             fontSize: 14,
-                            color: Colors.grey[800],
+                            color: Colors.green,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                  _TableCell(
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: Color(0xFFD9E9F7),
-                        borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Text(
-                        '${item['quantity']} units',
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.grey[800],
-                        ),
-                      ),
-                    ),
-                  ),
-                  _TableCell(
-                    child: Text(
-                      '\$${item['profit'].toStringAsFixed(2)}',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.green,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                  _TableCell(
-                    child: Row(
-                      children: [
-                        Icon(
-                          item['trend'] == 'Trending' 
-                            ? Icons.arrow_upward 
-                            : Icons.arrow_downward,
-                          size: 14,
-                          color: item['trend'] == 'Trending' 
-                            ? Colors.green 
-                            : Colors.red,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          item['trend'],
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: item['trend'] == 'Trending' 
-                              ? Colors.green 
-                              : Colors.red,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  _TableCell(
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Stack(
-                            children: [
-                              Container(
-                                height: 8,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[200],
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
+                      _TableCell(
+                        child: Row(
+                          children: [
+                            Icon(
+                              item['trend'] == 'Trending'
+                                  ? Icons.arrow_upward
+                                  : Icons.arrow_downward,
+                              size: 14,
+                              color: item['trend'] == 'Trending'
+                                  ? Colors.green
+                                  : Colors.red,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              item['trend'],
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: item['trend'] == 'Trending'
+                                    ? Colors.green
+                                    : Colors.red,
                               ),
-                              FractionallySizedBox(
-                                widthFactor: item['performance'] / 100,
-                                child: Container(
-                                  height: 8,
-                                  decoration: BoxDecoration(
-                                    color: Colors.green,
-                                    borderRadius: BorderRadius.circular(4),
+                            ),
+                          ],
+                        ),
+                      ),
+                      _TableCell(
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    height: 8,
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[200],
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
                                   ),
-                                ),
+                                  FractionallySizedBox(
+                                    widthFactor: item['performance'] / 100,
+                                    child: Container(
+                                      height: 8,
+                                      decoration: BoxDecoration(
+                                        color: Colors.green,
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              '${item['performance']}%',
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: Colors.grey[700],
+                              ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(width: 8),
-                        Text(
-                          '${item['performance']}%',
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: Colors.grey[700],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              )),
+                      ),
+                    ],
+                  )),
             ],
           ),
         ],
