@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:se_project/l10n/app_localizations.dart';
 import '../widgets/page_header.dart';
 import '../widgets/primary_button.dart';
 import '../services/categories_api.dart';
@@ -28,7 +29,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
         _isLoading = false;
       });
     } catch (e) {
-      debugPrint("Error loading categories: $e");
+      debugPrint(AppLocalizations.of(context)!.errorLoadingCategories + "$e");
       setState(() {
         _isLoading = false;
       });
@@ -87,23 +88,23 @@ class _CategoriesPageState extends State<CategoriesPage> {
     bool? shouldDelete = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Confirm Delete'),
+        title: Text(AppLocalizations.of(context)!.confirmDelete),
         content: Text(
-          'Are you sure you want to delete "${cat['category_name']}"? '
-          'This action cannot be undone.',
+          '"${cat['category_name']}": ' +
+              AppLocalizations.of(context)!.deleteConfirmationMsg,
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
             child: Text(
-              'Cancel',
+              AppLocalizations.of(context)!.cancel,
               style: TextStyle(color: Colors.grey[700]),
             ),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
             child: Text(
-              'Delete',
+              AppLocalizations.of(context)!.delete,
               style: TextStyle(color: Colors.red),
             ),
           ),
@@ -120,17 +121,17 @@ class _CategoriesPageState extends State<CategoriesPage> {
         // Optional: Show a success snackbar
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Category deleted successfully'),
+            content: Text(AppLocalizations.of(context)!.successDelete),
             backgroundColor: Colors.green,
           ),
         );
       } catch (e) {
-        debugPrint("Error deleting category: $e");
+        debugPrint(AppLocalizations.of(context)!.errorDeletingCategory + "$e");
 
         // Optional: Show error snackbar
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to delete category'),
+            content: Text(AppLocalizations.of(context)!.failDelete),
             backgroundColor: Colors.red,
           ),
         );
@@ -152,7 +153,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Category Management',
+                    AppLocalizations.of(context)!.categoryManagement,
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.w600,
@@ -161,7 +162,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    'Organize products by categories',
+                    AppLocalizations.of(context)!.categorySubtitle,
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.grey[600],
@@ -171,12 +172,12 @@ class _CategoriesPageState extends State<CategoriesPage> {
               ),
               PrimaryButton(
                 onPressed: _addCategory,
-                child: const Row(
+                child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(Icons.add, size: 18),
                     SizedBox(width: 8),
-                    Text('Add Category'),
+                    Text(AppLocalizations.of(context)!.addCategory),
                   ],
                 ),
               ),
@@ -189,7 +190,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
             children: [
               Expanded(
                 child: _StatCard(
-                  title: 'Total Categories',
+                  title: AppLocalizations.of(context)!.totalCategories,
                   value: '${_categories.length}',
                   valueColor: Colors.black,
                 ),
@@ -197,7 +198,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
               SizedBox(width: 16),
               Expanded(
                 child: _StatCard(
-                  title: 'Total Products',
+                  title: AppLocalizations.of(context)!.totalProducts,
                   value: '$totalProducts',
                   valueColor: Colors.black,
                 ),
@@ -205,7 +206,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
               SizedBox(width: 16),
               Expanded(
                 child: _StatCard(
-                  title: 'Avg Products/Category',
+                  title: AppLocalizations.of(context)!.avgProducts,
                   value: '${avgProducts.toInt()}',
                   valueColor: Color(0xFFB8860B),
                 ),
@@ -236,7 +237,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                         Expanded(
                           flex: 2,
                           child: Text(
-                            'Category Name',
+                            AppLocalizations.of(context)!.categoryName,
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
                               color: Colors.grey[700],
@@ -247,7 +248,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                         Expanded(
                           flex: 3,
                           child: Text(
-                            'Description',
+                            AppLocalizations.of(context)!.description,
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
                               color: Colors.grey[700],
@@ -258,7 +259,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                         Expanded(
                           flex: 1,
                           child: Text(
-                            'Product Count',
+                            AppLocalizations.of(context)!.productCount,
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
                               color: Colors.grey[700],
@@ -269,7 +270,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                         SizedBox(
                           width: 100,
                           child: Text(
-                            'Actions',
+                            AppLocalizations.of(context)!.actions,
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
                               color: Colors.grey[700],
@@ -446,8 +447,9 @@ class _CategoryDialogState extends State<_CategoryDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title:
-          Text(widget.categoryName == null ? 'Add Category' : 'Edit Category'),
+      title: Text(widget.categoryName == null
+          ? AppLocalizations.of(context)!.addCategory
+          : AppLocalizations.of(context)!.editCategory),
       content: SizedBox(
         width: 400,
         child: Column(
@@ -456,7 +458,7 @@ class _CategoryDialogState extends State<_CategoryDialog> {
             TextField(
               controller: nameController,
               decoration: InputDecoration(
-                labelText: 'Category Name',
+                labelText: AppLocalizations.of(context)!.categoryName,
                 border: OutlineInputBorder(),
               ),
             ),
@@ -464,7 +466,7 @@ class _CategoryDialogState extends State<_CategoryDialog> {
             TextField(
               controller: descController,
               decoration: InputDecoration(
-                labelText: 'Description',
+                labelText: AppLocalizations.of(context)!.description,
                 border: OutlineInputBorder(),
               ),
             ),
@@ -485,7 +487,7 @@ class _CategoryDialogState extends State<_CategoryDialog> {
               Navigator.pop(context);
             }
           },
-          child: const Text('Save'),
+          child: Text(AppLocalizations.of(context)!.save),
         ),
       ],
     );

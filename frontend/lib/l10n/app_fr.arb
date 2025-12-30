@@ -172,7 +172,7 @@
   "batchUpdatedSuccess": "Lot mis à jour avec succès !",
   "batchCreatedSuccess": "Lot créé avec succès !",
   "failedToLoadBatch": "Échec du chargement du lot",
-  "failedToSaveBatch": "Échec de l'enregistrement du lot"
+  "failedToSaveBatch": "Échec de l'enregistrement du lot",
   "lowStockDescription": "Surveiller les produits avec un niveau de stock bas",
   "totalAlerts": "Total des alertes",
   "lowStockItems": "Articles en stock bas",
@@ -187,5 +187,29 @@
   "unknown": "Inconnu",
   "notAvailable": "N/D",
   "critical": "Critique",
-  "warning": "Avertissement"
+  "warning": "Avertissement",
+
+
+
+  "categoryManagement": "Gestion des Catégories",
+  "categorySubtitle": "Organisez vos produits par catégories",
+  "addCategory": "Ajouter une catégorie",
+  "totalCategories": "Total des catégories",
+  "totalProducts": "Total des produits",
+  "avgProducts": "Moyenne produits/catégorie",
+  "categoryName": "Nom de la catégorie",
+  "description": "Description",
+  "productCount": "Nombre de produits",
+  "actions": "Actions",
+  "editCategory": "Modifier la catégorie",
+  "confirmDelete": "Confirmer la suppression",
+  "deleteConfirmationMsg": "Êtes-vous sûr de vouloir supprimer cette catégorie ? Cette action est irréversible.",
+  "cancel": "Annuler",
+  "delete": "Supprimer",
+  "save": "Enregistrer",
+  "successDelete": "Catégorie supprimée avec succès",
+  "failDelete": "Échec de la suppression de la catégorie",
+  "itemsLabel": "articles",
+  "errorDeletingCategory": "Erreur lors de la suppression de la catégorie: ",
+  "errorLoadingCategories": "Erreur lors du chargement des catégories :"
 }

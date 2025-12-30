@@ -181,7 +181,7 @@
   "batchUpdatedSuccess": "Batch updated successfully!",
   "batchCreatedSuccess": "Batch created successfully!",
   "failedToLoadBatch": "Failed to load batch",
-  "failedToSaveBatch": "Failed to save batch"
+  "failedToSaveBatch": "Failed to save batch",
 
   "lowStockDescription": "Monitor products with low inventory levels",
   "totalAlerts": "Total Alerts",
@@ -197,5 +197,27 @@
   "unknown": "Unknown",
   "notAvailable": "N/A",
   "critical": "Critical",
-  "warning": "Warning"
+  "warning": "Warning",
+
+  "categoryManagement": "Category Management",
+  "categorySubtitle": "Organize products by categories",
+  "addCategory": "Add Category",
+  "totalCategories": "Total Categories",
+  "totalProducts": "Total Products",
+  "avgProducts": "Avg Products/Category",
+  "categoryName": "Category Name",
+  "description": "Description",
+  "productCount": "Product Count",
+  "actions": "Actions",
+  "editCategory": "Edit Category",
+  "confirmDelete": "Confirm Delete",
+  "deleteConfirmationMsg": "Are you sure you want to delete this category? This action cannot be undone.",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "save": "Save",
+  "successDelete": "Category deleted successfully",
+  "failDelete": "Failed to delete category",
+  "itemsLabel": "items",
+  "errorDeletingCategory": "Error deleting category: ",
+  "errorLoadingCategories": "Error loading categories:"
 }

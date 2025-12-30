@@ -201,7 +201,6 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Thresholds'**
-  /// **'Suppliers & Orders'**
   String get navThresholds;
 
   /// No description provided for @navLowStock.
@@ -869,71 +868,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Valid'**
   String get valid;
-  /// No description provided for @lowStockDescription.
-  ///
-  /// In en, this message translates to:
-  /// **'Monitor products with low inventory levels'**
-  String get lowStockDescription;
-
-  /// No description provided for @totalAlerts.
-  ///
-  /// In en, this message translates to:
-  /// **'Total Alerts'**
-  String get totalAlerts;
-
-  /// No description provided for @lowStockItems.
-  ///
-  /// In en, this message translates to:
-  /// **'Low stock items'**
-  String get lowStockItems;
-
-  /// No description provided for @searchAlertsHint.
-  ///
-  /// In en, this message translates to:
-  /// **'Search by product name or category...'**
-  String get searchAlertsHint;
-
-  /// No description provided for @refresh.
-  ///
-  /// In en, this message translates to:
-  /// **'Refresh'**
-  String get refresh;
-
-  /// No description provided for @noLowStockAlerts.
-  ///
-  /// In en, this message translates to:
-  /// **'No low stock alerts'**
-  String get noLowStockAlerts;
-
-  /// No description provided for @noAlertsMatch.
-  ///
-  /// In en, this message translates to:
-  /// **'No alerts match your search'**
-  String get noAlertsMatch;
-
-  /// No description provided for @allStockSufficient.
-  ///
-  /// In en, this message translates to:
-  /// **'All products have sufficient stock levels'**
-  String get allStockSufficient;
-
-  /// No description provided for @tryDifferentSearch.
-  ///
-  /// In en, this message translates to:
-  /// **'Try a different search term'**
-  String get tryDifferentSearch;
-
-  /// No description provided for @currentStock.
-  ///
-  /// In en, this message translates to:
-  /// **'Current Stock'**
-  String get currentStock;
-
-  /// No description provided for @threshold.
-  ///
-  /// In en, this message translates to:
-  /// **'Threshold'**
-  String get threshold;
 
   /// No description provided for @unknown.
   ///
@@ -1066,6 +1000,73 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to save batch'**
   String get failedToSaveBatch;
+
+  /// No description provided for @lowStockDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Monitor products with low inventory levels'**
+  String get lowStockDescription;
+
+  /// No description provided for @totalAlerts.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Alerts'**
+  String get totalAlerts;
+
+  /// No description provided for @lowStockItems.
+  ///
+  /// In en, this message translates to:
+  /// **'Low stock items'**
+  String get lowStockItems;
+
+  /// No description provided for @searchAlertsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by product name or category...'**
+  String get searchAlertsHint;
+
+  /// No description provided for @refresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get refresh;
+
+  /// No description provided for @noLowStockAlerts.
+  ///
+  /// In en, this message translates to:
+  /// **'No low stock alerts'**
+  String get noLowStockAlerts;
+
+  /// No description provided for @noAlertsMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'No alerts match your search'**
+  String get noAlertsMatch;
+
+  /// No description provided for @allStockSufficient.
+  ///
+  /// In en, this message translates to:
+  /// **'All products have sufficient stock levels'**
+  String get allStockSufficient;
+
+  /// No description provided for @tryDifferentSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Try a different search term'**
+  String get tryDifferentSearch;
+
+  /// No description provided for @currentStock.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Stock'**
+  String get currentStock;
+
+  /// No description provided for @threshold.
+  ///
+  /// In en, this message translates to:
+  /// **'Threshold'**
+  String get threshold;
+
   /// No description provided for @notAvailable.
   ///
   /// In en, this message translates to:
@@ -1083,6 +1084,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Warning'**
   String get warning;
+
+  /// No description provided for @categoryManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'Category Management'**
+  String get categoryManagement;
+
+  /// No description provided for @totalCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Categories'**
+  String get totalCategories;
+
+  /// No description provided for @totalProducts.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Products'**
+  String get totalProducts;
+
+  /// No description provided for @avgProducts.
+  ///
+  /// In en, this message translates to:
+  /// **'Avg Products/Category'**
+  String get avgProducts;
+
+  /// No description provided for @confirmDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Delete'**
+  String get confirmDelete;
+
+  /// No description provided for @deleteConfirmationMsg.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this category? This action cannot be undone.'**
+  String get deleteConfirmationMsg;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// No description provided for @successDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Category deleted successfully'**
+  String get successDelete;
+
+  /// No description provided for @failDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete category'**
+  String get failDelete;
+
+  /// No description provided for @itemsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'items'**
+  String get itemsLabel;
+
+  /// No description provided for @errorDeletingCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Error deleting category: '**
+  String get errorDeletingCategory;
+
+  /// No description provided for @errorLoadingCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading categories:'**
+  String get errorLoadingCategories;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -396,37 +396,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get valid => 'Valid';
-  String get lowStockDescription => 'Monitor products with low inventory levels';
-
-  @override
-  String get totalAlerts => 'Total Alerts';
-
-  @override
-  String get lowStockItems => 'Low stock items';
-
-  @override
-  String get searchAlertsHint => 'Search by product name or category...';
-
-  @override
-  String get refresh => 'Refresh';
-
-  @override
-  String get noLowStockAlerts => 'No low stock alerts';
-
-  @override
-  String get noAlertsMatch => 'No alerts match your search';
-
-  @override
-  String get allStockSufficient => 'All products have sufficient stock levels';
-
-  @override
-  String get tryDifferentSearch => 'Try a different search term';
-
-  @override
-  String get currentStock => 'Current Stock';
-
-  @override
-  String get threshold => 'Threshold';
 
   @override
   String get unknown => 'Unknown';
@@ -493,6 +462,41 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get failedToSaveBatch => 'Failed to save batch';
+
+  @override
+  String get lowStockDescription => 'Monitor products with low inventory levels';
+
+  @override
+  String get totalAlerts => 'Total Alerts';
+
+  @override
+  String get lowStockItems => 'Low stock items';
+
+  @override
+  String get searchAlertsHint => 'Search by product name or category...';
+
+  @override
+  String get refresh => 'Refresh';
+
+  @override
+  String get noLowStockAlerts => 'No low stock alerts';
+
+  @override
+  String get noAlertsMatch => 'No alerts match your search';
+
+  @override
+  String get allStockSufficient => 'All products have sufficient stock levels';
+
+  @override
+  String get tryDifferentSearch => 'Try a different search term';
+
+  @override
+  String get currentStock => 'Current Stock';
+
+  @override
+  String get threshold => 'Threshold';
+
+  @override
   String get notAvailable => 'N/A';
 
   @override
@@ -500,4 +504,40 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get warning => 'Warning';
+
+  @override
+  String get categoryManagement => 'Category Management';
+
+  @override
+  String get totalCategories => 'Total Categories';
+
+  @override
+  String get totalProducts => 'Total Products';
+
+  @override
+  String get avgProducts => 'Avg Products/Category';
+
+  @override
+  String get confirmDelete => 'Confirm Delete';
+
+  @override
+  String get deleteConfirmationMsg => 'Are you sure you want to delete this category? This action cannot be undone.';
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String get successDelete => 'Category deleted successfully';
+
+  @override
+  String get failDelete => 'Failed to delete category';
+
+  @override
+  String get itemsLabel => 'items';
+
+  @override
+  String get errorDeletingCategory => 'Error deleting category: ';
+
+  @override
+  String get errorLoadingCategories => 'Error loading categories:';
 }

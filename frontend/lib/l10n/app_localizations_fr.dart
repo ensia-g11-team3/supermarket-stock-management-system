@@ -261,7 +261,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get categoryTitle => 'Gestion des Catégories';
 
   @override
-  String get categorySubtitle => 'Organisez les produits par catégories';
+  String get categorySubtitle => 'Organisez vos produits par catégories';
 
   @override
   String get addCategory => 'Ajouter une catégorie';
@@ -396,37 +396,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get valid => 'Valide';
-  String get lowStockDescription => 'Surveiller les produits avec un niveau de stock bas';
-
-  @override
-  String get totalAlerts => 'Total des alertes';
-
-  @override
-  String get lowStockItems => 'Articles en stock bas';
-
-  @override
-  String get searchAlertsHint => 'Rechercher par nom ou catégorie...';
-
-  @override
-  String get refresh => 'Actualiser';
-
-  @override
-  String get noLowStockAlerts => 'Aucune alerte de stock bas';
-
-  @override
-  String get noAlertsMatch => 'Aucune alerte ne correspond à votre recherche';
-
-  @override
-  String get allStockSufficient => 'Tous les produits ont un niveau de stock suffisant';
-
-  @override
-  String get tryDifferentSearch => 'Essayez un autre terme de recherche';
-
-  @override
-  String get currentStock => 'Stock actuel';
-
-  @override
-  String get threshold => 'Seuil';
 
   @override
   String get unknown => 'Inconnu';
@@ -493,6 +462,41 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get failedToSaveBatch => 'Échec de l\'enregistrement du lot';
+
+  @override
+  String get lowStockDescription => 'Surveiller les produits avec un niveau de stock bas';
+
+  @override
+  String get totalAlerts => 'Total des alertes';
+
+  @override
+  String get lowStockItems => 'Articles en stock bas';
+
+  @override
+  String get searchAlertsHint => 'Rechercher par nom ou catégorie...';
+
+  @override
+  String get refresh => 'Actualiser';
+
+  @override
+  String get noLowStockAlerts => 'Aucune alerte de stock bas';
+
+  @override
+  String get noAlertsMatch => 'Aucune alerte ne correspond à votre recherche';
+
+  @override
+  String get allStockSufficient => 'Tous les produits ont un niveau de stock suffisant';
+
+  @override
+  String get tryDifferentSearch => 'Essayez un autre terme de recherche';
+
+  @override
+  String get currentStock => 'Stock actuel';
+
+  @override
+  String get threshold => 'Seuil';
+
+  @override
   String get notAvailable => 'N/D';
 
   @override
@@ -500,4 +504,40 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get warning => 'Avertissement';
+
+  @override
+  String get categoryManagement => 'Gestion des Catégories';
+
+  @override
+  String get totalCategories => 'Total des catégories';
+
+  @override
+  String get totalProducts => 'Total des produits';
+
+  @override
+  String get avgProducts => 'Moyenne produits/catégorie';
+
+  @override
+  String get confirmDelete => 'Confirmer la suppression';
+
+  @override
+  String get deleteConfirmationMsg => 'Êtes-vous sûr de vouloir supprimer cette catégorie ? Cette action est irréversible.';
+
+  @override
+  String get save => 'Enregistrer';
+
+  @override
+  String get successDelete => 'Catégorie supprimée avec succès';
+
+  @override
+  String get failDelete => 'Échec de la suppression de la catégorie';
+
+  @override
+  String get itemsLabel => 'articles';
+
+  @override
+  String get errorDeletingCategory => 'Erreur lors de la suppression de la catégorie: ';
+
+  @override
+  String get errorLoadingCategories => 'Erreur lors du chargement des catégories :';
 }
