@@ -540,4 +540,187 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get errorLoadingCategories => 'Erreur lors du chargement des catégories :';
+
+  @override
+  String get thresholdManagement => 'Gestion des Seuils';
+
+  @override
+  String get thresholdSubtitle => 'Gérer les seuils de stock bas pour les produits et catégories';
+
+  @override
+  String get addThreshold => 'Ajouter un seuil';
+
+  @override
+  String get editThreshold => 'Modifier le seuil';
+
+  @override
+  String get thresholdInfo => 'Informations sur le seuil';
+
+  @override
+  String get thresholdType => 'Type de seuil';
+
+  @override
+  String get totalProductThresholds => 'Total des seuils produits';
+
+  @override
+  String get noThresholdsFound => 'Aucun seuil trouvé';
+
+  @override
+  String get search => 'Rechercher';
+
+  @override
+  String get searchPlaceholder => 'Rechercher par nom de produit ou catégorie...';
+
+  @override
+  String get type => 'Type';
+
+  @override
+  String get productCategory => 'Produit/Catégorie';
+
+  @override
+  String get thresholdValue => 'Valeur du seuil';
+
+  @override
+  String get createdAt => 'Créé le';
+
+  @override
+  String get product => 'Produit';
+
+  @override
+  String get setProductThreshold => 'Définir un seuil pour un produit spécifique';
+
+  @override
+  String get setCategoryThreshold => 'Définir un seuil pour tous les produits d\'une catégorie';
+
+  @override
+  String get selectProduct => 'Sélectionner un produit';
+
+  @override
+  String get chooseProduct => 'Choisir un produit...';
+
+  @override
+  String get chooseCategory => 'Choisir une catégorie...';
+
+  @override
+  String get enterThresholdValue => 'Entrez la valeur du seuil...';
+
+  @override
+  String get backToList => 'Retour à la liste';
+
+  @override
+  String get saveThreshold => 'Enregistrer le seuil';
+
+  @override
+  String get deleteThreshold => 'Supprimer le seuil';
+
+  @override
+  String get deleteThresholdConfirm => 'Êtes-vous sûr de vouloir supprimer le seuil pour cet élément ?';
+
+  @override
+  String get errorLoadingThresholds => 'Erreur lors du chargement des seuils :';
+
+  @override
+  String get errorLoadingData => 'Erreur lors du chargement des données :';
+
+  @override
+  String get errorDeletingThreshold => 'Erreur lors de la suppression du seuil :';
+
+  @override
+  String get errorCreatingThreshold => 'Erreur lors de la création du seuil :';
+
+  @override
+  String get thresholdDeleteSuccess => 'Seuil supprimé avec succès';
+
+  @override
+  String get thresholdCreateSuccess => 'Seuil créé avec succès';
+
+  @override
+  String get thresholdUpdateSuccess => 'Seuil mis à jour avec succès';
+
+  @override
+  String get pleaseSelectProduct => 'Veuillez sélectionner un produit';
+
+  @override
+  String get pleaseSelectCategory => 'Veuillez sélectionner une catégorie';
+
+  @override
+  String get pleaseEnterValue => 'Veuillez entrer une valeur de seuil';
+
+  @override
+  String get pleaseEnterPositive => 'Veuillez entrer un nombre positif valide';
+
+  @override
+  String get addThresholdDescription => 'Créez un nouveau seuil de stock bas pour un produit ou une catégorie';
+
+  @override
+  String get editThresholdDescription => 'Modifier la valeur du seuil de stock bas';
+
+  @override
+  String get thresholdInformation => 'Informations sur le seuil';
+
+  @override
+  String get productThreshold => 'Seuil du produit';
+
+  @override
+  String get categoryThreshold => 'Seuil de la catégorie';
+
+  @override
+  String get categoryWarningNote => 'Note : La mise à jour de ce seuil s\'appliquera à tous les produits de cette catégorie';
+
+  @override
+  String get thresholdValueLabel => 'Valeur du seuil';
+
+  @override
+  String get thresholdValueHint => 'Entrez la valeur du seuil...';
+
+  @override
+  String get removeThreshold => 'Supprimer le seuil';
+
+  @override
+  String get updateThreshold => 'Mettre à jour le seuil';
+
+  @override
+  String get confirmUpdateTitle => 'Confirmer la mise à jour du seuil';
+
+  @override
+  String get confirmUpdateBody => 'Vous êtes sur le point de mettre à jour le seuil pour :';
+
+  @override
+  String get newThreshold => 'Nouveau seuil';
+
+  @override
+  String get categoryWarningDetail => 'Cela mettra à jour TOUS les produits de la catégorie: ';
+
+  @override
+  String get productSuccessDetail => 'Cela mettra à jour le seuil uniquement pour: ';
+
+  @override
+  String get removeConfirmTitle => 'Supprimer le seuil';
+
+  @override
+  String get removeConfirmBody => 'Êtes-vous sûr de vouloir supprimer ce seuil? \n\nNote : Pour les seuils de produits, cela définira le seuil sur nul. Pour les seuils de catégories, cela définira le seuil sur nul pour tout les produits qui appartient à cette catégorie';
+
+  @override
+  String get successUpdate => 'Seuil mis à jour avec succès';
+
+  @override
+  String get successRemove => 'Seuil supprimé avec succès';
+
+  @override
+  String get errorUpdate => 'Erreur lors de la mise à jour du seuil : ';
+
+  @override
+  String get errorLoading => 'Erreur lors du chargement du seuil : ';
+
+  @override
+  String get validationEmpty => 'Veuillez entrer une valeur de seuil';
+
+  @override
+  String get validationInvalid => 'Veuillez entrer un nombre positif valide';
+
+  @override
+  String get update => 'Mettre à jour';
+
+  @override
+  String get remove => 'Supprimer';
 }

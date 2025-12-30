@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:se_project/l10n/app_localizations.dart';
 import '../widgets/page_header.dart';
 import '../widgets/primary_button.dart';
 import '../theme/app_theme.dart';
@@ -24,7 +25,7 @@ class EditThresholdPage extends StatefulWidget {
 class _EditThresholdPageState extends State<EditThresholdPage> {
   final _formKey = GlobalKey<FormState>();
   final _thresholdValueController = TextEditingController();
-  
+
   bool _isLoading = true;
   bool _isSaving = false;
   Map<String, dynamic>? _threshold;
@@ -43,21 +44,25 @@ class _EditThresholdPageState extends State<EditThresholdPage> {
 
   Future<void> _loadThreshold() async {
     try {
-      final data = await ThresholdApi.getThresholdById(int.parse(widget.thresholdId));
+      final data =
+          await ThresholdApi.getThresholdById(int.parse(widget.thresholdId));
       final threshold = data['threshold'];
       setState(() {
         _threshold = threshold;
-        _thresholdValueController.text = threshold['threshold_value'].toString();
+        _thresholdValueController.text =
+            threshold['threshold_value'].toString();
         _isLoading = false;
       });
     } catch (e) {
-      print("Error loading threshold: $e");
+      print(AppLocalizations.of(context)!.errorLoadingThresholds + "$e");
       setState(() {
         _isLoading = false;
       });
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error loading threshold: $e')),
+          SnackBar(
+              content: Text(
+                  AppLocalizations.of(context)!.errorLoadingThresholds + '$e')),
         );
       }
     }
@@ -69,7 +74,8 @@ class _EditThresholdPageState extends State<EditThresholdPage> {
     }
 
     final thresholdType = _threshold?['threshold_type'] ?? '';
-    final entityName = _threshold?['entity_name'] ?? 'Unknown';
+    final entityName =
+        _threshold?['entity_name'] ?? AppLocalizations.of(context)!.unknown;
     final oldValue = _threshold?['threshold_value'] ?? 0;
     final newValue = int.parse(_thresholdValueController.text);
 
@@ -81,7 +87,7 @@ class _EditThresholdPageState extends State<EditThresholdPage> {
           children: [
             Icon(Icons.warning_amber_rounded, color: AppColors.orange),
             const SizedBox(width: 8),
-            const Text('Confirm Threshold Update'),
+            Text(AppLocalizations.of(context)!.confirmUpdateTitle),
           ],
         ),
         content: Column(
@@ -89,13 +95,18 @@ class _EditThresholdPageState extends State<EditThresholdPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'You are about to update the threshold for:',
+              AppLocalizations.of(context)!.confirmUpdateBody,
               style: TextStyle(fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 12),
-            Text('• ${thresholdType == 'product' ? 'Product' : 'Category'}: $entityName'),
-            Text('• Old threshold: $oldValue'),
-            Text('• New threshold: $newValue'),
+            Text(
+                '• ${thresholdType == 'product' ? 'Product' : 'Category'}: $entityName'),
+            Text('• ' +
+                AppLocalizations.of(context)!.confirmUpdateBody +
+                ' $oldValue'),
+            Text('• ' +
+                AppLocalizations.of(context)!.newThreshold +
+                ' $newValue'),
             const SizedBox(height: 16),
             if (thresholdType == 'category') ...[
               Container(
@@ -111,7 +122,8 @@ class _EditThresholdPageState extends State<EditThresholdPage> {
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        'This will update ALL products in the "$entityName" category!',
+                        AppLocalizations.of(context)!.categoryWarningDetail +
+                            ' "$entityName"',
                         style: TextStyle(
                           color: AppColors.orange,
                           fontSize: 13,
@@ -128,15 +140,18 @@ class _EditThresholdPageState extends State<EditThresholdPage> {
                 decoration: BoxDecoration(
                   color: AppColors.primaryBlue.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: AppColors.primaryBlue.withOpacity(0.3)),
+                  border:
+                      Border.all(color: AppColors.primaryBlue.withOpacity(0.3)),
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.info_outline, color: AppColors.primaryBlue, size: 20),
+                    Icon(Icons.info_outline,
+                        color: AppColors.primaryBlue, size: 20),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        'This will update the threshold for "$entityName" only.',
+                        AppLocalizations.of(context)!.productSuccessDetail +
+                            ' "$entityName"',
                         style: TextStyle(
                           color: AppColors.primaryBlue,
                           fontSize: 13,
@@ -152,7 +167,7 @@ class _EditThresholdPageState extends State<EditThresholdPage> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
@@ -160,7 +175,7 @@ class _EditThresholdPageState extends State<EditThresholdPage> {
               backgroundColor: AppColors.primaryBlue,
               foregroundColor: Colors.white,
             ),
-            child: const Text('Update'),
+            child: Text(AppLocalizations.of(context)!.update),
           ),
         ],
       ),
@@ -182,14 +197,15 @@ class _EditThresholdPageState extends State<EditThresholdPage> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Threshold updated successfully')),
+          SnackBar(content: Text(AppLocalizations.of(context)!.successUpdate)),
         );
         widget.onThresholdUpdated?.call();
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error updating threshold: $e')),
+          SnackBar(
+              content: Text(AppLocalizations.of(context)!.errorUpdate + ' $e')),
         );
       }
     } finally {
@@ -205,21 +221,20 @@ class _EditThresholdPageState extends State<EditThresholdPage> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Remove Threshold'),
+        title: Text(AppLocalizations.of(context)!.removeThreshold),
         content: Text(
-          'Are you sure you want to remove this threshold for "${_threshold?['entity_name']}"?\n\n'
-          'Note: For product thresholds, this will set the threshold to null. '
-          'For category thresholds, this will delete the threshold entirely.',
+          '"${_threshold?['entity_name']}":' +
+              AppLocalizations.of(context)!.removeConfirmBody,
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
             style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('Remove'),
+            child: Text(AppLocalizations.of(context)!.remove),
           ),
         ],
       ),
@@ -230,14 +245,18 @@ class _EditThresholdPageState extends State<EditThresholdPage> {
         await ThresholdApi.deleteThreshold(int.parse(widget.thresholdId));
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Threshold removed successfully')),
+            SnackBar(
+                content: Text(AppLocalizations.of(context)!.successRemove)),
           );
           widget.onThresholdUpdated?.call();
         }
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error removing threshold: $e')),
+            SnackBar(
+                content: Text(
+                    AppLocalizations.of(context)!.errorDeletingThreshold +
+                        ' $e')),
           );
         }
       }
@@ -250,13 +269,13 @@ class _EditThresholdPageState extends State<EditThresholdPage> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         PageHeader(
-          title: 'Edit Threshold',
-          description: 'Modify the low-stock threshold value',
+          title: AppLocalizations.of(context)!.editThreshold,
+          description: AppLocalizations.of(context)!.editThresholdDescription,
           actions: [
             TextButton.icon(
               onPressed: widget.onNavigateBack,
               icon: const Icon(Icons.arrow_back, size: 20),
-              label: const Text('Back to List'),
+              label: Text(AppLocalizations.of(context)!.backToList),
               style: TextButton.styleFrom(
                 foregroundColor: AppTheme.primaryBlue,
               ),
@@ -279,8 +298,8 @@ class _EditThresholdPageState extends State<EditThresholdPage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  'Threshold Information',
+                                Text(
+                                  AppLocalizations.of(context)!.thresholdInfo,
                                   style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w600,
@@ -323,7 +342,8 @@ class _EditThresholdPageState extends State<EditThresholdPage> {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
                   color: thresholdType == 'product'
                       ? AppColors.primaryBlue.withOpacity(0.1)
@@ -331,9 +351,13 @@ class _EditThresholdPageState extends State<EditThresholdPage> {
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Text(
-                  thresholdType == 'product' ? 'Product Threshold' : 'Category Threshold',
+                  thresholdType == 'product'
+                      ? AppLocalizations.of(context)!.productThreshold
+                      : AppLocalizations.of(context)!.categoryThreshold,
                   style: TextStyle(
-                    color: thresholdType == 'product' ? AppColors.primaryBlue : AppColors.brownGold,
+                    color: thresholdType == 'product'
+                        ? AppColors.primaryBlue
+                        : AppColors.brownGold,
                     fontWeight: FontWeight.w600,
                     fontSize: 12,
                   ),
@@ -345,7 +369,9 @@ class _EditThresholdPageState extends State<EditThresholdPage> {
           Row(
             children: [
               Icon(
-                thresholdType == 'product' ? Icons.inventory_2_outlined : Icons.category_outlined,
+                thresholdType == 'product'
+                    ? Icons.inventory_2_outlined
+                    : Icons.category_outlined,
                 size: 20,
                 color: AppColors.textSecondary,
               ),
@@ -363,7 +389,7 @@ class _EditThresholdPageState extends State<EditThresholdPage> {
           if (thresholdType == 'category') ...[
             const SizedBox(height: 8),
             Text(
-              'Note: Updating this threshold will apply to all products in this category',
+              AppLocalizations.of(context)!.categoryWarningNote,
               style: TextStyle(
                 fontSize: 12,
                 color: AppColors.textSecondary.withOpacity(0.8),
@@ -393,7 +419,7 @@ class _EditThresholdPageState extends State<EditThresholdPage> {
           controller: _thresholdValueController,
           keyboardType: TextInputType.number,
           decoration: InputDecoration(
-            hintText: 'Enter threshold value...',
+            hintText: AppLocalizations.of(context)!.thresholdValueHint,
             filled: true,
             fillColor: AppTheme.inputBackground,
             border: OutlineInputBorder(
@@ -406,17 +432,19 @@ class _EditThresholdPageState extends State<EditThresholdPage> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: AppTheme.primaryBlue, width: 2),
+              borderSide:
+                  const BorderSide(color: AppTheme.primaryBlue, width: 2),
             ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'Please enter a threshold value';
+              return AppLocalizations.of(context)!.validationEmpty;
             }
             final intValue = int.tryParse(value);
             if (intValue == null || intValue <= 0) {
-              return 'Please enter a valid positive number';
+              return AppLocalizations.of(context)!.validationInvalid;
             }
             return null;
           },
@@ -432,7 +460,7 @@ class _EditThresholdPageState extends State<EditThresholdPage> {
         TextButton.icon(
           onPressed: _isSaving ? null : _removeThreshold,
           icon: const Icon(Icons.delete_outline, size: 20),
-          label: const Text('Remove Threshold'),
+          label: Text(AppLocalizations.of(context)!.removeConfirmTitle),
           style: TextButton.styleFrom(
             foregroundColor: Colors.red,
           ),
@@ -441,7 +469,7 @@ class _EditThresholdPageState extends State<EditThresholdPage> {
           children: [
             TextButton(
               onPressed: _isSaving ? null : widget.onNavigateBack,
-              child: const Text('Cancel'),
+              child: Text(AppLocalizations.of(context)!.cancel),
             ),
             const SizedBox(width: 16),
             PrimaryButton(
@@ -455,7 +483,7 @@ class _EditThresholdPageState extends State<EditThresholdPage> {
                         valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                       ),
                     )
-                  : const Text('Update Threshold'),
+                  : Text(AppLocalizations.of(context)!.updateThreshold),
             ),
           ],
         ),

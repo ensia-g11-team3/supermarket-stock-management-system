@@ -434,7 +434,7 @@ abstract class AppLocalizations {
   /// No description provided for @selectCategory.
   ///
   /// In en, this message translates to:
-  /// **'Select category'**
+  /// **'Select Category'**
   String get selectCategory;
 
   /// No description provided for @supplier.
@@ -1156,6 +1156,372 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error loading categories:'**
   String get errorLoadingCategories;
+
+  /// No description provided for @thresholdManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'Threshold Management'**
+  String get thresholdManagement;
+
+  /// No description provided for @thresholdSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage low-stock thresholds for products and categories'**
+  String get thresholdSubtitle;
+
+  /// No description provided for @addThreshold.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Threshold'**
+  String get addThreshold;
+
+  /// No description provided for @editThreshold.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Threshold'**
+  String get editThreshold;
+
+  /// No description provided for @thresholdInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Threshold Information'**
+  String get thresholdInfo;
+
+  /// No description provided for @thresholdType.
+  ///
+  /// In en, this message translates to:
+  /// **'Threshold Type'**
+  String get thresholdType;
+
+  /// No description provided for @totalProductThresholds.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Product Thresholds'**
+  String get totalProductThresholds;
+
+  /// No description provided for @noThresholdsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No thresholds found'**
+  String get noThresholdsFound;
+
+  /// No description provided for @search.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get search;
+
+  /// No description provided for @searchPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by product or category name...'**
+  String get searchPlaceholder;
+
+  /// No description provided for @type.
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get type;
+
+  /// No description provided for @productCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Product/Category'**
+  String get productCategory;
+
+  /// No description provided for @thresholdValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Threshold Value'**
+  String get thresholdValue;
+
+  /// No description provided for @createdAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Created At'**
+  String get createdAt;
+
+  /// No description provided for @product.
+  ///
+  /// In en, this message translates to:
+  /// **'Product'**
+  String get product;
+
+  /// No description provided for @setProductThreshold.
+  ///
+  /// In en, this message translates to:
+  /// **'Set threshold for a specific product'**
+  String get setProductThreshold;
+
+  /// No description provided for @setCategoryThreshold.
+  ///
+  /// In en, this message translates to:
+  /// **'Set threshold for all products in category'**
+  String get setCategoryThreshold;
+
+  /// No description provided for @selectProduct.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Product'**
+  String get selectProduct;
+
+  /// No description provided for @chooseProduct.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a product...'**
+  String get chooseProduct;
+
+  /// No description provided for @chooseCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a category...'**
+  String get chooseCategory;
+
+  /// No description provided for @enterThresholdValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter threshold value...'**
+  String get enterThresholdValue;
+
+  /// No description provided for @backToList.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to List'**
+  String get backToList;
+
+  /// No description provided for @saveThreshold.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Threshold'**
+  String get saveThreshold;
+
+  /// No description provided for @deleteThreshold.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Threshold'**
+  String get deleteThreshold;
+
+  /// No description provided for @deleteThresholdConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete the threshold for this item?'**
+  String get deleteThresholdConfirm;
+
+  /// No description provided for @errorLoadingThresholds.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading thresholds:'**
+  String get errorLoadingThresholds;
+
+  /// No description provided for @errorLoadingData.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading data:'**
+  String get errorLoadingData;
+
+  /// No description provided for @errorDeletingThreshold.
+  ///
+  /// In en, this message translates to:
+  /// **'Error deleting threshold:'**
+  String get errorDeletingThreshold;
+
+  /// No description provided for @errorCreatingThreshold.
+  ///
+  /// In en, this message translates to:
+  /// **'Error creating threshold:'**
+  String get errorCreatingThreshold;
+
+  /// No description provided for @thresholdDeleteSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Threshold deleted successfully'**
+  String get thresholdDeleteSuccess;
+
+  /// No description provided for @thresholdCreateSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Threshold created successfully'**
+  String get thresholdCreateSuccess;
+
+  /// No description provided for @thresholdUpdateSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Threshold updated successfully'**
+  String get thresholdUpdateSuccess;
+
+  /// No description provided for @pleaseSelectProduct.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a product'**
+  String get pleaseSelectProduct;
+
+  /// No description provided for @pleaseSelectCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a category'**
+  String get pleaseSelectCategory;
+
+  /// No description provided for @pleaseEnterValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a threshold value'**
+  String get pleaseEnterValue;
+
+  /// No description provided for @pleaseEnterPositive.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid positive number'**
+  String get pleaseEnterPositive;
+
+  /// No description provided for @addThresholdDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a new low-stock threshold for a product or category'**
+  String get addThresholdDescription;
+
+  /// No description provided for @editThresholdDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Modify the low-stock threshold value'**
+  String get editThresholdDescription;
+
+  /// No description provided for @thresholdInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Threshold Information'**
+  String get thresholdInformation;
+
+  /// No description provided for @productThreshold.
+  ///
+  /// In en, this message translates to:
+  /// **'Product Threshold'**
+  String get productThreshold;
+
+  /// No description provided for @categoryThreshold.
+  ///
+  /// In en, this message translates to:
+  /// **'Category Threshold'**
+  String get categoryThreshold;
+
+  /// No description provided for @categoryWarningNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Note: Updating this threshold will apply to all products in this category'**
+  String get categoryWarningNote;
+
+  /// No description provided for @thresholdValueLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Threshold Value'**
+  String get thresholdValueLabel;
+
+  /// No description provided for @thresholdValueHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter threshold value...'**
+  String get thresholdValueHint;
+
+  /// No description provided for @removeThreshold.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Threshold'**
+  String get removeThreshold;
+
+  /// No description provided for @updateThreshold.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Threshold'**
+  String get updateThreshold;
+
+  /// No description provided for @confirmUpdateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Threshold Update'**
+  String get confirmUpdateTitle;
+
+  /// No description provided for @confirmUpdateBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Old threshold'**
+  String get confirmUpdateBody;
+
+  /// No description provided for @newThreshold.
+  ///
+  /// In en, this message translates to:
+  /// **'New threshold'**
+  String get newThreshold;
+
+  /// No description provided for @categoryWarningDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'This will update ALL products in the category: '**
+  String get categoryWarningDetail;
+
+  /// No description provided for @productSuccessDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'This will update the threshold only for: '**
+  String get productSuccessDetail;
+
+  /// No description provided for @removeConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Threshold'**
+  String get removeConfirmTitle;
+
+  /// No description provided for @removeConfirmBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to remove this threshold? \n\nNote: For product thresholds, this will set the threshold to null. For category thresholds, this will set threshold to null for all products under this category.'**
+  String get removeConfirmBody;
+
+  /// No description provided for @successUpdate.
+  ///
+  /// In en, this message translates to:
+  /// **'Threshold updated successfully'**
+  String get successUpdate;
+
+  /// No description provided for @successRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Threshold removed successfully'**
+  String get successRemove;
+
+  /// No description provided for @errorUpdate.
+  ///
+  /// In en, this message translates to:
+  /// **'Error updating threshold: '**
+  String get errorUpdate;
+
+  /// No description provided for @errorLoading.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading threshold: '**
+  String get errorLoading;
+
+  /// No description provided for @validationEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a threshold value'**
+  String get validationEmpty;
+
+  /// No description provided for @validationInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid positive number'**
+  String get validationInvalid;
+
+  /// No description provided for @update.
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get update;
+
+  /// No description provided for @remove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get remove;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

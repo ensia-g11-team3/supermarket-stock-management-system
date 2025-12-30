@@ -177,7 +177,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get category => 'Category';
 
   @override
-  String get selectCategory => 'Select category';
+  String get selectCategory => 'Select Category';
 
   @override
   String get supplier => 'Supplier';
@@ -540,4 +540,187 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorLoadingCategories => 'Error loading categories:';
+
+  @override
+  String get thresholdManagement => 'Threshold Management';
+
+  @override
+  String get thresholdSubtitle => 'Manage low-stock thresholds for products and categories';
+
+  @override
+  String get addThreshold => 'Add Threshold';
+
+  @override
+  String get editThreshold => 'Edit Threshold';
+
+  @override
+  String get thresholdInfo => 'Threshold Information';
+
+  @override
+  String get thresholdType => 'Threshold Type';
+
+  @override
+  String get totalProductThresholds => 'Total Product Thresholds';
+
+  @override
+  String get noThresholdsFound => 'No thresholds found';
+
+  @override
+  String get search => 'Search';
+
+  @override
+  String get searchPlaceholder => 'Search by product or category name...';
+
+  @override
+  String get type => 'Type';
+
+  @override
+  String get productCategory => 'Product/Category';
+
+  @override
+  String get thresholdValue => 'Threshold Value';
+
+  @override
+  String get createdAt => 'Created At';
+
+  @override
+  String get product => 'Product';
+
+  @override
+  String get setProductThreshold => 'Set threshold for a specific product';
+
+  @override
+  String get setCategoryThreshold => 'Set threshold for all products in category';
+
+  @override
+  String get selectProduct => 'Select Product';
+
+  @override
+  String get chooseProduct => 'Choose a product...';
+
+  @override
+  String get chooseCategory => 'Choose a category...';
+
+  @override
+  String get enterThresholdValue => 'Enter threshold value...';
+
+  @override
+  String get backToList => 'Back to List';
+
+  @override
+  String get saveThreshold => 'Save Threshold';
+
+  @override
+  String get deleteThreshold => 'Delete Threshold';
+
+  @override
+  String get deleteThresholdConfirm => 'Are you sure you want to delete the threshold for this item?';
+
+  @override
+  String get errorLoadingThresholds => 'Error loading thresholds:';
+
+  @override
+  String get errorLoadingData => 'Error loading data:';
+
+  @override
+  String get errorDeletingThreshold => 'Error deleting threshold:';
+
+  @override
+  String get errorCreatingThreshold => 'Error creating threshold:';
+
+  @override
+  String get thresholdDeleteSuccess => 'Threshold deleted successfully';
+
+  @override
+  String get thresholdCreateSuccess => 'Threshold created successfully';
+
+  @override
+  String get thresholdUpdateSuccess => 'Threshold updated successfully';
+
+  @override
+  String get pleaseSelectProduct => 'Please select a product';
+
+  @override
+  String get pleaseSelectCategory => 'Please select a category';
+
+  @override
+  String get pleaseEnterValue => 'Please enter a threshold value';
+
+  @override
+  String get pleaseEnterPositive => 'Please enter a valid positive number';
+
+  @override
+  String get addThresholdDescription => 'Create a new low-stock threshold for a product or category';
+
+  @override
+  String get editThresholdDescription => 'Modify the low-stock threshold value';
+
+  @override
+  String get thresholdInformation => 'Threshold Information';
+
+  @override
+  String get productThreshold => 'Product Threshold';
+
+  @override
+  String get categoryThreshold => 'Category Threshold';
+
+  @override
+  String get categoryWarningNote => 'Note: Updating this threshold will apply to all products in this category';
+
+  @override
+  String get thresholdValueLabel => 'Threshold Value';
+
+  @override
+  String get thresholdValueHint => 'Enter threshold value...';
+
+  @override
+  String get removeThreshold => 'Remove Threshold';
+
+  @override
+  String get updateThreshold => 'Update Threshold';
+
+  @override
+  String get confirmUpdateTitle => 'Confirm Threshold Update';
+
+  @override
+  String get confirmUpdateBody => 'Old threshold';
+
+  @override
+  String get newThreshold => 'New threshold';
+
+  @override
+  String get categoryWarningDetail => 'This will update ALL products in the category: ';
+
+  @override
+  String get productSuccessDetail => 'This will update the threshold only for: ';
+
+  @override
+  String get removeConfirmTitle => 'Remove Threshold';
+
+  @override
+  String get removeConfirmBody => 'Are you sure you want to remove this threshold? \n\nNote: For product thresholds, this will set the threshold to null. For category thresholds, this will set threshold to null for all products under this category.';
+
+  @override
+  String get successUpdate => 'Threshold updated successfully';
+
+  @override
+  String get successRemove => 'Threshold removed successfully';
+
+  @override
+  String get errorUpdate => 'Error updating threshold: ';
+
+  @override
+  String get errorLoading => 'Error loading threshold: ';
+
+  @override
+  String get validationEmpty => 'Please enter a threshold value';
+
+  @override
+  String get validationInvalid => 'Please enter a valid positive number';
+
+  @override
+  String get update => 'Update';
+
+  @override
+  String get remove => 'Remove';
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:se_project/l10n/app_localizations.dart';
 import '../widgets/page_header.dart';
 import '../widgets/primary_button.dart';
 import '../theme/app_theme.dart';
@@ -34,13 +35,13 @@ class _ThresholdListPageState extends State<ThresholdListPage> {
   Future<void> _fetchThresholds() async {
     try {
       final data = await ThresholdApi.getThresholds();
-      final allThresholds = List<Map<String, dynamic>>.from(data['thresholds'] ?? []);
-      
+      final allThresholds =
+          List<Map<String, dynamic>>.from(data['thresholds'] ?? []);
+
       // Filter to only show products with thresholds set (not null)
-      final thresholdsWithValues = allThresholds
-          .where((t) => t['threshold_value'] != null)
-          .toList();
-      
+      final thresholdsWithValues =
+          allThresholds.where((t) => t['threshold_value'] != null).toList();
+
       setState(() {
         _thresholds = thresholdsWithValues;
         _isLoading = false;
@@ -75,7 +76,8 @@ class _ThresholdListPageState extends State<ThresholdListPage> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Delete Threshold'),
-        content: Text('Are you sure you want to delete the threshold for "$entityName"?'),
+        content: Text(
+            'Are you sure you want to delete the threshold for "$entityName"?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -95,7 +97,9 @@ class _ThresholdListPageState extends State<ThresholdListPage> {
         await ThresholdApi.deleteThreshold(thresholdId);
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Threshold for "$entityName" deleted successfully')),
+            SnackBar(
+                content:
+                    Text('Threshold for "$entityName" deleted successfully')),
           );
         }
         _fetchThresholds();
@@ -115,17 +119,17 @@ class _ThresholdListPageState extends State<ThresholdListPage> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         PageHeader(
-          title: 'Threshold Management',
-          description: 'Manage low-stock thresholds for products and categories',
+          title: AppLocalizations.of(context)!.thresholdManagement,
+          description: AppLocalizations.of(context)!.thresholdSubtitle,
           actions: [
             PrimaryButton(
               onPressed: widget.onNavigateToAdd,
-              child: const Row(
+              child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(Icons.add, size: 20),
                   SizedBox(width: 8),
-                  Text('Add Threshold'),
+                  Text(AppLocalizations.of(context)!.addThreshold),
                 ],
               ),
             ),
@@ -148,8 +152,8 @@ class _ThresholdListPageState extends State<ThresholdListPage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  'Filters',
+                                Text(
+                                  AppLocalizations.of(context)!.filters,
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w600,
@@ -177,14 +181,17 @@ class _ThresholdListPageState extends State<ThresholdListPage> {
                                         Icon(
                                           Icons.inventory_2_outlined,
                                           size: 64,
-                                          color: AppColors.textSecondary.withOpacity(0.5),
+                                          color: AppColors.textSecondary
+                                              .withOpacity(0.5),
                                         ),
                                         const SizedBox(height: 16),
                                         Text(
-                                          'No thresholds found',
+                                          AppLocalizations.of(context)!
+                                              .noThresholdsFound,
                                           style: TextStyle(
                                             fontSize: 16,
-                                            color: AppColors.textSecondary.withOpacity(0.7),
+                                            color: AppColors.textSecondary
+                                                .withOpacity(0.7),
                                           ),
                                         ),
                                       ],
@@ -201,23 +208,35 @@ class _ThresholdListPageState extends State<ThresholdListPage> {
                                   },
                                   children: [
                                     // Header Row
-                                    const TableRow(
+                                    TableRow(
                                       decoration: BoxDecoration(
                                         color: AppTheme.brownGold,
                                         border: Border(
-                                          bottom: BorderSide(color: AppTheme.borderColor),
+                                          bottom: BorderSide(
+                                              color: AppTheme.borderColor),
                                         ),
                                       ),
                                       children: [
-                                        _TableHeaderCell(Text('Type')),
-                                        _TableHeaderCell(Text('Product/Category')),
-                                        _TableHeaderCell(Text('Threshold Value')),
-                                        _TableHeaderCell(Text('Created At')),
-                                        _TableHeaderCell(Text('Actions')),
+                                        _TableHeaderCell(Text(
+                                            AppLocalizations.of(context)!
+                                                .type)),
+                                        _TableHeaderCell(Text(
+                                            AppLocalizations.of(context)!
+                                                .productCategory)),
+                                        _TableHeaderCell(Text(
+                                            AppLocalizations.of(context)!
+                                                .thresholdValue)),
+                                        _TableHeaderCell(Text(
+                                            AppLocalizations.of(context)!
+                                                .createdAt)),
+                                        _TableHeaderCell(Text(
+                                            AppLocalizations.of(context)!
+                                                .actions)),
                                       ],
                                     ),
                                     // Data Rows
-                                    ..._filteredThresholds.map((threshold) => _buildDataRow(threshold)),
+                                    ..._filteredThresholds.map((threshold) =>
+                                        _buildDataRow(threshold)),
                                   ],
                                 ),
                         ),
@@ -234,8 +253,8 @@ class _ThresholdListPageState extends State<ThresholdListPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Search',
+        Text(
+          AppLocalizations.of(context)!.search,
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w500,
@@ -250,7 +269,7 @@ class _ThresholdListPageState extends State<ThresholdListPage> {
             });
           },
           decoration: InputDecoration(
-            hintText: 'Search by product or category name...',
+            hintText: AppLocalizations.of(context)!.searchPlaceholder,
             prefixIcon: const Icon(Icons.search, color: AppTheme.textSecondary),
             filled: true,
             fillColor: AppTheme.inputBackground,
@@ -264,16 +283,16 @@ class _ThresholdListPageState extends State<ThresholdListPage> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: AppTheme.primaryBlue, width: 2),
+              borderSide:
+                  const BorderSide(color: AppTheme.primaryBlue, width: 2),
             ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           ),
         ),
       ],
     );
   }
-
-
 
   Widget _buildStatsCard() {
     return Row(
@@ -283,7 +302,7 @@ class _ThresholdListPageState extends State<ThresholdListPage> {
             icon: Icons.inventory_2_outlined,
             iconColor: AppColors.primaryBlue,
             iconBgColor: AppColors.primaryBlue.withOpacity(0.1),
-            title: 'Total Product Thresholds',
+            title: AppLocalizations.of(context)!.totalProductThresholds,
             value: _thresholds.length.toString(),
           ),
         ),
@@ -359,15 +378,19 @@ class _ThresholdListPageState extends State<ThresholdListPage> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: thresholdType == 'product'
+              color: thresholdType == AppLocalizations.of(context)!.product
                   ? AppColors.primaryBlue.withOpacity(0.1)
                   : AppColors.brownGold.withOpacity(0.1),
               borderRadius: BorderRadius.circular(16),
             ),
             child: Text(
-              thresholdType == 'product' ? 'Product' : 'Category',
+              thresholdType == AppLocalizations.of(context)!.product
+                  ? AppLocalizations.of(context)!.category
+                  : AppLocalizations.of(context)!.product,
               style: TextStyle(
-                color: thresholdType == 'product' ? AppColors.primaryBlue : AppColors.brownGold,
+                color: thresholdType == AppLocalizations.of(context)!.product
+                    ? AppColors.primaryBlue
+                    : AppColors.brownGold,
                 fontWeight: FontWeight.w600,
                 fontSize: 12,
               ),
@@ -379,7 +402,9 @@ class _ThresholdListPageState extends State<ThresholdListPage> {
           Row(
             children: [
               Icon(
-                thresholdType == 'product' ? Icons.inventory_2_outlined : Icons.category_outlined,
+                thresholdType == AppLocalizations.of(context)!.product
+                    ? Icons.inventory_2_outlined
+                    : Icons.category_outlined,
                 size: 18,
                 color: AppColors.textSecondary,
               ),
@@ -432,7 +457,7 @@ class _ThresholdListPageState extends State<ThresholdListPage> {
                   widget.onNavigateToEdit?.call(thresholdId.toString());
                 },
                 color: AppTheme.primaryBlue,
-                tooltip: 'Edit',
+                tooltip: AppLocalizations.of(context)!.edit,
               ),
               IconButton(
                 icon: const Icon(Icons.delete, size: 20),
@@ -440,7 +465,7 @@ class _ThresholdListPageState extends State<ThresholdListPage> {
                   _deleteThreshold(thresholdId, entityName);
                 },
                 color: Colors.red,
-                tooltip: 'Delete',
+                tooltip: AppLocalizations.of(context)!.delete,
               ),
             ],
           ),
