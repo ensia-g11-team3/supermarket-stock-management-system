@@ -12,7 +12,6 @@ class ProductListPage extends StatefulWidget {
   final VoidCallback? onNavigateToAdd;
   final Function(String productId, String productName)? onNavigateToBatches;
 
-
   const ProductListPage({
     super.key,
     this.onNavigateToEdit,
@@ -46,7 +45,7 @@ class _ProductListPageState extends State<ProductListPage> {
         _isLoading = false;
       });
     } catch (e) {
-      print("Error loading products: $e");
+      print(AppLocalizations.of(context)!.errorLoadingProducts + "$e");
       setState(() {
         _isLoading = false;
       });
@@ -132,8 +131,8 @@ class _ProductListPageState extends State<ProductListPage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  'Filters',
+                                Text(
+                                  AppLocalizations.of(context)!.filters,
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w600,
@@ -357,15 +356,21 @@ class _ProductListPageState extends State<ProductListPage> {
                                                       .delete,
                                             ),
                                             IconButton(
-                                              icon: const Icon(Icons.inventory_2, size: 20),
+                                              icon: const Icon(
+                                                  Icons.inventory_2,
+                                                  size: 20),
                                               onPressed: () {
-                                                widget.onNavigateToBatches?.call(
-                                                  product['product_id'].toString(),
+                                                widget.onNavigateToBatches
+                                                    ?.call(
+                                                  product['product_id']
+                                                      .toString(),
                                                   product['name'],
                                                 );
                                               },
                                               color: Colors.purple,
-                                              tooltip: 'View Batches',
+                                              tooltip:
+                                                  AppLocalizations.of(context)!
+                                                      .viewBatches,
                                             ),
                                           ],
                                         ),

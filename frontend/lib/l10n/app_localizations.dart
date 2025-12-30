@@ -1157,6 +1157,12 @@ abstract class AppLocalizations {
   /// **'Error loading categories:'**
   String get errorLoadingCategories;
 
+  /// No description provided for @errorLoadingProducts.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading products: '**
+  String get errorLoadingProducts;
+
   /// No description provided for @thresholdManagement.
   ///
   /// In en, this message translates to:

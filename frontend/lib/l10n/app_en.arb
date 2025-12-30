@@ -220,6 +220,8 @@
   "itemsLabel": "items",
   "errorDeletingCategory": "Error deleting category: ",
   "errorLoadingCategories": "Error loading categories:",
+  "errorLoadingCategories": "Error loading categories:",
+  "errorLoadingProducts":"Error loading products: ",
 
 
 

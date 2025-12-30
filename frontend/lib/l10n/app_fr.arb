@@ -212,6 +212,7 @@
   "itemsLabel": "articles",
   "errorDeletingCategory": "Erreur lors de la suppression de la catégorie: ",
   "errorLoadingCategories": "Erreur lors du chargement des catégories :",
+  "errorLoadingProducts":"Erreur lors du chargement des produits: ",
 
 
   "thresholdManagement": "Gestion des Seuils",

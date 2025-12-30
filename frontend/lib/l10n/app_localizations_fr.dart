@@ -542,6 +542,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get errorLoadingCategories => 'Erreur lors du chargement des catégories :';
 
   @override
+  String get errorLoadingProducts => 'Erreur lors du chargement des produits: ';
+
+  @override
   String get thresholdManagement => 'Gestion des Seuils';
 
   @override

@@ -542,6 +542,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorLoadingCategories => 'Error loading categories:';
 
   @override
+  String get errorLoadingProducts => 'Error loading products: ';
+
+  @override
   String get thresholdManagement => 'Threshold Management';
 
   @override
