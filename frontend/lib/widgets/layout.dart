@@ -90,12 +90,6 @@ class Layout extends StatelessWidget {
                         onTap: () => onNavigate('categories'),
                       ),
                       _NavItem(
-                        icon: Icons.local_shipping,
-                        label: AppLocalizations.of(context)!.navSuppliers,
-                        isSelected: currentPage == 'suppliers',
-                        onTap: () => onNavigate('suppliers'),
-                      ),
-                      _NavItem(
                         icon: Icons.notifications_active,
                         label: AppLocalizations.of(context)!.navLowStock,
                         isSelected: currentPage == 'alerts',
@@ -109,12 +103,6 @@ class Layout extends StatelessWidget {
                             currentPage == 'add-threshold' ||
                             currentPage == 'edit-threshold',
                         onTap: () => onNavigate('thresholds'),
-                      ),
-                      _NavItem(
-                        icon: Icons.swap_horiz,
-                        label: AppLocalizations.of(context)!.navStockMovement,
-                        isSelected: currentPage == 'movements',
-                        onTap: () => onNavigate('movements'),
                       ),
                       _NavItem(
                         icon: Icons.people,
