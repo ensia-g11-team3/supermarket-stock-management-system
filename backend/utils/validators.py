@@ -9,7 +9,7 @@ def validate_product_data(data, is_update=False):
     
     # Required fields for creation
     if not is_update:
-        required_fields = ['barcode', 'name', 'category', 'selling_price', 'buying_price']
+        required_fields = ['barcode', 'name', 'category_id', 'selling_price', 'buying_price']
         for field in required_fields:
             if field not in data or not data[field]:
                 errors.append(f"'{field}' is required")
@@ -25,9 +25,9 @@ def validate_product_data(data, is_update=False):
             errors.append("'name' must be a string with max 100 characters")
     
     # Validate category
-    if 'category' in data:
-        if not isinstance(data['category'], str) or len(data['category']) > 50:
-            errors.append("'category' must be a string with max 50 characters")
+    if 'category_id' in data:
+        if not isinstance(data['category_id'], int):
+            errors.append("'category_id' must be a int")
     
     # Validate qty
     if 'qty' in data:

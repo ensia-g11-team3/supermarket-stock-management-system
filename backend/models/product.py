@@ -18,7 +18,7 @@ class Product:
             
             query = """
                 INSERT INTO products 
-                (barcode, name, category, qty, product_threshold, 
+                (barcode, name, category_id, qty, product_threshold, 
                  selling_price, buying_price, supplier, status, description)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             """
@@ -26,7 +26,7 @@ class Product:
             values = (
                 data.get('barcode'),
                 data.get('name'),
-                data.get('category'),
+                data.get('category_id'),
                 data.get('qty', 0),
                 data.get('product_threshold'),
                 float(data.get('selling_price', 0.0)), 
@@ -60,30 +60,40 @@ class Product:
         finally:
             close_connection(connection)
     
+    
     @staticmethod
     def get_all():
-        """
-        Retrieve all products from the database.
-        Returns (success, result/error_message, status_code)
-        """
-        connection = get_connection()
-        if not connection:
-            return False, "Database connection failed", 500
+      """
+      Retrieve all products with category names.
+      Returns (success, result/error_message, status_code)
+      """
+      connection = get_connection()
+      if not connection:
+        return False, "Database connection failed", 500
+    
+      try:
+          cursor = connection.cursor(dictionary=True)
         
-        try:
-            cursor = connection.cursor(dictionary=True)
-            cursor.execute("SELECT * FROM products ORDER BY created_at DESC")
-            products = cursor.fetchall()
-            cursor.close()
-            return True, {
-            "count": len(products),
-            "products": products
-            }, 200
-            
-        except Error as e:
-            return False, f"Database error: {str(e)}", 500
-        finally:
-            close_connection(connection)
+        # Join categories table to get category_name
+          query = """
+              SELECT p.*, c.category_name
+            FROM products p
+            LEFT JOIN categories c ON p.category_id = c.category_id
+            ORDER BY p.created_at DESC
+        """
+          cursor.execute(query)
+          products = cursor.fetchall()
+          cursor.close()
+          return True, {
+              "count": len(products),
+              "products": products
+          }, 200
+        
+      except Error as e:
+        return False, f"Database error: {str(e)}", 500
+      finally:
+        close_connection(connection)
+
     
     @staticmethod
     def get_by_id(product_id):
@@ -134,7 +144,7 @@ class Product:
             update_fields = []
             values = []
             
-            allowed_fields = ['barcode', 'name', 'category', 'qty', 'product_threshold', 
+            allowed_fields = ['barcode', 'name', 'category_id', 'qty', 'product_threshold', 
                             'selling_price', 'buying_price', 'supplier', 
                             'status', 'description']
             

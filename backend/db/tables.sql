@@ -22,7 +22,7 @@ CREATE TABLE products (
     product_id INT AUTO_INCREMENT PRIMARY KEY,
     barcode VARCHAR(50) NOT NULL UNIQUE,
     name VARCHAR(100) NOT NULL UNIQUE,
-    category VARCHAR(50) NOT NULL,
+    category_id INT NOT NULL,
     quantity_in_stock INT NOT NULL DEFAULT 0,
     qty INT NOT NULL DEFAULT 0,
     product_threshold INT,
@@ -32,7 +32,11 @@ CREATE TABLE products (
     supplier VARCHAR(100),
     status VARCHAR(20) NOT NULL DEFAULT 'In stock',
     description TEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_product_category
+        FOREIGN KEY (category_id)
+        REFERENCES categories(category_id)
+        ON DELETE CASCADE
 );
 
 -- TRANSACTIONS
