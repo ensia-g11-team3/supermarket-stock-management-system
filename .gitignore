@@ -6,3 +6,18 @@ __pycache__/
 venv/ 
 __pycache__/ 
 *.pyc 
+
+
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# Flutter
+/frontend/build/
+/**/Flutter/ephemeral/
+/**/flutter/ephemeral/
+
+# OS
+.DS_Store
+Thumbs.db
