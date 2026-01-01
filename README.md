@@ -1,112 +1,142 @@
-# 🧾 Stock Management Application — Sprint 1
+# Stockify - Stock Management Application
 
-A desktop application for basic stock and user management.
-This first sprint delivers the core foundations of the system: user management, product management, and simple transaction creation.
-
----
-
-## ✅ Sprint 1 Delivered Features
-
-### **1. User Management (CRUD)**
-
-* Create new users
-* View list of users
-* Update user information
-* Delete users
-
-### **2. Product Management (CRUD)**
-
-* Add new products
-* View products list
-* Edit product details
-* Delete products
-
-### **3. Create Transaction**
-
-* Start a new sale transaction
-* Add products to the transaction
-* Calculate total price
-* Save the transaction
-
-*(Note: Sprint 1 only includes creating a transaction — no advanced sales management yet.)*
+Stockify is a desktop stock management application designed for stores and supermarkets. It helps store owners and staff organize and manage their inventories efficiently through product management, category organization, and sales transaction tracking. The application supports four types of users, low-stock alerts, and offers localization in both English and French.
 
 ---
 
-## 🧰 Tech Stack (Sprint 1)
+## Technologies Used
 
-* **Frontend:** Flutter (Desktop)
-* **Backend:** Flask (Python)
-* **Database:** SQLite / MySQL (depending on your setup)
-* **API communication:** REST
+- **Frontend:** Flutter  
+- **Backend:** Flask  
+- **Database:** MySQL  
 
 ---
 
-## 📁 Project Structure (Sprint 1)
+## Installation & Setup
 
-```
-project/
- ├── backend/
- │    ├── app.py
- │    ├── routes/
- │    ├── models/
- │    ├── database/
- │    └── requirements.txt
- ├── frontend/
- │    ├── lib/
- │    ├── screens/
- │    ├── widgets/
- │    ├── services/
- │    └── pubspec.yaml
- ├── README.md
- └── docs/
+Follow these steps to set up Stockify locally:
+
+### Prerequisites
+
+1. Install **MySQL Server** on your computer.  
+2. Install **Flutter** for the frontend.  
+3. Install **Python** and **Flask** for the backend.  
+
+---
+
+### Clone the repository
+
+```bash
+git clone https://github.com/ensia-g11-team3/supermarket-stock-management-system
+cd supermarket-stock-management-system
 ```
 
 ---
 
-## 🚀 How to Run the Project
+### Backend Setup
 
+1. Navigate to the backend folder:
 
-### **Database**
-## Create database
-CREATE DATABASE stock_db;
-
-## Configure db.py
-Set your MySQL username, password, host, and database.
-
-
-## Create tables
-use tables.sql
-(make sure MySQL server is running) 
-
-### **Backend**
-
-```
+```bash
 cd backend
+````
+
+2. (Optional but recommended) Create a virtual environment:
+
+```bash
+python -m venv venv
+source venv/bin/activate  # Linux/macOS
+venv\Scripts\activate     # Windows
+```
+
+3. Install the required Python packages:
+
+```bash
 pip install -r requirements.txt
+```
+
+4. Create the database:
+
+```sql
+CREATE DATABASE stock_db;
+```
+
+5. Create the tables by running the queries in:
+
+```
+backend/db/tables.sql
+```
+
+6. Configure your database connection in `backend/db.py`. Make sure the **user**, **password**, and **host** match your MySQL setup.
+
+7. **Important:** Create the first user before running the app.
+   Run the provided script to create the initial admin user:
+
+```bash
+python create_first_user.py
+```
+
+> Note: The system only allows new user creation by an admin. This first user (admin) must be created before starting the application. Users can only log in
+>Make sure to remember the username and password for the created user.
+
+8. Run the backend:
+
+```bash
 python app.py
 ```
 
-### **Frontend**
+---
 
-```
+### Frontend Setup
+
+1. Navigate to the frontend folder:
+
+```bash
 cd frontend
+```
+
+2. Get Flutter dependencies:
+
+```bash
 flutter pub get
+```
+
+3. Run the Flutter application:
+
+```bash
 flutter run
 ```
 
----
-
-## 📝 Sprint 1 Notes
-
-* Authentication is **not yet implemented**.
-* Transaction creation is basic: no report, no stock update yet.
-* Sprint 1 focuses on building the foundation and database structure.
+> Make sure your backend is running before starting the frontend to ensure proper communication with the API.
 
 ---
 
-## 📌 Next Steps (Sprint 2 Goals)
+## Features
 
-* Update stock when a transaction happens
-* Improve transactions
-* Add supplier management ... etc
+* **Product Management:** Add, edit, delete, and view products and product batches.
+* **Category Management:** Organize products into categories for easier tracking.
+* **Sales Transactions:** Record sales, update inventory automatically, and track sales history.
+* **User Roles:** Supports four types of users.
+* **Low Stock Alerts:** Notify users when products reach low stock levels.
+* **Localization:** Supports both English and French interfaces.
+
+---
+
+## Special Notes
+
+* Make sure to create the **first admin user** before running the application.
+* Backend requires correct **database credentials** in `db.py`.
+* Using a virtual environment is recommended to avoid package conflicts.
+* The system is designed to be desktop-based; Flutter frontend can be run on Windows, macOS, or Linux.
+* Low-stock alerts are triggered based on thresholds set in the database by the users .
+
+---
+
+## Team
+
+* Nour Malek Yahiaoui
+* Leryeme Benmakhlouf
+* Wail Ouaret
+* Mohamed Anis Chehili
+* Mustapha Boulefa
 
