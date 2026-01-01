@@ -1,22 +1,17 @@
-# Python cache
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-venv/ 
-__pycache__/ 
-*.pyc 
+# Python (backend)
+backend/__pycache__/
+backend/*.pyc
+backend/*.pyo
+backend/*.pyd
+backend/venv/
 
-
-# Python
-venv/
-__pycache__/
-*.pyc
-
-# Flutter
-/frontend/build/
-/**/Flutter/ephemeral/
-/**/flutter/ephemeral/
+# Flutter/Dart (frontend)
+frontend/build/
+frontend/.dart_tool/
+frontend/**/Flutter/ephemeral/
+frontend/**/flutter/ephemeral/
+ios/Flutter/ephemeral/
+android/Flutter/ephemeral/
 
 # OS
 .DS_Store
