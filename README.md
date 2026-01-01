@@ -1,10 +1,10 @@
-# Stockify - Stock Management Application
+# 📦 Stockify - Stock Management Application
 
 Stockify is a desktop stock management application designed for stores and supermarkets. It helps store owners and staff organize and manage their inventories efficiently through product management, category organization, and sales transaction tracking. The application supports four types of users, low-stock alerts, and offers localization in both English and French.
 
 ---
 
-## Technologies Used
+## 🛠 Technologies Used
 
 - **Frontend:** Flutter  
 - **Backend:** Flask  
@@ -12,11 +12,27 @@ Stockify is a desktop stock management application designed for stores and super
 
 ---
 
-## Installation & Setup
+## 📁 Project Structure
+
+```
+
+Stockify/
+├── backend/      # Flask backend
+├── frontend/     # Flutter frontend
+├── ios/          # iOS build folder
+├── android/      # Android build folder
+├── .gitignore    # Git ignore file
+├── README.md     # Project documentation
+
+````
+
+---
+
+## ⚡ Installation & Setup
 
 Follow these steps to set up Stockify locally:
 
-### Prerequisites
+### 📝 Prerequisites
 
 1. Install **MySQL Server** on your computer.  
 2. Install **Flutter** for the frontend.  
@@ -24,22 +40,22 @@ Follow these steps to set up Stockify locally:
 
 ---
 
-### Clone the repository
+### 📥 Clone the Repository
 
 ```bash
 git clone https://github.com/ensia-g11-team3/supermarket-stock-management-system
 cd supermarket-stock-management-system
-```
+````
 
 ---
 
-### Backend Setup
+### 🖥 Backend Setup
 
 1. Navigate to the backend folder:
 
 ```bash
 cd backend
-````
+```
 
 2. (Optional but recommended) Create a virtual environment:
 
@@ -69,15 +85,13 @@ backend/db/tables.sql
 
 6. Configure your database connection in `backend/db.py`. Make sure the **user**, **password**, and **host** match your MySQL setup.
 
-7. **Important:** Create the first user before running the app.
-   Run the provided script to create the initial admin user:
+7. **⚠️ Important:** Create the first admin user before running the app.
 
 ```bash
 python create_first_user.py
 ```
 
-> Note: The system only allows new user creation by an admin. This first user (admin) must be created before starting the application. Users can only log in
->Make sure to remember the username and password for the created user.
+> Note: The system only allows new user creation by an admin. This first user (admin) must be created before starting the application. 📝 Remember the username and password for the created user.
 
 8. Run the backend:
 
@@ -87,7 +101,7 @@ python app.py
 
 ---
 
-### Frontend Setup
+### 📱 Frontend Setup
 
 1. Navigate to the frontend folder:
 
@@ -111,32 +125,31 @@ flutter run
 
 ---
 
-## Features
+## ✨ Features
 
-* **Product Management:** Add, edit, delete, and view products and product batches.
-* **Category Management:** Organize products into categories for easier tracking.
-* **Sales Transactions:** Record sales, update inventory automatically, and track sales history.
-* **User Roles:** Supports four types of users.
-* **Low Stock Alerts:** Notify users when products reach low stock levels.
-* **Localization:** Supports both English and French interfaces.
+* **📦 Product Management:** Add, edit, delete, and view products and product batches.
+* **📂 Category Management:** Organize products into categories for easier tracking.
+* **💳 Sales Transactions:** Record sales, update inventory automatically, and track sales history.
+* **👥 User Roles:** Supports four types of users.
+* **⚠️ Low Stock Alerts:** Notify users when products reach low stock levels.
+* **🌐 Localization:** Supports both English and French interfaces.
 
 ---
 
-## Special Notes
+## 📝 Special Notes
 
 * Make sure to create the **first admin user** before running the application.
 * Backend requires correct **database credentials** in `db.py`.
 * Using a virtual environment is recommended to avoid package conflicts.
 * The system is designed to be desktop-based; Flutter frontend can be run on Windows, macOS, or Linux.
-* Low-stock alerts are triggered based on thresholds set in the database by the users .
+* Low-stock alerts are triggered based on thresholds set in the database by the users.
 
 ---
 
-## Team
+## 👨‍💻 Team
 
 * Nour Malek Yahiaoui
 * Leryeme Benmakhlouf
 * Wail Ouaret
 * Mohamed Anis Chehili
 * Mustapha Boulefa
-
