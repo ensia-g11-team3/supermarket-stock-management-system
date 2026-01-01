@@ -34,17 +34,21 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
     super.dispose();
   }
 
-  // Client-side filtering - same pattern as product list page
+  /// HELPER: Safely parse any dynamic value into double
+  double parseDouble(dynamic value) {
+    if (value is double) return value;
+    if (value is int) return value.toDouble();
+    if (value is String) return double.tryParse(value) ?? 0.0;
+    return 0.0;
+  }
+
   List<Map<String, dynamic>> get _filteredTransactions {
     return _transactions.where((transaction) {
-      // Search filter - match transaction ID (contains search term)
       final bool matchesSearch = _searchController.text.isEmpty ||
           transaction['transaction_id']
               .toString()
               .contains(_searchController.text);
 
-      // Date filter - flexible substring matching on full datetime
-      // Supports: "25", "Dec", "25 Dec", "2025", "Thu", etc.
       final bool matchesDate = _dateController.text.isEmpty ||
           (transaction['transaction_date'] != null &&
               transaction['transaction_date']
@@ -52,13 +56,11 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
                   .toLowerCase()
                   .contains(_dateController.text.toLowerCase()));
 
-      // Payment method filter - exact match
       final bool matchesPayment = _selectedPaymentMethod == 'All Methods' ||
           (transaction['payment_method'] != null &&
               transaction['payment_method'].toString().toLowerCase() ==
                   _selectedPaymentMethod.toLowerCase());
 
-      // Cashier filter - match worker name
       final bool matchesCashier = _selectedCashier == 'All Cashiers' ||
           (transaction['worker_name'] != null &&
               transaction['worker_name']
@@ -70,20 +72,15 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
     }).toList();
   }
 
-  // Helper to convert datetime to dd-mm-yyyy format
   String _formatDateToDDMMYYYY(String datetime) {
     try {
-      // Remove any time component and get just the date part
-      String datePart = datetime.split(' ')[0].split(
-          'T')[0]; // Handle both "2025-12-23 14:30" and "2025-12-23T14:30"
-
-      // Split yyyy-mm-dd
+      String datePart = datetime.split(' ')[0].split('T')[0];
       final parts = datePart.split('-');
       if (parts.length == 3) {
         final year = parts[0];
         final month = parts[1];
         final day = parts[2];
-        return '$day-$month-$year'; // Return dd-mm-yyyy
+        return '$day-$month-$year';
       }
       return datetime;
     } catch (e) {
@@ -92,7 +89,6 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
     }
   }
 
-  // Get unique cashier names from transactions
   List<String> get _cashierOptions {
     final cashiers = _transactions
         .map((t) => t['worker_name']?.toString() ?? '')
@@ -105,17 +101,12 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
 
   Future<void> _loadTransactions({bool loadMore = false}) async {
     if (_isLoading) return;
-
     setState(() => _isLoading = true);
 
     try {
       final page = loadMore ? _currentPage + 1 : 1;
-
-      // Load ALL transactions without filters (filters applied client-side)
-      final response = await ApiService.getTransactions(
-        page: page,
-        limit: _limit,
-      );
+      final response =
+          await ApiService.getTransactions(page: page, limit: _limit);
 
       final List<dynamic> transactions = response['transactions'] ?? [];
       final int total = response['total'] ?? 0;
@@ -312,10 +303,7 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
 
   Widget _buildSummaryCards() {
     final totalSales = _transactions.fold<double>(0, (sum, txn) {
-      final amount = txn['total_amount'];
-      final doubleAmount =
-          amount is String ? double.tryParse(amount) ?? 0.0 : (amount ?? 0.0);
-      return sum + doubleAmount;
+      return sum + parseDouble(txn['total_amount']);
     });
     final avgTransaction =
         _transactions.isNotEmpty ? totalSales / _transactions.length : 0.0;
@@ -400,10 +388,7 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
   Widget _buildTableRow(Map<String, dynamic> txn, int index) {
     final transactionId = txn['transaction_id']?.toString() ?? 'N/A';
     final dateTime = txn['transaction_date']?.toString() ?? 'N/A';
-    final totalAmount = txn['total_amount'];
-    final total = totalAmount is String
-        ? double.tryParse(totalAmount) ?? 0.0
-        : (totalAmount ?? 0.0);
+    final totalAmount = parseDouble(txn['total_amount']);
     final payment = txn['payment_method'] ?? 'N/A';
     final cashier = txn['worker_name'] ?? 'N/A';
 
@@ -417,8 +402,8 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
           Expanded(flex: 2, child: Text(dateTime, style: _cellStyle())),
           Expanded(
               flex: 1,
-              child:
-                  Text('${total.toStringAsFixed(2)} DA', style: _cellStyle())),
+              child: Text('${totalAmount.toStringAsFixed(2)} DA',
+                  style: _cellStyle())),
           Expanded(flex: 1, child: Text(payment, style: _cellStyle())),
           Expanded(flex: 1, child: Text(cashier, style: _cellStyle())),
           SizedBox(width: 80, child: _buildActions(txn)),
@@ -447,11 +432,9 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
   }
 
   void _showViewDialog(BuildContext context, Map<String, dynamic> txn) async {
-    // Fetch full transaction details
     try {
       final transactionId = txn['transaction_id'];
       final details = await ApiService.getTransactionDetails(transactionId);
-
       if (!mounted) return;
 
       showDialog(
@@ -479,13 +462,7 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
                   ),
                   (
                     'Total Amount:',
-                    () {
-                      final amount = details['total_amount'];
-                      final doubleAmount = amount is String
-                          ? double.tryParse(amount) ?? 0.0
-                          : (amount ?? 0.0);
-                      return '${doubleAmount.toStringAsFixed(2)} DA';
-                    }()
+                    'Total Amount: ${parseDouble(details['total_amount']).toStringAsFixed(2)} DA'
                   ),
                   ('Payment Method:', details['payment_method'] ?? 'N/A'),
                   ('Cashier:', details['worker_name'] ?? 'N/A'),
@@ -589,7 +566,7 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
               ? _itemRow(
                   items[i ~/ 2]['product_name'] ?? 'Unknown',
                   items[i ~/ 2]['quantity'] ?? 0,
-                  items[i ~/ 2]['selling_price'] ?? 0.0,
+                  parseDouble(items[i ~/ 2]['selling_price']),
                 )
               : Divider(height: 16),
         ),
@@ -624,8 +601,10 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
                 blurRadius: 10,
                 offset: Offset(0, 2))
           ]);
+
   TextStyle _headerStyle() => TextStyle(
       fontSize: 13, fontWeight: FontWeight.w600, color: Colors.grey[700]);
+
   TextStyle _cellStyle() => TextStyle(fontSize: 14, color: Colors.grey[800]);
 }
 

@@ -130,18 +130,19 @@ class _LoginPageState extends State<LoginPage> {
                       child: PrimaryButton(
                         onPressed: () async {
                           final username = _userCtrl.text.trim();
-final password = _passCtrl.text.trim();
+                          final password = _passCtrl.text.trim();
                           if (_userCtrl.text.isNotEmpty &&
                               _passCtrl.text.isNotEmpty) {
-                                if (username == 'dev' && password == 'dev') {
-  widget.onLogin('dev'); // go straight in
-  return;
-
-}
+                            if (username == 'dev' && password == 'dev') {
+                              widget.onLogin('dev'); // go straight in
+                              return;
+                            }
                             final result = await LoginApi.login(
                                 _userCtrl.text, _passCtrl.text);
                             if (result['success']) {
-                              widget.onLogin(_userCtrl.text); // proceed
+                              final userId =
+                                  result['user']['user_id'].toString();
+                              widget.onLogin(userId);
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text(result['message'])),
