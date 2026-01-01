@@ -19,8 +19,6 @@ Stockify is a desktop stock management application designed for stores and super
 Stockify/
 ├── backend/      # Flask backend
 ├── frontend/     # Flutter frontend
-├── ios/          # iOS build folder
-├── android/      # Android build folder
 ├── .gitignore    # Git ignore file
 ├── README.md     # Project documentation
 
@@ -44,7 +42,7 @@ Follow these steps to set up Stockify locally:
 
 ```bash
 git clone https://github.com/ensia-g11-team3/supermarket-stock-management-system
-cd supermarket-stock-management-system
+cd Stockify
 ````
 
 ---
