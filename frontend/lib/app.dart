@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 
 import 'theme/app_theme.dart';
@@ -17,22 +19,75 @@ import 'pages/user_list_page.dart';
 import 'pages/create_user_page.dart';
 import 'pages/edit_user_page.dart';
 
-class StockifyApp extends StatelessWidget {
+//localization: added by Nour
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'l10n/app_localizations.dart';
+
+void _debugLog(String location, String message, Map<String, dynamic> data, String hypothesisId) {
+  try {
+    final logEntry = {
+      'location': location,
+      'message': message,
+      'data': data,
+      'timestamp': DateTime.now().millisecondsSinceEpoch,
+      'sessionId': 'debug-session',
+      'runId': 'run1',
+      'hypothesisId': hypothesisId,
+    };
+    final logPath = r'c:\Users\wailo\Desktop\project\.cursor\debug.log';
+    final file = File(logPath);
+    file.writeAsStringSync('${jsonEncode(logEntry)}\n', mode: FileMode.append);
+  } catch (e) {}
+}
+
+class StockifyApp extends StatefulWidget {
   const StockifyApp({super.key});
 
   @override
+  State<StockifyApp> createState() => _StockifyAppState();
+}
+
+class _StockifyAppState extends State<StockifyApp> {
+  Locale _locale = const Locale('fr');
+
+  void _changeLanguage(Locale newLocale) {
+    setState(() {
+      _locale = newLocale;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    // #region agent log
+    _debugLog('app.dart:34', 'StockifyApp build', {'timestamp': DateTime.now().toString(), 'locale': _locale.languageCode}, 'D');
+    // #endregion
     return MaterialApp(
       title: 'Stockify',
+      supportedLocales: const [
+        Locale('fr'),
+        Locale('en'),
+      ],
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      locale: _locale,
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
-      home: const AppRouter(),
+      home: AppRouter(onLanguageChanged: _changeLanguage),
     );
   }
 }
 
 class AppRouter extends StatefulWidget {
-  const AppRouter({super.key});
+  final ValueChanged<Locale> onLanguageChanged;
+  
+  const AppRouter({
+    super.key,
+    required this.onLanguageChanged,
+  });
 
   @override
   State<AppRouter> createState() => _AppRouterState();
@@ -72,7 +127,7 @@ class _AppRouterState extends State<AppRouter> {
       case 'dashboard':
         return const DashboardPage();
       case 'pos':
-        return const POSPage();
+        return const POSPage(userId: null);
       case 'history':
         return const SalesHistoryPage();
       case 'products':
@@ -129,6 +184,9 @@ class _AppRouterState extends State<AppRouter> {
 
   @override
   Widget build(BuildContext context) {
+    // #region agent log
+    _debugLog('app.dart:228', 'AppRouter build', {'isAuthenticated': _isAuthenticated, 'currentPage': _currentPage}, 'D');
+    // #endregion
     if (!_isAuthenticated) {
       return LoginPage(
         onLogin: _handleLogin,
@@ -140,6 +198,7 @@ class _AppRouterState extends State<AppRouter> {
       onNavigate: _navigateToPage,
       username: _username,
       onLogout: _handleLogout,
+      onLanguageChanged: widget.onLanguageChanged,
       child: _renderPage(),
     );
   }

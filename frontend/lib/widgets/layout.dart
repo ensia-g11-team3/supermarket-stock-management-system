@@ -6,6 +6,7 @@ class Layout extends StatelessWidget {
   final ValueChanged<String> onNavigate;
   final String username;
   final VoidCallback onLogout;
+  final ValueChanged<Locale> onLanguageChanged;
   final Widget child;
 
   const Layout({
@@ -14,11 +15,13 @@ class Layout extends StatelessWidget {
     required this.onNavigate,
     required this.username,
     required this.onLogout,
+    required this.onLanguageChanged,
     required this.child,
   });
 
   @override
   Widget build(BuildContext context) {
+    final currentLocale = Localizations.localeOf(context);
     return Scaffold(
       body: Row(
         children: [
@@ -118,6 +121,57 @@ class Layout extends StatelessWidget {
                   ),
                 ),
                 const Divider(color: Colors.white24, height: 1),
+                // Language Switcher
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: InkWell(
+                    onTap: () {
+                      final newLocale = currentLocale.languageCode == 'fr' 
+                          ? const Locale('en') 
+                          : const Locale('fr');
+                      onLanguageChanged(newLocale);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(6),
+                        border: Border.all(
+                          color: Colors.white.withOpacity(0.3),
+                          width: 1,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            Icons.language,
+                            color: Colors.white,
+                            size: 18,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            currentLocale.languageCode == 'fr' ? 'FR' : 'EN',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                          Icon(
+                            currentLocale.languageCode == 'fr' 
+                                ? Icons.arrow_forward_ios 
+                                : Icons.arrow_back_ios,
+                            color: Colors.white70,
+                            size: 12,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
                 // User Section
                 Container(
                   padding: const EdgeInsets.all(16),

@@ -1,5 +1,27 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import '../widgets/primary_button.dart';
+import '../services/api_service.dart';
+import '../l10n/app_localizations.dart';
+
+void _debugLog(String location, String message, Map<String, dynamic> data, String hypothesisId) {
+  try {
+    final logEntry = {
+      'location': location,
+      'message': message,
+      'data': data,
+      'timestamp': DateTime.now().millisecondsSinceEpoch,
+      'sessionId': 'debug-session',
+      'runId': 'run1',
+      'hypothesisId': hypothesisId,
+    };
+    final logPath = r'c:\Users\wailo\Desktop\project\.cursor\debug.log';
+    final file = File(logPath);
+    file.writeAsStringSync('${jsonEncode(logEntry)}\n', mode: FileMode.append);
+  } catch (e) {}
+}
+>>>>>>> Stashed changes
 
 class SalesHistoryPage extends StatefulWidget {
   const SalesHistoryPage({super.key});
@@ -11,13 +33,195 @@ class SalesHistoryPage extends StatefulWidget {
 class _SalesHistoryPageState extends State<SalesHistoryPage> {
   final _searchController = TextEditingController();
   final _dateController = TextEditingController();
-  String _selectedPaymentMethod = 'All Methods';
-  String _selectedCashier = 'All Cashiers';
+  String? _selectedPaymentMethod;
+  String? _selectedCashier;
 
+<<<<<<< Updated upstream
   final List<Map<String, dynamic>> _transactions = [
     {'id': 'TRX001', 'dateTime': '2025-11-16 09:15', 'items': 3, 'total': 15.47, 'payment': 'Cash', 'cashier': 'John Doe', 'status': 'completed'},
     {'id': 'TRX002', 'dateTime': '2025-11-16 09:30', 'items': 5, 'total': 28.95, 'payment': 'Card', 'cashier': 'John Doe', 'status': 'completed'},
   ];
+=======
+  List<Map<String, dynamic>> _transactions = [];
+  bool _isLoading = false;
+  bool _hasMore = true;
+  int _currentPage = 1;
+  final int _limit = 10;
+  int _totalTransactions = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    // #region agent log
+    _debugLog('sales_history_page.dart:29', 'initState entry', {'selectedPaymentMethod': _selectedPaymentMethod, 'selectedCashier': _selectedCashier}, 'B');
+    // #endregion
+    _loadTransactions();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // #region agent log
+    _debugLog('sales_history_page.dart:35', 'didChangeDependencies entry', {'hasContext': context != null, 'selectedPaymentMethod': _selectedPaymentMethod, 'selectedCashier': _selectedCashier}, 'B');
+    // #endregion
+    try {
+      final localizations = AppLocalizations.of(context)!;
+      // #region agent log
+      _debugLog('sales_history_page.dart:40', 'localizations obtained', {'allMethods': localizations.allMethods, 'allCashiers': localizations.allCashiers}, 'A');
+      // #endregion
+      _selectedPaymentMethod ??= localizations.allMethods;
+      _selectedCashier ??= localizations.allCashiers;
+      // #region agent log
+      _debugLog('sales_history_page.dart:44', 'dropdowns initialized', {'selectedPaymentMethod': _selectedPaymentMethod, 'selectedCashier': _selectedCashier}, 'B');
+      // #endregion
+    } catch (e) {
+      // #region agent log
+      _debugLog('sales_history_page.dart:48', 'localization error', {'error': e.toString()}, 'A');
+      // #endregion
+      rethrow;
+    }
+  }
+
+  void dispose() {
+    _searchController.dispose();
+    _dateController.dispose();
+    super.dispose();
+  }
+
+  /// HELPER: Safely parse any dynamic value into double
+  double parseDouble(dynamic value) {
+    if (value is double) return value;
+    if (value is int) return value.toDouble();
+    if (value is String) return double.tryParse(value) ?? 0.0;
+    return 0.0;
+  }
+
+  List<Map<String, dynamic>> get _filteredTransactions {
+    // #region agent log
+    _debugLog('sales_history_page.dart:56', '_filteredTransactions called', {'selectedPaymentMethod': _selectedPaymentMethod, 'selectedCashier': _selectedCashier, 'hasContext': context != null}, 'B');
+    // #endregion
+    return _transactions.where((transaction) {
+      final bool matchesSearch = _searchController.text.isEmpty ||
+          transaction['transaction_id']
+              .toString()
+              .contains(_searchController.text);
+
+      final bool matchesDate = _dateController.text.isEmpty ||
+          (transaction['transaction_date'] != null &&
+              transaction['transaction_date']
+                  .toString()
+                  .toLowerCase()
+                  .contains(_dateController.text.toLowerCase()));
+
+      try {
+        final localizations = AppLocalizations.of(context)!;
+        // #region agent log
+        _debugLog('sales_history_page.dart:73', 'localizations in filter', {'selectedPaymentMethod': _selectedPaymentMethod, 'selectedCashier': _selectedCashier}, 'A');
+        // #endregion
+        final bool matchesPayment = (_selectedPaymentMethod == null || _selectedPaymentMethod == localizations.allMethods) ||
+            (transaction['payment_method'] != null &&
+                transaction['payment_method'].toString().toLowerCase() ==
+                    _selectedPaymentMethod!.toLowerCase());
+
+        final bool matchesCashier = (_selectedCashier == null || _selectedCashier == localizations.allCashiers) ||
+            (transaction['worker_name'] != null &&
+                transaction['worker_name']
+                    .toString()
+                    .toLowerCase()
+                    .contains(_selectedCashier!.toLowerCase()));
+
+        return matchesSearch && matchesDate && matchesPayment && matchesCashier;
+      } catch (e) {
+        // #region agent log
+        _debugLog('sales_history_page.dart:87', 'filter error', {'error': e.toString()}, 'A');
+        // #endregion
+        return matchesSearch && matchesDate;
+      }
+    }).toList();
+  }
+
+  String _formatDateToDDMMYYYY(String datetime) {
+    try {
+      String datePart = datetime.split(' ')[0].split('T')[0];
+      final parts = datePart.split('-');
+      if (parts.length == 3) {
+        final year = parts[0];
+        final month = parts[1];
+        final day = parts[2];
+        return '$day-$month-$year';
+      }
+      return datetime;
+    } catch (e) {
+      print('Error formatting date: $datetime, error: $e');
+      return datetime;
+    }
+  }
+
+  List<String> get _cashierOptions {
+    final cashiers = _transactions
+        .map((t) => t['worker_name']?.toString() ?? '')
+        .where((name) => name.isNotEmpty)
+        .toSet()
+        .toList();
+    cashiers.sort();
+    final localizations = AppLocalizations.of(context)!;
+    return [localizations.allCashiers, ...cashiers];
+  }
+
+  Future<void> _loadTransactions({bool loadMore = false}) async {
+    // #region agent log
+    _debugLog('sales_history_page.dart:130', '_loadTransactions entry', {'loadMore': loadMore, 'isLoading': _isLoading}, 'C');
+    // #endregion
+    if (_isLoading) return;
+    setState(() => _isLoading = true);
+
+    try {
+      final page = loadMore ? _currentPage + 1 : 1;
+      // #region agent log
+      _debugLog('sales_history_page.dart:137', 'calling API', {'page': page, 'limit': _limit}, 'C');
+      // #endregion
+      final response =
+          await ApiService.getTransactions(page: page, limit: _limit);
+      // #region agent log
+      _debugLog('sales_history_page.dart:141', 'API response received', {'hasTransactions': response['transactions'] != null, 'transactionsCount': (response['transactions'] ?? []).length, 'total': response['total'] ?? 0}, 'C');
+      // #endregion
+      final List<dynamic> transactions = response['transactions'] ?? [];
+      final int total = response['total'] ?? 0;
+
+      setState(() {
+        if (loadMore) {
+          _transactions.addAll(transactions.cast<Map<String, dynamic>>());
+          _currentPage = page;
+        } else {
+          _transactions = transactions.cast<Map<String, dynamic>>();
+          _currentPage = 1;
+        }
+        _totalTransactions = total;
+        _hasMore = _transactions.length < total;
+        _isLoading = false;
+      });
+    } catch (e) {
+      // #region agent log
+      _debugLog('sales_history_page.dart:158', 'API error', {'error': e.toString(), 'errorType': e.runtimeType.toString()}, 'C');
+      // #endregion
+      setState(() => _isLoading = false);
+      if (mounted) {
+        try {
+          final localizations = AppLocalizations.of(context)!;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+                content: Text('${localizations.errorLoadingTransactions} $e'),
+                backgroundColor: Colors.red),
+          );
+        } catch (e2) {
+          // #region agent log
+          _debugLog('sales_history_page.dart:169', 'localization error in error handler', {'error': e2.toString()}, 'A');
+          // #endregion
+        }
+      }
+    }
+  }
+>>>>>>> Stashed changes
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +238,25 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
                 const SizedBox(height: 24),
                 _buildSummaryCards(),
                 const SizedBox(height: 24),
+<<<<<<< Updated upstream
                 _buildTransactionsTable(),
+=======
+                _isLoading && _transactions.isEmpty
+                    ? const Center(child: CircularProgressIndicator())
+                    : _buildTransactionsTable(),
+                if (_hasMore && !_isLoading) ...[
+                  const SizedBox(height: 16),
+                  PrimaryButton(
+                    onPressed: () => _loadTransactions(loadMore: true),
+                    child: Text(AppLocalizations.of(context)!.loadMore),
+                  ),
+                ],
+                if (_isLoading && _transactions.isNotEmpty)
+                  const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: CircularProgressIndicator(),
+                  ),
+>>>>>>> Stashed changes
                 const SizedBox(height: 24),
               ],
             ),
@@ -45,11 +267,13 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
   }
 
   Widget _buildHeader() {
+    final localizations = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.all(24),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+<<<<<<< Updated upstream
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -69,18 +293,30 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
               ],
             ),
           ),
+=======
+          Text(localizations.salesHistoryTitle,
+              style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFFB87653))),
+          const SizedBox(height: 4),
+          Text(localizations.salesHistorySubtitle,
+              style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+>>>>>>> Stashed changes
         ],
       ),
     );
   }
 
   Widget _buildFilters() {
+    final localizations = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: _cardDecoration(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+<<<<<<< Updated upstream
           Text('Filters', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.grey[800])),
           const SizedBox(height: 20),
           Row(
@@ -92,6 +328,40 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
               Expanded(child: _buildDropdown('Payment Method', _selectedPaymentMethod, ['All Methods', 'Cash', 'Card', 'Mobile Payment'], (v) => setState(() => _selectedPaymentMethod = v!))),
               const SizedBox(width: 16),
               Expanded(child: _buildDropdown('Cashier', _selectedCashier, ['All Cashiers', 'John Doe', 'Jane Smith'], (v) => setState(() => _selectedCashier = v!), highlight: true)),
+=======
+          Text(localizations.filters,
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.grey[800])),
+          const SizedBox(height: 20),
+          Row(
+            children: [
+              Expanded(
+                  child: _buildTextField(localizations.searchTransaction,
+                      _searchController, localizations.transactionIdPlaceholder, Icons.search,
+                      onChanged: (v) => setState(() {}))),
+              const SizedBox(width: 16),
+              Expanded(
+                  child: _buildTextField(
+                      localizations.date, _dateController, localizations.datePlaceholder, null,
+                      onChanged: (v) => setState(() {}))),
+              const SizedBox(width: 16),
+              Expanded(
+                  child: _buildDropdown(
+                      localizations.paymentMethod,
+                      _selectedPaymentMethod ?? localizations.allMethods,
+                      [localizations.allMethods, localizations.cash, localizations.card, localizations.mobilePayment],
+                      (v) => setState(() => _selectedPaymentMethod = v!))),
+              const SizedBox(width: 16),
+              Expanded(
+                  child: _buildDropdown(
+                      localizations.cashier,
+                      _selectedCashier ?? localizations.allCashiers,
+                      _cashierOptions,
+                      (v) => setState(() => _selectedCashier = v!),
+                      highlight: true)),
+>>>>>>> Stashed changes
             ],
           ),
         ],
@@ -146,6 +416,7 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
   }
 
   Widget _buildSummaryCards() {
+<<<<<<< Updated upstream
     return Row(
       children: [
         Expanded(child: _SummaryCard(title: 'Total Transactions', value: '8')),
@@ -153,11 +424,51 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
         Expanded(child: _SummaryCard(title: 'Total Sales', value: '\$166.60')),
         const SizedBox(width: 16),
         Expanded(child: _SummaryCard(title: 'Average Transaction', value: '\$20.82', valueColor: Color(0xFFB87653))),
+=======
+    final localizations = AppLocalizations.of(context)!;
+    final totalSales = _transactions.fold<double>(0, (sum, txn) {
+      return sum + parseDouble(txn['total_amount']);
+    });
+    final avgTransaction =
+        _transactions.isNotEmpty ? totalSales / _transactions.length : 0.0;
+
+    return Row(
+      children: [
+        Expanded(
+            child: _SummaryCard(
+                title: localizations.totalTransactions, value: '$_totalTransactions')),
+        const SizedBox(width: 16),
+        Expanded(
+            child: _SummaryCard(
+                title: localizations.totalSales,
+                value: '${totalSales.toStringAsFixed(2)} DA')),
+        const SizedBox(width: 16),
+        Expanded(
+            child: _SummaryCard(
+                title: localizations.averageTransaction,
+                value: '${avgTransaction.toStringAsFixed(2)} DA',
+                valueColor: Color(0xFFB87653))),
+>>>>>>> Stashed changes
       ],
     );
   }
 
   Widget _buildTransactionsTable() {
+<<<<<<< Updated upstream
+=======
+    final localizations = AppLocalizations.of(context)!;
+    if (_filteredTransactions.isEmpty) {
+      return Container(
+        padding: const EdgeInsets.all(48),
+        decoration: _cardDecoration(),
+        child: Center(
+          child: Text(localizations.noTransactionsFound,
+              style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+        ),
+      );
+    }
+
+>>>>>>> Stashed changes
     return Container(
       decoration: _cardDecoration(),
       child: Column(
@@ -175,9 +486,23 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
   }
 
   Widget _buildTableHeader() {
+<<<<<<< Updated upstream
     final headers = ['Transaction ID', 'Date & Time', 'Items', 'Total', 'Payment', 'Cashier', 'Status', 'Actions'];
     final flex = [1, 2, 1, 1, 1, 1, 1, 0];
     
+=======
+    final localizations = AppLocalizations.of(context)!;
+    final headers = [
+      localizations.transactionId,
+      localizations.dateTime,
+      localizations.total,
+      localizations.payment,
+      localizations.cashier,
+      localizations.actions
+    ];
+    final flex = [1, 2, 1, 1, 1, 0];
+
+>>>>>>> Stashed changes
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.grey[200]!))),
@@ -287,6 +612,7 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
     );
   }
 
+<<<<<<< Updated upstream
   void _showEditDialog(BuildContext context, Map<String, dynamic> txn, int index) {
     final itemsCtrl = TextEditingController(text: txn['items'].toString());
     final totalCtrl = TextEditingController(text: txn['total'].toString());
@@ -297,6 +623,14 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
       builder: (context) => StatefulBuilder(
         builder: (context, setDialogState) => Dialog(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+=======
+      final localizations = AppLocalizations.of(context)!;
+      showDialog(
+        context: context,
+        builder: (context) => Dialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+>>>>>>> Stashed changes
           child: Container(
             width: 500,
             padding: EdgeInsets.all(24),
@@ -304,6 +638,7 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+<<<<<<< Updated upstream
                 _dialogHeader('Edit Transaction'),
                 Divider(height: 32),
                 Text('Transaction ID: ${txn['id']}', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.grey[700])),
@@ -315,6 +650,34 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
                 _buildDropdown('Payment Method', payment, ['Cash', 'Card', 'Mobile Payment'], (v) => setDialogState(() => payment = v!)),
                 SizedBox(height: 16),
                 _buildDropdown('Cashier', cashier, ['John Doe', 'Jane Smith', 'Mike Johnson'], (v) => setDialogState(() => cashier = v!)),
+=======
+                _dialogHeader(localizations.transactionDetails),
+                Divider(height: 32),
+                ...[
+                  (
+                    '${localizations.transactionId}:',
+                    details['transaction_id']?.toString() ?? 'N/A'
+                  ),
+                  (
+                    '${localizations.dateTime}:',
+                    details['transaction_date']?.toString() ?? 'N/A'
+                  ),
+                  (
+                    localizations.totalAmount,
+                    '${parseDouble(details['total_amount']).toStringAsFixed(2)} DA'
+                  ),
+                  ('${localizations.paymentMethodLabel}', details['payment_method'] ?? 'N/A'),
+                  ('${localizations.cashierLabel}', details['worker_name'] ?? 'N/A'),
+                ].map((e) => _detailRow(e.$1, e.$2)),
+                SizedBox(height: 24),
+                Text(localizations.itemsPurchased,
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.grey[700])),
+                SizedBox(height: 12),
+                _buildItemsList(details['items'] ?? []),
+>>>>>>> Stashed changes
                 SizedBox(height: 24),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -322,6 +685,7 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
                     PrimaryButton(onPressed: () => Navigator.pop(context), variant: ButtonVariant.secondary, child: const Text('Cancel')),
                     const SizedBox(width: 12),
                     PrimaryButton(
+<<<<<<< Updated upstream
                       onPressed: () {
                         setState(() {
                           _transactions[index].addAll({'items': int.parse(itemsCtrl.text), 'total': double.parse(totalCtrl.text), 'payment': payment, 'cashier': cashier});
@@ -331,12 +695,18 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
                       },
                       child: const Text('Save Changes'),
                     ),
+=======
+                        onPressed: () => Navigator.pop(context),
+                        variant: ButtonVariant.secondary,
+                        child: Text(localizations.close)),
+>>>>>>> Stashed changes
                   ],
                 ),
               ],
             ),
           ),
         ),
+<<<<<<< Updated upstream
       ),
     );
   }
@@ -385,6 +755,19 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
         ],
       ),
     );
+=======
+      );
+    } catch (e) {
+      if (mounted) {
+        final localizations = AppLocalizations.of(context)!;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text('${localizations.errorLoadingDetails} $e'),
+              backgroundColor: Colors.red),
+        );
+      }
+    }
+>>>>>>> Stashed changes
   }
 
   Widget _dialogHeader(String title) {
@@ -410,8 +793,25 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
     );
   }
 
+<<<<<<< Updated upstream
   Widget _buildItemsList(int itemCount) {
     final items = [('Coca Cola 500ml', 2, 3.99), ('Lays Chips', 1, 2.49), if (itemCount > 2) ('Milk 1L', 2, 2.50)];
+=======
+  Widget _buildItemsList(List<dynamic> items) {
+    final localizations = AppLocalizations.of(context)!;
+    if (items.isEmpty) {
+      return Container(
+        padding: EdgeInsets.all(16),
+        decoration: BoxDecoration(
+            color: Colors.grey[50],
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Colors.grey[200]!)),
+        child:
+            Text(localizations.noItemsFound, style: TextStyle(color: Colors.grey[600])),
+      );
+    }
+
+>>>>>>> Stashed changes
     return Container(
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(color: Colors.grey[50], borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.grey[200]!)),
