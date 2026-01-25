@@ -383,6 +383,56 @@
   "roleAdmin": "Admin",
   "roleInventoryManager": "Responsable des stocks",
   "roleInventoryStaff": "Employé des stocks",
-  "rolePOSWorker": "Employé caisse"
+  "rolePOSWorker": "Employé caisse", 
+
+
+
+
+  "salesHistory": "Historique des ventes",
+  "salesHistorySubtitle": "Voir toutes les transactions terminées",
+
+  "filters": "Filtres",
+  "searchTransaction": "Rechercher une transaction",
+  "transactionIdHint": "ID de transaction...",
+  "date": "Date",
+  "dateHint": "ex. 25 déc. 2025...",
+  "paymentMethod": "Mode de paiement",
+  "cashier": "Caissier",
+
+  "allMethods": "Tous les modes",
+  "cash": "Espèces",
+  "card": "Carte",
+  "mobilePayment": "Paiement mobile",
+  "allCashiers": "Tous les caissiers",
+
+  "loadMore": "Charger plus",
+
+  "totalTransactions": "Nombre de transactions",
+  "totalSales": "Total des ventes",
+  "averageTransaction": "Transaction moyenne",
+
+  "noTransactionsFound": "Aucune transaction trouvée",
+
+  "tableTransactionId": "ID transaction",
+  "tableDateTime": "Date et heure",
+  "tableTotal": "Total",
+  "tablePayment": "Paiement",
+  "tableCashier": "Caissier",
+  "tableActions": "Actions",
+
+  "transactionDetails": "Détails de la transaction",
+  "totalAmount": "Montant total",
+  "paymentMethodLabel": "Mode de paiement",
+  "cashierLabel": "Caissier",
+
+  "itemsPurchased": "Articles achetés",
+  "noItemsFound": "Aucun article trouvé",
+
+  "close": "Fermer",
+
+  "errorLoadingTransactions": "Erreur lors du chargement des transactions",
+  "errorLoadingDetails": "Erreur lors du chargement des détails",
+
+  "notAvailable": "Indisponible"
 
 }

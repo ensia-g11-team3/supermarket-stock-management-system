@@ -644,7 +644,7 @@ abstract class AppLocalizations {
   /// No description provided for @salesHistorySubtitle.
   ///
   /// In en, this message translates to:
-  /// **'View and manage all transactions'**
+  /// **'View all completed transactions'**
   String get salesHistorySubtitle;
 
   /// No description provided for @exportReport.
@@ -1930,6 +1930,132 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'POS Worker'**
   String get rolePOSWorker;
+
+  /// No description provided for @salesHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Sales History'**
+  String get salesHistory;
+
+  /// No description provided for @transactionIdHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction ID...'**
+  String get transactionIdHint;
+
+  /// No description provided for @dateHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., 25, Dec, 2025...'**
+  String get dateHint;
+
+  /// No description provided for @mobilePayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Mobile Payment'**
+  String get mobilePayment;
+
+  /// No description provided for @loadMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Load More'**
+  String get loadMore;
+
+  /// No description provided for @noTransactionsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No transactions found'**
+  String get noTransactionsFound;
+
+  /// No description provided for @tableTransactionId.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction ID'**
+  String get tableTransactionId;
+
+  /// No description provided for @tableDateTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Date & Time'**
+  String get tableDateTime;
+
+  /// No description provided for @tableTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get tableTotal;
+
+  /// No description provided for @tablePayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment'**
+  String get tablePayment;
+
+  /// No description provided for @tableCashier.
+  ///
+  /// In en, this message translates to:
+  /// **'Cashier'**
+  String get tableCashier;
+
+  /// No description provided for @tableActions.
+  ///
+  /// In en, this message translates to:
+  /// **'Actions'**
+  String get tableActions;
+
+  /// No description provided for @transactionDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction Details'**
+  String get transactionDetails;
+
+  /// No description provided for @totalAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Amount'**
+  String get totalAmount;
+
+  /// No description provided for @paymentMethodLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Method'**
+  String get paymentMethodLabel;
+
+  /// No description provided for @cashierLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cashier'**
+  String get cashierLabel;
+
+  /// No description provided for @itemsPurchased.
+  ///
+  /// In en, this message translates to:
+  /// **'Items Purchased'**
+  String get itemsPurchased;
+
+  /// No description provided for @noItemsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No items found'**
+  String get noItemsFound;
+
+  /// No description provided for @close.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
+
+  /// No description provided for @errorLoadingTransactions.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading transactions'**
+  String get errorLoadingTransactions;
+
+  /// No description provided for @errorLoadingDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading details'**
+  String get errorLoadingDetails;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

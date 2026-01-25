@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:se_project/l10n/app_localizations.dart';
 import '../widgets/primary_button.dart';
 import '../services/api_service.dart';
 
@@ -12,8 +13,8 @@ class SalesHistoryPage extends StatefulWidget {
 class _SalesHistoryPageState extends State<SalesHistoryPage> {
   final _searchController = TextEditingController();
   final _dateController = TextEditingController();
-  String _selectedPaymentMethod = 'All Methods';
-  String _selectedCashier = 'All Cashiers';
+  String? _selectedPaymentMethod;
+  String? _selectedCashier;
 
   List<Map<String, dynamic>> _transactions = [];
   bool _isLoading = false;
@@ -28,6 +29,7 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
     _loadTransactions();
   }
 
+  @override
   void dispose() {
     _searchController.dispose();
     _dateController.dispose();
@@ -56,17 +58,21 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
                   .toLowerCase()
                   .contains(_dateController.text.toLowerCase()));
 
-      final bool matchesPayment = _selectedPaymentMethod == 'All Methods' ||
+      final bool matchesPayment = _selectedPaymentMethod == null ||
+          _selectedPaymentMethod == 'All Methods' ||
+          _selectedPaymentMethod == AppLocalizations.of(context)!.allMethods ||
           (transaction['payment_method'] != null &&
               transaction['payment_method'].toString().toLowerCase() ==
-                  _selectedPaymentMethod.toLowerCase());
+                  _selectedPaymentMethod!.toLowerCase());
 
-      final bool matchesCashier = _selectedCashier == 'All Cashiers' ||
+      final bool matchesCashier = _selectedCashier == null ||
+          _selectedCashier == 'All Cashiers' ||
+          _selectedCashier == AppLocalizations.of(context)!.allCashiers ||
           (transaction['worker_name'] != null &&
               transaction['worker_name']
                   .toString()
                   .toLowerCase()
-                  .contains(_selectedCashier.toLowerCase()));
+                  .contains(_selectedCashier!.toLowerCase()));
 
       return matchesSearch && matchesDate && matchesPayment && matchesCashier;
     }).toList();
@@ -96,7 +102,7 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
         .toSet()
         .toList();
     cashiers.sort();
-    return ['All Cashiers', ...cashiers];
+    return [AppLocalizations.of(context)!.allCashiers, ...cashiers];
   }
 
   Future<void> _loadTransactions({bool loadMore = false}) async {
@@ -157,7 +163,7 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
                   const SizedBox(height: 16),
                   PrimaryButton(
                     onPressed: () => _loadTransactions(loadMore: true),
-                    child: const Text('Load More'),
+                    child: Text(AppLocalizations.of(context)!.loadMore),
                   ),
                 ],
                 if (_isLoading && _transactions.isNotEmpty)
@@ -180,13 +186,13 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Sales History',
+          Text(AppLocalizations.of(context)!.salesHistory,
               style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.w600,
                   color: Color(0xFFB87653))),
           const SizedBox(height: 4),
-          Text('View all completed transactions',
+          Text(AppLocalizations.of(context)!.salesHistorySubtitle,
               style: TextStyle(fontSize: 14, color: Colors.grey[600])),
         ],
       ),
@@ -209,28 +215,35 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
           Row(
             children: [
               Expanded(
-                  child: _buildTextField('Search Transaction',
-                      _searchController, 'Transaction ID...', Icons.search,
-                      onChanged: (v) => setState(() {}))),
-              const SizedBox(width: 16),
-              Expanded(
                   child: _buildTextField(
-                      'Date', _dateController, 'e.g., 25, Dec, 2025...', null,
+                      AppLocalizations.of(context)!.searchTransaction,
+                      _searchController,
+                      AppLocalizations.of(context)!.transactionId + '...',
+                      Icons.search,
+                      onChanged: (v) => setState(() {}))),
+              const SizedBox(width: 16),
+              Expanded(
+                  child: _buildTextField(AppLocalizations.of(context)!.date,
+                      _dateController, 'e.g., 25, Dec, 2025...', null,
                       onChanged: (v) => setState(() {}))),
               const SizedBox(width: 16),
               Expanded(
                   child: _buildDropdown(
-                      'Payment Method',
+                      AppLocalizations.of(context)!.paymentMethod,
                       _selectedPaymentMethod,
-                      ['All Methods', 'Cash', 'Card', 'Mobile Payment'],
-                      (v) => setState(() => _selectedPaymentMethod = v!))),
+                      [
+                        AppLocalizations.of(context)!.allMethods,
+                        AppLocalizations.of(context)!.cash,
+                        AppLocalizations.of(context)!.card
+                      ],
+                      (v) => setState(() => _selectedPaymentMethod = v))),
               const SizedBox(width: 16),
               Expanded(
                   child: _buildDropdown(
-                      'Cashier',
+                      AppLocalizations.of(context)!.cashier,
                       _selectedCashier,
                       _cashierOptions,
-                      (v) => setState(() => _selectedCashier = v!),
+                      (v) => setState(() => _selectedCashier = v),
                       highlight: true)),
             ],
           ),
@@ -271,9 +284,12 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
     );
   }
 
-  Widget _buildDropdown(String label, String value, List<String> items,
+  Widget _buildDropdown(String label, String? value, List<String> items,
       Function(String?) onChanged,
       {bool highlight = false}) {
+    // Ensure value is either null or exists in items list
+    final validValue = (value != null && items.contains(value)) ? value : null;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -288,9 +304,10 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
             borderRadius: BorderRadius.circular(8),
           ),
           child: DropdownButton<String>(
-            value: value,
+            value: validValue,
             isExpanded: true,
             underline: SizedBox(),
+            hint: Text(items.isNotEmpty ? items[0] : ''),
             items: items
                 .map((v) => DropdownMenuItem(value: v, child: Text(v)))
                 .toList(),
@@ -312,16 +329,17 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
       children: [
         Expanded(
             child: _SummaryCard(
-                title: 'Total Transactions', value: '$_totalTransactions')),
+                title: AppLocalizations.of(context)!.totalTransactions,
+                value: '$_totalTransactions')),
         const SizedBox(width: 16),
         Expanded(
             child: _SummaryCard(
-                title: 'Total Sales',
+                title: AppLocalizations.of(context)!.totalSales,
                 value: '${totalSales.toStringAsFixed(2)} DA')),
         const SizedBox(width: 16),
         Expanded(
             child: _SummaryCard(
-                title: 'Average Transaction',
+                title: AppLocalizations.of(context)!.averageTransaction,
                 value: '${avgTransaction.toStringAsFixed(2)} DA',
                 valueColor: Color(0xFFB87653))),
       ],
@@ -334,7 +352,7 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
         padding: const EdgeInsets.all(48),
         decoration: _cardDecoration(),
         child: Center(
-          child: Text('No transactions found',
+          child: Text(AppLocalizations.of(context)!.noTransactionsFound,
               style: TextStyle(fontSize: 16, color: Colors.grey[600])),
         ),
       );
@@ -359,12 +377,12 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
 
   Widget _buildTableHeader() {
     final headers = [
-      'Transaction ID',
-      'Date & Time',
-      'Total',
-      'Payment',
-      'Cashier',
-      'Actions'
+      AppLocalizations.of(context)!.tableTransactionId,
+      AppLocalizations.of(context)!.tableDateTime,
+      AppLocalizations.of(context)!.tableTotal,
+      AppLocalizations.of(context)!.tablePayment,
+      AppLocalizations.of(context)!.tableCashier,
+      AppLocalizations.of(context)!.tableActions
     ];
     final flex = [1, 2, 1, 1, 1, 0];
 
@@ -386,12 +404,15 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
   }
 
   Widget _buildTableRow(Map<String, dynamic> txn, int index) {
-    final transactionId = txn['transaction_id']?.toString() ?? 'N/A';
-    final dateTime = txn['transaction_date']?.toString() ?? 'N/A';
+    final transactionId = txn['transaction_id']?.toString() ??
+        AppLocalizations.of(context)!.notAvailable;
+    final dateTime = txn['transaction_date']?.toString() ??
+        AppLocalizations.of(context)!.notAvailable;
     final totalAmount = parseDouble(txn['total_amount']);
-    final payment = txn['payment_method'] ?? 'N/A';
-    final cashier = txn['worker_name'] ?? 'N/A';
-
+    final payment =
+        txn['payment_method'] ?? AppLocalizations.of(context)!.notAvailable;
+    final cashier =
+        txn['worker_name'] ?? AppLocalizations.of(context)!.notAvailable;
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 24, vertical: 20),
       decoration: BoxDecoration(
@@ -449,26 +470,36 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _dialogHeader('Transaction Details'),
+                _dialogHeader(AppLocalizations.of(context)!.transactionDetails),
                 Divider(height: 32),
                 ...[
                   (
-                    'Transaction ID:',
-                    details['transaction_id']?.toString() ?? 'N/A'
+                    AppLocalizations.of(context)!.transactionId,
+                    details['transaction_id']?.toString() ??
+                        AppLocalizations.of(context)!.notAvailable
                   ),
                   (
-                    'Date & Time:',
-                    details['transaction_date']?.toString() ?? 'N/A'
+                    AppLocalizations.of(context)!.tableDateTime,
+                    details['transaction_date']?.toString() ??
+                        AppLocalizations.of(context)!.notAvailable
                   ),
                   (
-                    'Total Amount:',
-                    'Total Amount: ${parseDouble(details['total_amount']).toStringAsFixed(2)} DA'
+                    AppLocalizations.of(context)!.totalAmount,
+                    '${AppLocalizations.of(context)!.totalAmount}: ${parseDouble(details['total_amount']).toStringAsFixed(2)} DA'
                   ),
-                  ('Payment Method:', details['payment_method'] ?? 'N/A'),
-                  ('Cashier:', details['worker_name'] ?? 'N/A'),
+                  (
+                    AppLocalizations.of(context)!.paymentMethod,
+                    details['payment_method'] ??
+                        AppLocalizations.of(context)!.notAvailable
+                  ),
+                  (
+                    AppLocalizations.of(context)!.cashier,
+                    details['worker_name'] ??
+                        AppLocalizations.of(context)!.notAvailable
+                  ),
                 ].map((e) => _detailRow(e.$1, e.$2)),
                 SizedBox(height: 24),
-                Text('Items Purchased:',
+                Text(AppLocalizations.of(context)!.itemsPurchased,
                     style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
@@ -482,7 +513,7 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
                     PrimaryButton(
                         onPressed: () => Navigator.pop(context),
                         variant: ButtonVariant.secondary,
-                        child: const Text('Close')),
+                        child: Text(AppLocalizations.of(context)!.close)),
                   ],
                 ),
               ],
@@ -494,7 +525,8 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text('Error loading details: $e'),
+              content: Text(
+                  AppLocalizations.of(context)!.errorLoadingDetails + ' $e'),
               backgroundColor: Colors.red),
         );
       }
@@ -564,7 +596,8 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
           items.length * 2 - 1,
           (i) => i.isEven
               ? _itemRow(
-                  items[i ~/ 2]['product_name'] ?? 'Unknown',
+                  items[i ~/ 2]['product_name'] ??
+                      AppLocalizations.of(context)!.unknown,
                   items[i ~/ 2]['quantity'] ?? 0,
                   parseDouble(items[i ~/ 2]['selling_price']),
                 )

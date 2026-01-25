@@ -284,7 +284,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get salesHistoryTitle => 'Sales History';
 
   @override
-  String get salesHistorySubtitle => 'View and manage all transactions';
+  String get salesHistorySubtitle => 'View all completed transactions';
 
   @override
   String get exportReport => 'Export Report';
@@ -927,4 +927,67 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get rolePOSWorker => 'POS Worker';
+
+  @override
+  String get salesHistory => 'Sales History';
+
+  @override
+  String get transactionIdHint => 'Transaction ID...';
+
+  @override
+  String get dateHint => 'e.g., 25, Dec, 2025...';
+
+  @override
+  String get mobilePayment => 'Mobile Payment';
+
+  @override
+  String get loadMore => 'Load More';
+
+  @override
+  String get noTransactionsFound => 'No transactions found';
+
+  @override
+  String get tableTransactionId => 'Transaction ID';
+
+  @override
+  String get tableDateTime => 'Date & Time';
+
+  @override
+  String get tableTotal => 'Total';
+
+  @override
+  String get tablePayment => 'Payment';
+
+  @override
+  String get tableCashier => 'Cashier';
+
+  @override
+  String get tableActions => 'Actions';
+
+  @override
+  String get transactionDetails => 'Transaction Details';
+
+  @override
+  String get totalAmount => 'Total Amount';
+
+  @override
+  String get paymentMethodLabel => 'Payment Method';
+
+  @override
+  String get cashierLabel => 'Cashier';
+
+  @override
+  String get itemsPurchased => 'Items Purchased';
+
+  @override
+  String get noItemsFound => 'No items found';
+
+  @override
+  String get close => 'Close';
+
+  @override
+  String get errorLoadingTransactions => 'Error loading transactions';
+
+  @override
+  String get errorLoadingDetails => 'Error loading details';
 }

@@ -397,5 +397,54 @@
   "roleAdmin": "Admin",
   "roleInventoryManager": "Inventory Manager",
   "roleInventoryStaff": "Inventory Staff",
-  "rolePOSWorker": "POS Worker"
+  "rolePOSWorker": "POS Worker",
+
+
+
+  "salesHistory": "Sales History",
+  "salesHistorySubtitle": "View all completed transactions",
+
+  "filters": "Filters",
+  "searchTransaction": "Search Transaction",
+  "transactionIdHint": "Transaction ID...",
+  "date": "Date",
+  "dateHint": "e.g., 25, Dec, 2025...",
+  "paymentMethod": "Payment Method",
+  "cashier": "Cashier",
+
+  "allMethods": "All Methods",
+  "cash": "Cash",
+  "card": "Card",
+  "mobilePayment": "Mobile Payment",
+  "allCashiers": "All Cashiers",
+
+  "loadMore": "Load More",
+
+  "totalTransactions": "Total Transactions",
+  "totalSales": "Total Sales",
+  "averageTransaction": "Average Transaction",
+
+  "noTransactionsFound": "No transactions found",
+
+  "tableTransactionId": "Transaction ID",
+  "tableDateTime": "Date & Time",
+  "tableTotal": "Total",
+  "tablePayment": "Payment",
+  "tableCashier": "Cashier",
+  "tableActions": "Actions",
+
+  "transactionDetails": "Transaction Details",
+  "totalAmount": "Total Amount",
+  "paymentMethodLabel": "Payment Method",
+  "cashierLabel": "Cashier",
+
+  "itemsPurchased": "Items Purchased",
+  "noItemsFound": "No items found",
+
+  "close": "Close",
+
+  "errorLoadingTransactions": "Error loading transactions",
+  "errorLoadingDetails": "Error loading details",
+
+  "notAvailable": "N/A"
 }

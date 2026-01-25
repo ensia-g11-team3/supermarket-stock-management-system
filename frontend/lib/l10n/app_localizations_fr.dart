@@ -284,13 +284,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get salesHistoryTitle => 'Historique des Ventes';
 
   @override
-  String get salesHistorySubtitle => 'Voir et gérer toutes les transactions';
+  String get salesHistorySubtitle => 'Voir toutes les transactions terminées';
 
   @override
   String get exportReport => 'Exporter le rapport';
 
   @override
-  String get searchTransaction => 'Rechercher transaction';
+  String get searchTransaction => 'Rechercher une transaction';
 
   @override
   String get transactionId => 'ID Transaction';
@@ -302,7 +302,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get paymentMethod => 'Mode de paiement';
 
   @override
-  String get allMethods => 'Toutes les méthodes';
+  String get allMethods => 'Tous les modes';
 
   @override
   String get cashier => 'Caissier';
@@ -311,10 +311,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get allCashiers => 'Tous les caissiers';
 
   @override
-  String get totalTransactions => 'Total Transactions';
+  String get totalTransactions => 'Nombre de transactions';
 
   @override
-  String get totalSales => 'Ventes Totales';
+  String get totalSales => 'Total des ventes';
 
   @override
   String get averageTransaction => 'Transaction moyenne';
@@ -497,7 +497,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get threshold => 'Seuil';
 
   @override
-  String get notAvailable => 'N/D';
+  String get notAvailable => 'Indisponible';
 
   @override
   String get critical => 'Critique';
@@ -927,4 +927,67 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get rolePOSWorker => 'Employé caisse';
+
+  @override
+  String get salesHistory => 'Historique des ventes';
+
+  @override
+  String get transactionIdHint => 'ID de transaction...';
+
+  @override
+  String get dateHint => 'ex. 25 déc. 2025...';
+
+  @override
+  String get mobilePayment => 'Paiement mobile';
+
+  @override
+  String get loadMore => 'Charger plus';
+
+  @override
+  String get noTransactionsFound => 'Aucune transaction trouvée';
+
+  @override
+  String get tableTransactionId => 'ID transaction';
+
+  @override
+  String get tableDateTime => 'Date et heure';
+
+  @override
+  String get tableTotal => 'Total';
+
+  @override
+  String get tablePayment => 'Paiement';
+
+  @override
+  String get tableCashier => 'Caissier';
+
+  @override
+  String get tableActions => 'Actions';
+
+  @override
+  String get transactionDetails => 'Détails de la transaction';
+
+  @override
+  String get totalAmount => 'Montant total';
+
+  @override
+  String get paymentMethodLabel => 'Mode de paiement';
+
+  @override
+  String get cashierLabel => 'Caissier';
+
+  @override
+  String get itemsPurchased => 'Articles achetés';
+
+  @override
+  String get noItemsFound => 'Aucun article trouvé';
+
+  @override
+  String get close => 'Fermer';
+
+  @override
+  String get errorLoadingTransactions => 'Erreur lors du chargement des transactions';
+
+  @override
+  String get errorLoadingDetails => 'Erreur lors du chargement des détails';
 }
