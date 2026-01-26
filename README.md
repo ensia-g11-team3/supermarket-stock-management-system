@@ -125,6 +125,16 @@ flutter run
 
 ---
 
+### 🌐 Language Configuration
+
+To change the application language from French to English:
+
+1. Open `frontend/lib/app.dart`
+2. Go to **line 46**
+3. Replace `fr` with `en`
+
+---
+
 ## ✨ Features
 
 * **📦 Product Management:** Add, edit, delete, and view products and product batches.
