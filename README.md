@@ -1,3 +1,4 @@
+<img width="1875" height="750" alt="modern home for" src="https://github.com/user-attachments/assets/e8929d08-9ec5-4439-8662-d35fcd2e6463" />
 # 📦 Stockify - Stock Management Application
 
 Stockify is a desktop stock management application designed for stores and supermarkets. It helps store owners and staff organize and manage their inventories efficiently through product management, category organization, and sales transaction tracking. The application supports four types of users, low-stock alerts, and offers localization in both English and French.
