@@ -1,4 +1,4 @@
-![Uploading modern home for.png…]()
+![App](assets/app.png)
 
 # 📦 Stockify - Stock Management Application
 
@@ -166,7 +166,7 @@ flutter run
 ## 🎬 Demo Video
 <div align="center">
 
-  [![Watch Demo](https://img.youtube.com/vi/9_Fb54MZqCE/hqdefault.jpg)](https://youtu.be/9_Fb54MZqCE)
+  [![Watch Demo](assets/demo.png)](https://youtu.be/9_Fb54MZqCE)
 
 
 </div>
