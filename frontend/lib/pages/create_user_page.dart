@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:se_project/l10n/app_localizations.dart';
 import 'package:se_project/services/user_api.dart';
 import '../widgets/page_header.dart';
 import '../widgets/primary_button.dart';
@@ -25,25 +26,15 @@ class _CreateUserPageState extends State<CreateUserPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  String _selectedRole = 'Inventory Manager';
+  String _selectedRole = 'Admin';
   bool _isPasswordVisible = false;
   bool _isLoading = false;
 
-  // Permission states
-  final Map<String, bool> _permissions = {
-    'View products list': false,
-    'Add product': false,
-    'Edit product': false,
-    'Delete product': false,
-    'View activities history': false,
-    'Set alerts': false,
-  };
-
-  final List<String> _roles = [
-    'Admin',
-    'Inventory Manager',
-    'Inventory Staff',
-    'POS worker'
+  late List<String> _roles = [
+    AppLocalizations.of(context)!.roleAdmin,
+    AppLocalizations.of(context)!.roleInventoryManager,
+    AppLocalizations.of(context)!.roleInventoryStaff,
+    AppLocalizations.of(context)!.rolePOSWorker
   ];
 
   // Role-based default permissions
@@ -75,7 +66,6 @@ class _CreateUserPageState extends State<CreateUserPage> {
   @override
   void initState() {
     super.initState();
-    _updatePermissionsForRole(_selectedRole);
   }
 
   @override
@@ -117,7 +107,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Product added successfully'),
+            content: Text('Utilisateur créé avec succès'),
             backgroundColor: Colors.green,
           ),
         );
@@ -128,7 +118,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to add user: $e'),
+          content: Text('Échec de l’ajout de l’utilisateur : $e'),
           backgroundColor: Colors.red,
         ),
       );
@@ -145,54 +135,39 @@ class _CreateUserPageState extends State<CreateUserPage> {
 
     setState(() {
       _selectedRole = 'POS Worker';
-      _permissions.updateAll((key, value) => false);
-      _updatePermissionsForRole(_selectedRole);
-    });
-  }
-
-  void _updatePermissionsForRole(String role) {
-    setState(() {
-      // Reset all permissions
-      _permissions.updateAll((key, value) => false);
-
-      // Set default permissions for selected role
-      final defaultPerms = _rolePermissions[role] ?? [];
-      for (var perm in defaultPerms) {
-        _permissions[perm] = true;
-      }
     });
   }
 
   String? _validateRequired(String? value, String fieldName) {
     if (value == null || value.trim().isEmpty) {
-      return '$fieldName is required';
+      return '$fieldName est requis';
     }
     return null;
   }
 
   String? _validateEmail(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return 'Email is required';
+      return 'L\'adreese mail est requise';
     }
     final emailRegex = RegExp(r'^[\w\.-]+@[\w\.-]+\.\w+$');
     if (!emailRegex.hasMatch(value)) {
-      return 'Enter a valid email address';
+      return 'Entrez une adresse e-mail valide';
     }
     return null;
   }
 
   String? _validatePassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Password is required';
+      return 'Le mot-de-passe est requis';
     }
     if (value.length < 8) {
-      return 'Must be at least 8 characters';
+      return 'Le mot de passe doit comporter au moins 8 caractères';
     }
     if (!RegExp(r'[A-Z]').hasMatch(value)) {
-      return 'Must contain at least one uppercase letter';
+      return 'Le mot de passe doit contenir au moins une lettre majuscule';
     }
     if (!RegExp(r'[0-9]').hasMatch(value)) {
-      return 'Must contain at least one number';
+      return 'Le mot de passe doit contenir au moins un chiffre';
     }
     return null;
   }
@@ -202,9 +177,9 @@ class _CreateUserPageState extends State<CreateUserPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const PageHeader(
-          title: 'Create New User',
-          description: 'Add a new user to the system',
+        PageHeader(
+          title: AppLocalizations.of(context)!.createNewUser,
+          description: AppLocalizations.of(context)!.addNewUserDescription,
         ),
         Padding(
           padding: const EdgeInsets.all(24),
@@ -214,7 +189,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
               ElevatedButton.icon(
                 onPressed: widget.onNavigateBack,
                 icon: const Icon(Icons.arrow_back),
-                label: const Text('Back to User List'),
+                label: Text(AppLocalizations.of(context)!.backToUserList),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.grey[200],
                   foregroundColor: Colors.black87,
@@ -260,20 +235,22 @@ class _CreateUserPageState extends State<CreateUserPage> {
                             Expanded(
                               child: _buildTextField(
                                 controller: _usernameController,
-                                label: 'Username',
-                                hint: 'Enter username',
-                                validator: (val) =>
-                                    _validateRequired(val, 'Username'),
+                                label: AppLocalizations.of(context)!.username,
+                                hint:
+                                    AppLocalizations.of(context)!.enterUsername,
+                                validator: (val) => _validateRequired(val,
+                                    AppLocalizations.of(context)!.username),
                               ),
                             ),
                             const SizedBox(width: 16),
                             Expanded(
                               child: _buildTextField(
                                 controller: _fullNameController,
-                                label: 'Full Name',
-                                hint: 'Enter full name',
-                                validator: (val) =>
-                                    _validateRequired(val, 'Full name'),
+                                label: AppLocalizations.of(context)!.fullName,
+                                hint:
+                                    AppLocalizations.of(context)!.enterFullName,
+                                validator: (val) => _validateRequired(val,
+                                    AppLocalizations.of(context)!.fullName),
                               ),
                             ),
                           ],
@@ -285,18 +262,19 @@ class _CreateUserPageState extends State<CreateUserPage> {
                             Expanded(
                               child: _buildTextField(
                                 controller: _phoneController,
-                                label: 'Phone Number',
-                                hint: '+1234567890',
-                                validator: (val) =>
-                                    _validateRequired(val, 'Phone number'),
+                                label:
+                                    AppLocalizations.of(context)!.phoneNumber,
+                                hint: '0555555555',
+                                validator: (val) => _validateRequired(val,
+                                    AppLocalizations.of(context)!.phoneNumber),
                               ),
                             ),
                             const SizedBox(width: 16),
                             Expanded(
                               child: _buildTextField(
                                 controller: _emailController,
-                                label: 'Email',
-                                hint: 'user@example.com',
+                                label: AppLocalizations.of(context)!.email,
+                                hint: AppLocalizations.of(context)!.emailHint,
                                 validator: _validateEmail,
                               ),
                             ),
@@ -307,7 +285,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
                         _buildPasswordField(),
                         const SizedBox(height: 4),
                         Text(
-                          'Must contain at least 8 characters, one uppercase letter, and one number',
+                          AppLocalizations.of(context)!.passwordRules,
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.grey[600],
@@ -318,9 +296,9 @@ class _CreateUserPageState extends State<CreateUserPage> {
                         const Divider(),
                         const SizedBox(height: 32),
 
-                        // Role & Permissions Section
+                        // Role Section
                         Text(
-                          'Role & Permissions',
+                          AppLocalizations.of(context)!.role,
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w600,
@@ -330,30 +308,8 @@ class _CreateUserPageState extends State<CreateUserPage> {
                         const SizedBox(height: 24),
 
                         _buildRoleDropdown(),
-                        const SizedBox(height: 4),
-                        Text(
-                          'Selecting a role will auto-fill default permissions',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[600],
-                          ),
-                        ),
 
                         const SizedBox(height: 24),
-
-                        Text(
-                          'Permissions',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.grey[700],
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-
-                        _buildPermissionsSection(),
-
-                        const SizedBox(height: 40),
 
                         // Action Buttons
                         Row(
@@ -362,7 +318,8 @@ class _CreateUserPageState extends State<CreateUserPage> {
                               onPressed: _isLoading ? null : _handleSave,
                               isLoading: _isLoading,
                               size: ButtonSize.lg,
-                              child: const Text('Create User'),
+                              child: Text(
+                                  AppLocalizations.of(context)!.createNewUser),
                             ),
                             const SizedBox(width: 16),
                             PrimaryButton(
@@ -370,7 +327,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
                                   _isLoading ? null : widget.onNavigateBack,
                               variant: ButtonVariant.secondary,
                               size: ButtonSize.lg,
-                              child: const Text('Cancel'),
+                              child: Text(AppLocalizations.of(context)!.cancel),
                             ),
                           ],
                         ),
@@ -450,7 +407,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
       children: [
         RichText(
           text: TextSpan(
-            text: 'Password',
+            text: AppLocalizations.of(context)!.password,
             style: TextStyle(
               fontSize: 14,
               color: Colors.grey[700],
@@ -470,7 +427,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
           obscureText: !_isPasswordVisible,
           validator: _validatePassword,
           decoration: InputDecoration(
-            hintText: 'Enter password',
+            hintText: AppLocalizations.of(context)!.enterPassword,
             hintStyle: TextStyle(color: Colors.grey[400]),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
@@ -515,7 +472,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
       children: [
         RichText(
           text: TextSpan(
-            text: 'Role',
+            text: AppLocalizations.of(context)!.role,
             style: TextStyle(
               fontSize: 14,
               color: Colors.grey[700],
@@ -561,45 +518,10 @@ class _CreateUserPageState extends State<CreateUserPage> {
               setState(() {
                 _selectedRole = value;
               });
-              _updatePermissionsForRole(value);
             }
           },
         ),
       ],
-    );
-  }
-
-  Widget _buildPermissionsSection() {
-    return Column(
-      children: _permissions.keys.map((permission) {
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 12),
-          child: Row(
-            children: [
-              SizedBox(
-                width: 24,
-                height: 24,
-                child: Checkbox(
-                  value: _permissions[permission],
-                  onChanged: (value) {
-                    setState(() {
-                      _permissions[permission] = value ?? false;
-                    });
-                  },
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Text(
-                permission,
-                style: const TextStyle(fontSize: 15),
-              ),
-            ],
-          ),
-        );
-      }).toList(),
     );
   }
 }

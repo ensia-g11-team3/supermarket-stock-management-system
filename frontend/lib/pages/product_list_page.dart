@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:se_project/l10n/app_localizations.dart';
+import 'package:se_project/services/categories_api.dart';
 import '../widgets/page_header.dart';
 import '../widgets/search_bar.dart';
 import '../widgets/primary_button.dart';
@@ -11,7 +12,6 @@ class ProductListPage extends StatefulWidget {
   final ValueChanged<String>? onNavigateToEdit;
   final VoidCallback? onNavigateToAdd;
   final Function(String productId, String productName)? onNavigateToBatches;
-
 
   const ProductListPage({
     super.key,
@@ -29,13 +29,29 @@ class _ProductListPageState extends State<ProductListPage> {
   late String _selectedCategory;
   late String _selectedStockLevel;
 
+  List<Map<String, dynamic>> _categories = [];
+
   List<Map<String, dynamic>> _products = [];
   bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
+    _fetchCategories();
     _fetchProducts();
+  }
+
+  Future<void> _fetchCategories() async {
+    try {
+      final data = await CategoryApi.getCategories();
+      setState(() {
+        _categories = data;
+        _selectedCategory =
+            AppLocalizations.of(context)!.allCategories; // safe init
+      });
+    } catch (e) {
+      print("Error loading categories: $e");
+    }
   }
 
   Future<void> _fetchProducts() async {
@@ -46,7 +62,7 @@ class _ProductListPageState extends State<ProductListPage> {
         _isLoading = false;
       });
     } catch (e) {
-      print("Error loading products: $e");
+      print(AppLocalizations.of(context)!.errorLoadingProducts + "$e");
       setState(() {
         _isLoading = false;
       });
@@ -66,7 +82,7 @@ class _ProductListPageState extends State<ProductListPage> {
 
       final bool matchesCategory =
           _selectedCategory == AppLocalizations.of(context)!.allCategories ||
-              product['category'] == _selectedCategory;
+              (product['category_name']?.toString() ?? '') == _selectedCategory;
 
       final bool matchesStockLevel = _selectedStockLevel ==
               AppLocalizations.of(context)!.allStockLevels ||
@@ -132,8 +148,8 @@ class _ProductListPageState extends State<ProductListPage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  'Filters',
+                                Text(
+                                  AppLocalizations.of(context)!.filters,
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w600,
@@ -165,10 +181,9 @@ class _ProductListPageState extends State<ProductListPage> {
                                         items: [
                                           AppLocalizations.of(context)!
                                               .allCategories,
-                                          'Beverages',
-                                          'Snacks',
-                                          'Dairy',
-                                          'Bakery',
+                                          ..._categories
+                                              .map((c) => c['category_name'])
+                                              .toList(),
                                         ],
                                         onChanged: (value) {
                                           setState(() {
@@ -256,7 +271,8 @@ class _ProductListPageState extends State<ProductListPage> {
                                     children: [
                                       _TableCell(Text(product['name'])),
                                       _TableCell(Text(product['barcode'])),
-                                      _TableCell(Text(product['category'])),
+                                      _TableCell(
+                                          Text(product['category_name'] ?? '')),
                                       _TableCell(
                                         StockBadge(
                                           stock: product['qty'],
@@ -357,15 +373,21 @@ class _ProductListPageState extends State<ProductListPage> {
                                                       .delete,
                                             ),
                                             IconButton(
-                                              icon: const Icon(Icons.inventory_2, size: 20),
+                                              icon: const Icon(
+                                                  Icons.inventory_2,
+                                                  size: 20),
                                               onPressed: () {
-                                                widget.onNavigateToBatches?.call(
-                                                  product['product_id'].toString(),
+                                                widget.onNavigateToBatches
+                                                    ?.call(
+                                                  product['product_id']
+                                                      .toString(),
                                                   product['name'],
                                                 );
                                               },
                                               color: Colors.purple,
-                                              tooltip: 'View Batches',
+                                              tooltip:
+                                                  AppLocalizations.of(context)!
+                                                      .viewBatches,
                                             ),
                                           ],
                                         ),

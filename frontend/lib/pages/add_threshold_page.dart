@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:se_project/l10n/app_localizations.dart';
 import 'dart:convert';
 import '../widgets/page_header.dart';
 import '../widgets/primary_button.dart';
@@ -28,7 +29,7 @@ class _AddThresholdPageState extends State<AddThresholdPage> {
   String? _selectedProduct;
   String? _selectedCategory;
   final _thresholdValueController = TextEditingController();
-  
+
   List<Map<String, dynamic>> _products = [];
   List<Map<String, dynamic>> _categories = [];
   bool _isLoading = true;
@@ -52,36 +53,38 @@ class _AddThresholdPageState extends State<AddThresholdPage> {
       final productsResponse = await http.get(
         Uri.parse('${ApiService.baseUrl}/api/products/products'),
       );
-      
+
       // Load categories
       final categoriesResponse = await http.get(
         Uri.parse('${ApiService.baseUrl}/api/categories/'),
       );
 
-      if (productsResponse.statusCode == 200 && categoriesResponse.statusCode == 200) {
+      if (productsResponse.statusCode == 200 &&
+          categoriesResponse.statusCode == 200) {
         final productsData = json.decode(productsResponse.body);
         final categoriesData = json.decode(categoriesResponse.body);
 
         setState(() {
-          _products = List<Map<String, dynamic>>.from(productsData['products'] ?? []);
+          _products =
+              List<Map<String, dynamic>>.from(productsData['products'] ?? []);
           _categories = List<Map<String, dynamic>>.from(categoriesData ?? []);
           _isLoading = false;
         });
       }
     } catch (e) {
-      print("Error loading data: $e");
+      print(AppLocalizations.of(context)!.errorLoadingData + "$e");
       setState(() {
         _isLoading = false;
       });
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error loading data: $e')),
+          SnackBar(
+              content:
+                  Text(AppLocalizations.of(context)!.errorLoadingData + '$e')),
         );
       }
     }
   }
-
-
 
   Future<void> _saveThreshold() async {
     if (!_formKey.currentState!.validate()) {
@@ -90,14 +93,16 @@ class _AddThresholdPageState extends State<AddThresholdPage> {
 
     if (_thresholdType == 'product' && _selectedProduct == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a product')),
+        SnackBar(
+            content: Text(AppLocalizations.of(context)!.pleaseSelectProduct)),
       );
       return;
     }
 
     if (_thresholdType == 'category' && _selectedCategory == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a category')),
+        SnackBar(
+            content: Text(AppLocalizations.of(context)!.pleaseSelectCategory)),
       );
       return;
     }
@@ -109,21 +114,26 @@ class _AddThresholdPageState extends State<AddThresholdPage> {
     try {
       await ThresholdApi.createThreshold(
         thresholdType: _thresholdType,
-        productId: _thresholdType == 'product' ? int.parse(_selectedProduct!) : null,
+        productId:
+            _thresholdType == 'product' ? int.parse(_selectedProduct!) : null,
         categoryName: _thresholdType == 'category' ? _selectedCategory : null,
         thresholdValue: int.parse(_thresholdValueController.text),
       );
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Threshold created successfully')),
+          SnackBar(
+              content:
+                  Text(AppLocalizations.of(context)!.thresholdCreateSuccess)),
         );
         widget.onThresholdCreated?.call();
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error creating threshold: $e')),
+          SnackBar(
+              content: Text(
+                  AppLocalizations.of(context)!.errorCreatingThreshold + '$e')),
         );
       }
     } finally {
@@ -141,13 +151,13 @@ class _AddThresholdPageState extends State<AddThresholdPage> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         PageHeader(
-          title: 'Add Threshold',
-          description: 'Create a new low-stock threshold for a product or category',
+          title: AppLocalizations.of(context)!.addThreshold,
+          description: AppLocalizations.of(context)!.addThresholdDescription,
           actions: [
             TextButton.icon(
               onPressed: widget.onNavigateBack,
               icon: const Icon(Icons.arrow_back, size: 20),
-              label: const Text('Back to List'),
+              label: Text(AppLocalizations.of(context)!.backToList),
               style: TextButton.styleFrom(
                 foregroundColor: AppTheme.primaryBlue,
               ),
@@ -170,8 +180,8 @@ class _AddThresholdPageState extends State<AddThresholdPage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  'Threshold Information',
+                                Text(
+                                  AppLocalizations.of(context)!.thresholdInfo,
                                   style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w600,
@@ -208,8 +218,8 @@ class _AddThresholdPageState extends State<AddThresholdPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Threshold Type',
+        Text(
+          AppLocalizations.of(context)!.thresholdType,
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
@@ -221,8 +231,9 @@ class _AddThresholdPageState extends State<AddThresholdPage> {
           children: [
             Expanded(
               child: RadioListTile<String>(
-                title: const Text('Product'),
-                subtitle: const Text('Set threshold for a specific product'),
+                title: Text(AppLocalizations.of(context)!.product),
+                subtitle:
+                    Text(AppLocalizations.of(context)!.setProductThreshold),
                 value: 'product',
                 groupValue: _thresholdType,
                 onChanged: (value) {
@@ -237,8 +248,9 @@ class _AddThresholdPageState extends State<AddThresholdPage> {
             ),
             Expanded(
               child: RadioListTile<String>(
-                title: const Text('Category'),
-                subtitle: const Text('Set threshold for all products in category'),
+                title: Text(AppLocalizations.of(context)!.category),
+                subtitle:
+                    Text(AppLocalizations.of(context)!.setCategoryThreshold),
                 value: 'category',
                 groupValue: _thresholdType,
                 onChanged: (value) {
@@ -261,8 +273,8 @@ class _AddThresholdPageState extends State<AddThresholdPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Select Product',
+        Text(
+          AppLocalizations.of(context)!.selectProduct,
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
@@ -273,7 +285,7 @@ class _AddThresholdPageState extends State<AddThresholdPage> {
         DropdownButtonFormField<String>(
           value: _selectedProduct,
           decoration: InputDecoration(
-            hintText: 'Choose a product...',
+            hintText: AppLocalizations.of(context)!.chooseProduct,
             filled: true,
             fillColor: AppTheme.inputBackground,
             border: OutlineInputBorder(
@@ -286,9 +298,11 @@ class _AddThresholdPageState extends State<AddThresholdPage> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: AppTheme.primaryBlue, width: 2),
+              borderSide:
+                  const BorderSide(color: AppTheme.primaryBlue, width: 2),
             ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           ),
           items: _products.map((product) {
             return DropdownMenuItem<String>(
@@ -303,7 +317,7 @@ class _AddThresholdPageState extends State<AddThresholdPage> {
           },
           validator: (value) {
             if (_thresholdType == 'product' && value == null) {
-              return 'Please select a product';
+              return AppLocalizations.of(context)!.pleaseSelectProduct;
             }
             return null;
           },
@@ -316,8 +330,8 @@ class _AddThresholdPageState extends State<AddThresholdPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Select Category',
+        Text(
+          AppLocalizations.of(context)!.selectCategory,
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
@@ -328,7 +342,7 @@ class _AddThresholdPageState extends State<AddThresholdPage> {
         DropdownButtonFormField<String>(
           value: _selectedCategory,
           decoration: InputDecoration(
-            hintText: 'Choose a category...',
+            hintText: AppLocalizations.of(context)!.chooseCategory,
             filled: true,
             fillColor: AppTheme.inputBackground,
             border: OutlineInputBorder(
@@ -341,9 +355,11 @@ class _AddThresholdPageState extends State<AddThresholdPage> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: AppTheme.primaryBlue, width: 2),
+              borderSide:
+                  const BorderSide(color: AppTheme.primaryBlue, width: 2),
             ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           ),
           items: _categories.map((category) {
             return DropdownMenuItem<String>(
@@ -358,7 +374,7 @@ class _AddThresholdPageState extends State<AddThresholdPage> {
           },
           validator: (value) {
             if (_thresholdType == 'category' && value == null) {
-              return 'Please select a category';
+              return AppLocalizations.of(context)!.pleaseSelectCategory;
             }
             return null;
           },
@@ -371,8 +387,8 @@ class _AddThresholdPageState extends State<AddThresholdPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Threshold Value',
+        Text(
+          AppLocalizations.of(context)!.thresholdValue,
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
@@ -384,7 +400,7 @@ class _AddThresholdPageState extends State<AddThresholdPage> {
           controller: _thresholdValueController,
           keyboardType: TextInputType.number,
           decoration: InputDecoration(
-            hintText: 'Enter threshold value...',
+            hintText: AppLocalizations.of(context)!.enterThresholdValue,
             filled: true,
             fillColor: AppTheme.inputBackground,
             border: OutlineInputBorder(
@@ -397,17 +413,19 @@ class _AddThresholdPageState extends State<AddThresholdPage> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: AppTheme.primaryBlue, width: 2),
+              borderSide:
+                  const BorderSide(color: AppTheme.primaryBlue, width: 2),
             ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'Please enter a threshold value';
+              return AppLocalizations.of(context)!.pleaseEnterValue;
             }
             final intValue = int.tryParse(value);
             if (intValue == null || intValue <= 0) {
-              return 'Please enter a valid positive number';
+              return AppLocalizations.of(context)!.pleaseEnterPositive;
             }
             return null;
           },
@@ -422,7 +440,7 @@ class _AddThresholdPageState extends State<AddThresholdPage> {
       children: [
         TextButton(
           onPressed: _isSaving ? null : widget.onNavigateBack,
-          child: const Text('Cancel'),
+          child: Text(AppLocalizations.of(context)!.cancel),
         ),
         const SizedBox(width: 16),
         PrimaryButton(
@@ -436,7 +454,7 @@ class _AddThresholdPageState extends State<AddThresholdPage> {
                     valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                   ),
                 )
-              : const Text('Save Threshold'),
+              : Text(AppLocalizations.of(context)!.saveThreshold),
         ),
       ],
     );

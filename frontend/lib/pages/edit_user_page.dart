@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:se_project/l10n/app_localizations.dart';
 import 'package:se_project/services/user_api.dart';
 import '../widgets/page_header.dart';
 import '../widgets/primary_button.dart';
@@ -33,20 +34,11 @@ class _EditUserPageState extends State<EditUserPage> {
   String? _selectedRole;
   bool? _resetPassword;
 
-  final Map<String, bool> _permissions = {
-    'View products list': true,
-    'Add product': true,
-    'Edit product': true,
-    'Delete product': true,
-    'View activities history': true,
-    'Set alerts': true,
-  };
-
-  final List<String> _roles = [
-    'Admin',
-    'Inventory Manager',
-    'Inventory Staff',
-    'POS worker'
+  late List<String> _roles = [
+    AppLocalizations.of(context)!.roleAdmin,
+    AppLocalizations.of(context)!.roleInventoryManager,
+    AppLocalizations.of(context)!.roleInventoryStaff,
+    AppLocalizations.of(context)!.rolePOSWorker
   ];
 
   Future<void> _loadUserData() async {
@@ -67,7 +59,7 @@ class _EditUserPageState extends State<EditUserPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text("Failed to load user: $e"),
+            content: Text(AppLocalizations.of(context)!.failedLoadUser + "$e"),
             backgroundColor: Colors.red,
           ),
         );
@@ -100,8 +92,8 @@ class _EditUserPageState extends State<EditUserPage> {
 
     if (_selectedRole == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please select a role'),
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.selectRoleRequired),
           backgroundColor: Colors.red,
         ),
       );
@@ -122,8 +114,8 @@ class _EditUserPageState extends State<EditUserPage> {
       widget.onUserUpdated();
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('User updated successfully!'),
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.userUpdatedSuccess),
           backgroundColor: Colors.green,
         ),
       );
@@ -132,7 +124,7 @@ class _EditUserPageState extends State<EditUserPage> {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Failed to update user: $e"),
+          content: Text(AppLocalizations.of(context)!.failedUpdateUser + "$e"),
           backgroundColor: Colors.red,
         ),
       );
@@ -145,18 +137,19 @@ class _EditUserPageState extends State<EditUserPage> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         PageHeader(
-          title: 'Edit User',
-          description: 'Editing user: ${_usernameController.text}',
+          title: AppLocalizations.of(context)!.editUser,
+          description: AppLocalizations.of(context)!.editingUser +
+              ' ${_usernameController.text}',
           actions: [
             PrimaryButton(
               onPressed: widget.onNavigateBack,
               variant: ButtonVariant.secondary,
-              child: const Row(
+              child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(Icons.arrow_back, size: 18),
                   SizedBox(width: 8),
-                  Text('Back to User List'),
+                  Text(AppLocalizations.of(context)!.backToUserList),
                 ],
               ),
             ),
@@ -182,8 +175,8 @@ class _EditUserPageState extends State<EditUserPage> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Text(
-                                  'User Information',
+                                Text(
+                                  AppLocalizations.of(context)!.userInformation,
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w600,
@@ -192,8 +185,8 @@ class _EditUserPageState extends State<EditUserPage> {
                                 ),
                                 Row(
                                   children: [
-                                    const Text(
-                                      'Status: ',
+                                    Text(
+                                      AppLocalizations.of(context)!.userStatus,
                                       style: TextStyle(
                                         fontSize: 14,
                                         color: AppTheme.textSecondary,
@@ -201,8 +194,9 @@ class _EditUserPageState extends State<EditUserPage> {
                                     ),
                                     StatusBadge(isActive: status == 1),
                                     const SizedBox(width: 24),
-                                    const Text(
-                                      'Created: ',
+                                    Text(
+                                      AppLocalizations.of(context)!
+                                          .user_created,
                                       style: TextStyle(
                                         fontSize: 14,
                                         color: AppTheme.textSecondary,
@@ -231,8 +225,8 @@ class _EditUserPageState extends State<EditUserPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'Basic Information',
+                            Text(
+                              AppLocalizations.of(context)!.basicInformation,
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w600,
@@ -245,11 +239,13 @@ class _EditUserPageState extends State<EditUserPage> {
                                 Expanded(
                                   child: _buildTextField(
                                     controller: _usernameController,
-                                    label: 'Username',
+                                    label:
+                                        AppLocalizations.of(context)!.username,
                                     isRequired: true,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
-                                        return 'Please enter username';
+                                        return AppLocalizations.of(context)!
+                                            .pleaseEnterUsername;
                                       }
                                       return null;
                                     },
@@ -259,11 +255,13 @@ class _EditUserPageState extends State<EditUserPage> {
                                 Expanded(
                                   child: _buildTextField(
                                     controller: _fullNameController,
-                                    label: 'Full Name',
+                                    label:
+                                        AppLocalizations.of(context)!.fullName,
                                     isRequired: true,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
-                                        return 'Please enter full name';
+                                        return AppLocalizations.of(context)!
+                                            .pleaseEnterFullName;
                                       }
                                       return null;
                                     },
@@ -277,12 +275,14 @@ class _EditUserPageState extends State<EditUserPage> {
                                 Expanded(
                                   child: _buildTextField(
                                     controller: _phoneController,
-                                    label: 'Phone Number',
+                                    label: AppLocalizations.of(context)!
+                                        .phoneNumber,
                                     isRequired: true,
                                     keyboardType: TextInputType.phone,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
-                                        return 'Please enter phone number';
+                                        return AppLocalizations.of(context)!
+                                            .pleaseEnterPhoneNumber;
                                       }
                                       return null;
                                     },
@@ -292,15 +292,17 @@ class _EditUserPageState extends State<EditUserPage> {
                                 Expanded(
                                   child: _buildTextField(
                                     controller: _emailController,
-                                    label: 'Email',
+                                    label: AppLocalizations.of(context)!.email,
                                     isRequired: true,
                                     keyboardType: TextInputType.emailAddress,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
-                                        return 'Please enter email';
+                                        return AppLocalizations.of(context)!
+                                            .pleaseEnterEmail;
                                       }
                                       if (!value.contains('@')) {
-                                        return 'Please enter a valid email';
+                                        return AppLocalizations.of(context)!
+                                            .pleaseEnterValidEmail;
                                       }
                                       return null;
                                     },
@@ -314,7 +316,7 @@ class _EditUserPageState extends State<EditUserPage> {
                     ),
 
                     const SizedBox(height: 24),
-                    // Role & Permissions Card
+                    // Role &  Card
                     Card(
                       child: Padding(
                         padding: const EdgeInsets.all(24),
@@ -322,7 +324,7 @@ class _EditUserPageState extends State<EditUserPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Text(
-                              'Role & Permissions',
+                              'Role',
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w600,
@@ -333,60 +335,17 @@ class _EditUserPageState extends State<EditUserPage> {
                             _selectedRole == null
                                 ? CircularProgressIndicator() // or SizedBox()
                                 : _buildDropdown(
-                                    label: 'Role',
+                                    label: AppLocalizations.of(context)!.role,
                                     value: _selectedRole!,
                                     items: _roles,
                                     onChanged: (value) {
                                       setState(() {
                                         _selectedRole = value!;
-                                        _permissions
-                                            .updateAll((key, value) => true);
                                       });
                                     },
                                     isRequired: true,
                                   ),
-                            const SizedBox(height: 8),
-                            const Text(
-                              'Selecting a role will reset permissions to defaults',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: AppTheme.textSecondary,
-                              ),
-                            ),
                             const SizedBox(height: 24),
-                            const Text(
-                              'Permissions',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: AppTheme.textPrimary,
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            ..._permissions.entries.map((entry) => Padding(
-                                  padding: const EdgeInsets.only(bottom: 12),
-                                  child: Row(
-                                    children: [
-                                      Checkbox(
-                                        value: entry.value,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            _permissions[entry.key] =
-                                                value ?? false;
-                                          });
-                                        },
-                                        activeColor: AppTheme.primaryBlue,
-                                      ),
-                                      Text(
-                                        entry.key,
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                          color: AppTheme.textPrimary,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                )),
                           ],
                         ),
                       ),
@@ -397,13 +356,14 @@ class _EditUserPageState extends State<EditUserPage> {
                       children: [
                         PrimaryButton(
                           onPressed: _handleSave,
-                          child: const Text('Save Changes'),
+                          child:
+                              Text(AppLocalizations.of(context)!.saveChanges),
                         ),
                         const SizedBox(width: 12),
                         PrimaryButton(
                           onPressed: widget.onNavigateBack,
                           variant: ButtonVariant.secondary,
-                          child: const Text('Cancel'),
+                          child: Text(AppLocalizations.of(context)!.cancel),
                         ),
                       ],
                     ),

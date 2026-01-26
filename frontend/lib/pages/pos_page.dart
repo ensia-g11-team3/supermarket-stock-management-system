@@ -258,7 +258,9 @@ class POSController {
 
 /// PRESENTATION LAYER
 class POSPage extends StatefulWidget {
-  const POSPage({super.key});
+  final String userId;
+
+  const POSPage({super.key, required this.userId});
 
   @override
   State<POSPage> createState() => _POSPageState();
@@ -365,7 +367,7 @@ class _POSPageState extends State<POSPage> {
         Uri.parse(ApiPOSRepository.transactionsUrl),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
-          'worker_id': 1,
+          'worker_id': widget.userId, // use the logged-in user
           'total_amount': _state.total,
           'payment_method': _state.paymentMethod,
           'items': _state.cart
@@ -392,7 +394,8 @@ class _POSPageState extends State<POSPage> {
         throw Exception('Failed: ${response.statusCode} - ${response.body}');
       }
     } catch (e) {
-      print('❌ ERROR: $e'); // Console will show exact issue
+      print(
+          '❌ userId: ${widget.userId} ERROR: $e'); // Console will show exact issue
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('❌ $e'), duration: Duration(seconds: 2)));

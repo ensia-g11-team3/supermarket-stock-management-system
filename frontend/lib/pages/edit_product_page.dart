@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:se_project/l10n/app_localizations.dart';
+import 'package:se_project/services/categories_api.dart';
 import '../widgets/page_header.dart';
 import '../widgets/primary_button.dart';
 import '../theme/app_theme.dart';
@@ -32,19 +32,31 @@ class _EditProductPageState extends State<EditProductPage> {
   late TextEditingController _descriptionController;
   late TextEditingController _supplierController;
 
-  String? _selectedCategory;
+  List<Map<String, dynamic>> _categories = [];
+  Map<String, dynamic>? _selectedCategory;
+  bool _loadingCategories = true;
 
-  final List<String> _categories = [
-    'Beverages',
-    'Snacks',
-    'Dairy',
-    'Bakery',
-    'Electronics',
-    'Clothing',
-    'Food & Beverages',
-    'Office Supplies',
-    'Furniture',
-  ];
+  Future<void> _loadCategories() async {
+    try {
+      final data = await await CategoryApi.getCategories();
+      setState(() {
+        _categories = data;
+        _loadingCategories = false;
+
+        // Ensure selected category exists in list
+        if (_selectedCategory != null) {
+          _selectedCategory = _categories.firstWhere(
+            (c) => c['category_id'] == _selectedCategory!['category_id'],
+            orElse: () => _selectedCategory!,
+          );
+        }
+      });
+    } catch (e) {
+      setState(() {
+        _loadingCategories = false;
+      });
+    }
+  }
 
   Future<void> _loadProductData() async {
     try {
@@ -59,7 +71,10 @@ class _EditProductPageState extends State<EditProductPage> {
         _sellingPriceController.text = product["selling_price"].toString();
         _descriptionController.text = product["description"] ?? "";
         _supplierController.text = product["supplier"];
-        _selectedCategory = product["category"];
+        _selectedCategory = {
+          'category_id': product["category_id"],
+          'category_name': product["category_name"]
+        };
       });
     } catch (e) {
       if (mounted) {
@@ -78,7 +93,6 @@ class _EditProductPageState extends State<EditProductPage> {
   void initState() {
     super.initState();
 
-    // Initialize controllers
     _productNameController = TextEditingController();
     _barcodeController = TextEditingController();
     _quantityController = TextEditingController();
@@ -87,8 +101,8 @@ class _EditProductPageState extends State<EditProductPage> {
     _descriptionController = TextEditingController();
     _supplierController = TextEditingController();
 
-    // Load product data
-    _loadProductData();
+    // Load product first, then categories
+    _loadProductData().then((_) => _loadCategories());
   }
 
   @override
@@ -109,7 +123,7 @@ class _EditProductPageState extends State<EditProductPage> {
     if (_selectedCategory == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(AppLocalizations.of(context)!.plzSelectCategory),
+          content: Text(AppLocalizations.of(context)!.selectCategoryMsg),
           backgroundColor: Colors.red,
         ),
       );
@@ -119,7 +133,7 @@ class _EditProductPageState extends State<EditProductPage> {
     final updatedData = {
       "name": _productNameController.text,
       "barcode": _barcodeController.text,
-      "category": _selectedCategory,
+      "category_id": _selectedCategory!['category_id'],
       "supplier": _supplierController.text,
       "qty": int.parse(_quantityController.text),
       "buying_price": double.parse(_buyingPriceController.text),
@@ -139,7 +153,7 @@ class _EditProductPageState extends State<EditProductPage> {
         ),
       );
 
-      widget.onNavigateBack(); // go back to list
+      widget.onNavigateBack();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -177,7 +191,6 @@ class _EditProductPageState extends State<EditProductPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Form Fields
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -207,17 +220,27 @@ class _EditProductPageState extends State<EditProductPage> {
                                     AppLocalizations.of(context)!.enterBarcode,
                               ),
                               const SizedBox(height: 20),
-                              _buildDropdown(
-                                label: AppLocalizations.of(context)!.category,
-                                value: _selectedCategory,
-                                items: _categories,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _selectedCategory = value;
-                                  });
-                                },
-                                isRequired: true,
-                              ),
+                              _loadingCategories
+                                  ? const CircularProgressIndicator()
+                                  : DropdownButtonFormField<
+                                      Map<String, dynamic>>(
+                                      value: _selectedCategory,
+                                      hint: Text(AppLocalizations.of(context)!
+                                          .category),
+                                      items: _categories.map((cat) {
+                                        return DropdownMenuItem<
+                                            Map<String, dynamic>>(
+                                          value: cat,
+                                          child: Text(cat['category_name']),
+                                        );
+                                      }).toList(),
+                                      onChanged: (val) => setState(
+                                          () => _selectedCategory = val),
+                                      validator: (val) => val == null
+                                          ? AppLocalizations.of(context)!
+                                              .selectCategoryMsg
+                                          : null,
+                                    ),
                               const SizedBox(height: 20),
                               _buildTextField(
                                 controller: _supplierController,
@@ -253,9 +276,9 @@ class _EditProductPageState extends State<EditProductPage> {
                               ),
                               const SizedBox(height: 20),
                               _buildTextField(
-                                controller: _sellingPriceController,
+                                controller: _buyingPriceController,
                                 label:
-                                    AppLocalizations.of(context)!.sellingPrice,
+                                    AppLocalizations.of(context)!.buyingPrice,
                                 hint: '0.00',
                                 keyboardType:
                                     const TextInputType.numberWithOptions(
@@ -275,9 +298,9 @@ class _EditProductPageState extends State<EditProductPage> {
                               ),
                               const SizedBox(height: 20),
                               _buildTextField(
-                                controller: _buyingPriceController,
+                                controller: _sellingPriceController,
                                 label:
-                                    AppLocalizations.of(context)!.buyingPrice,
+                                    AppLocalizations.of(context)!.sellingPrice,
                                 hint: '0.00',
                                 keyboardType:
                                     const TextInputType.numberWithOptions(
@@ -310,7 +333,6 @@ class _EditProductPageState extends State<EditProductPage> {
                       ],
                     ),
                     const SizedBox(height: 32),
-                    // Action Buttons
                     Row(
                       children: [
                         PrimaryButton(
@@ -321,12 +343,6 @@ class _EditProductPageState extends State<EditProductPage> {
                         const SizedBox(width: 12),
                         TextButton(
                           onPressed: widget.onNavigateBack,
-                          style: TextButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 24,
-                              vertical: 12,
-                            ),
-                          ),
                           child: Text(AppLocalizations.of(context)!.cancel),
                         ),
                       ],
@@ -383,9 +399,7 @@ class _EditProductPageState extends State<EditProductPage> {
           validator: validator,
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: const TextStyle(
-              color: Colors.grey, // ← this is what you want
-            ),
+            hintStyle: const TextStyle(color: Colors.grey),
             filled: true,
             fillColor: AppTheme.inputBackground,
             border: OutlineInputBorder(
@@ -401,86 +415,10 @@ class _EditProductPageState extends State<EditProductPage> {
               borderSide:
                   const BorderSide(color: AppTheme.primaryBlue, width: 2),
             ),
-            contentPadding: EdgeInsets.symmetric(
+            contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,
-              vertical: maxLines > 1 ? 12 : 12,
+              vertical: 12,
             ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildDropdown({
-    required String label,
-    required String? value,
-    required List<String> items,
-    required ValueChanged<String?> onChanged,
-    bool isRequired = false,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Text(
-              label,
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: AppTheme.textPrimary,
-              ),
-            ),
-            if (isRequired) ...[
-              const SizedBox(width: 4),
-              const Text(
-                '*',
-                style: TextStyle(
-                  color: Colors.red,
-                  fontSize: 14,
-                ),
-              ),
-            ],
-          ],
-        ),
-        const SizedBox(height: 8),
-        Container(
-          decoration: BoxDecoration(
-            color: AppTheme.inputBackground,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: AppTheme.borderColor),
-          ),
-          child: DropdownButtonFormField<String>(
-            value: value,
-            decoration: InputDecoration(
-              hintText: 'Select ${label.toLowerCase()}',
-              filled: true,
-              fillColor: AppTheme.inputBackground,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide.none,
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide.none,
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide:
-                    const BorderSide(color: AppTheme.primaryBlue, width: 2),
-              ),
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 12,
-              ),
-            ),
-            items: items.map((item) {
-              return DropdownMenuItem<String>(
-                value: item,
-                child: Text(item),
-              );
-            }).toList(),
-            onChanged: onChanged,
           ),
         ),
       ],

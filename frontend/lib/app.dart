@@ -65,6 +65,7 @@ class _AppRouterState extends State<AppRouter> {
   String? _editUserId;
   String? _editProductId;
   String? _editThresholdId;
+  String? _userId;
 
   Key _productListKey = UniqueKey();
   Key _batchListKey = UniqueKey();
@@ -74,11 +75,11 @@ class _AppRouterState extends State<AppRouter> {
   String? _batchProductName;
   String? _editBatchId;
 
-  void _handleLogin(String username) {
+  void _handleLogin(String userId) {
     setState(() {
       _isAuthenticated = true;
-      _username = username;
-      _currentPage = 'dashboard';
+      _userId = userId;
+      _currentPage = 'pos';
     });
   }
 
@@ -103,7 +104,7 @@ class _AppRouterState extends State<AppRouter> {
       case 'dashboard':
         return const DashboardPage();
       case 'pos':
-        return const POSPage();
+        return POSPage(userId: _userId!);
       case 'history':
         return const SalesHistoryPage();
       case 'products':

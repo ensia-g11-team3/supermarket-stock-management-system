@@ -122,7 +122,7 @@ abstract class AppLocalizations {
   /// No description provided for @enterUsername.
   ///
   /// In en, this message translates to:
-  /// **'Enter your username'**
+  /// **'Enter username'**
   String get enterUsername;
 
   /// No description provided for @password.
@@ -134,7 +134,7 @@ abstract class AppLocalizations {
   /// No description provided for @enterPassword.
   ///
   /// In en, this message translates to:
-  /// **'Enter your password'**
+  /// **'Enter password'**
   String get enterPassword;
 
   /// No description provided for @rememberMe.
@@ -201,7 +201,6 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Thresholds'**
-  /// **'Suppliers & Orders'**
   String get navThresholds;
 
   /// No description provided for @navLowStock.
@@ -435,7 +434,7 @@ abstract class AppLocalizations {
   /// No description provided for @selectCategory.
   ///
   /// In en, this message translates to:
-  /// **'Select category'**
+  /// **'Select Category'**
   String get selectCategory;
 
   /// No description provided for @supplier.
@@ -645,7 +644,7 @@ abstract class AppLocalizations {
   /// No description provided for @salesHistorySubtitle.
   ///
   /// In en, this message translates to:
-  /// **'View and manage all transactions'**
+  /// **'View all completed transactions'**
   String get salesHistorySubtitle;
 
   /// No description provided for @exportReport.
@@ -750,6 +749,258 @@ abstract class AppLocalizations {
   /// **'deleted'**
   String get deleted;
 
+  /// No description provided for @viewBatches.
+  ///
+  /// In en, this message translates to:
+  /// **'View Batches'**
+  String get viewBatches;
+
+  /// No description provided for @productBatchesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Product Batches'**
+  String get productBatchesTitle;
+
+  /// No description provided for @manageBatchesDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage batches for this product'**
+  String get manageBatchesDescription;
+
+  /// No description provided for @backToProducts.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Products'**
+  String get backToProducts;
+
+  /// No description provided for @createNewBatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Create New Batch'**
+  String get createNewBatch;
+
+  /// No description provided for @totalBatches.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Batches'**
+  String get totalBatches;
+
+  /// No description provided for @totalQuantity.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Quantity'**
+  String get totalQuantity;
+
+  /// No description provided for @expired.
+  ///
+  /// In en, this message translates to:
+  /// **'Expired'**
+  String get expired;
+
+  /// No description provided for @nearExpiry.
+  ///
+  /// In en, this message translates to:
+  /// **'Near Expiry'**
+  String get nearExpiry;
+
+  /// No description provided for @noBatchesFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No batches found for this product'**
+  String get noBatchesFound;
+
+  /// No description provided for @createFirstBatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Create your first batch'**
+  String get createFirstBatch;
+
+  /// No description provided for @batchId.
+  ///
+  /// In en, this message translates to:
+  /// **'Batch ID'**
+  String get batchId;
+
+  /// No description provided for @quantity.
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity'**
+  String get quantity;
+
+  /// No description provided for @mfgDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Mfg. Date'**
+  String get mfgDate;
+
+  /// No description provided for @expiryDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Expiry Date'**
+  String get expiryDate;
+
+  /// No description provided for @units.
+  ///
+  /// In en, this message translates to:
+  /// **'units'**
+  String get units;
+
+  /// No description provided for @noExpiry.
+  ///
+  /// In en, this message translates to:
+  /// **'No Expiry'**
+  String get noExpiry;
+
+  /// No description provided for @expiresIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Expires in'**
+  String get expiresIn;
+
+  /// No description provided for @days.
+  ///
+  /// In en, this message translates to:
+  /// **'days'**
+  String get days;
+
+  /// No description provided for @valid.
+  ///
+  /// In en, this message translates to:
+  /// **'Valid'**
+  String get valid;
+
+  /// No description provided for @unknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get unknown;
+
+  /// No description provided for @editBatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Batch'**
+  String get editBatch;
+
+  /// No description provided for @deleteBatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Batch'**
+  String get deleteBatch;
+
+  /// No description provided for @deleteConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this user?'**
+  String get deleteConfirmation;
+
+  /// No description provided for @deleteSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'deleted successfully'**
+  String get deleteSuccess;
+
+  /// No description provided for @loadError.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load batches'**
+  String get loadError;
+
+  /// No description provided for @deleteError.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete batch'**
+  String get deleteError;
+
+  /// No description provided for @na.
+  ///
+  /// In en, this message translates to:
+  /// **'N/A'**
+  String get na;
+
+  /// No description provided for @productLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Product'**
+  String get productLabel;
+
+  /// No description provided for @backToBatches.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Batches'**
+  String get backToBatches;
+
+  /// No description provided for @enterQuantityHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter batch quantity'**
+  String get enterQuantityHint;
+
+  /// No description provided for @pleaseEnterQuantity.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter quantity'**
+  String get pleaseEnterQuantity;
+
+  /// No description provided for @enterValidNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid number'**
+  String get enterValidNumber;
+
+  /// No description provided for @quantityGreaterThanZero.
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity must be greater than 0'**
+  String get quantityGreaterThanZero;
+
+  /// No description provided for @manufactureDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Manufacture Date'**
+  String get manufactureDate;
+
+  /// No description provided for @notSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'Not selected'**
+  String get notSelected;
+
+  /// No description provided for @updateBatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Batch'**
+  String get updateBatch;
+
+  /// No description provided for @createBatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Batch'**
+  String get createBatch;
+
+  /// No description provided for @batchUpdatedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Batch updated successfully!'**
+  String get batchUpdatedSuccess;
+
+  /// No description provided for @batchCreatedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Batch created successfully!'**
+  String get batchCreatedSuccess;
+
+  /// No description provided for @failedToLoadBatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load batch'**
+  String get failedToLoadBatch;
+
+  /// No description provided for @failedToSaveBatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save batch'**
+  String get failedToSaveBatch;
+
   /// No description provided for @lowStockDescription.
   ///
   /// In en, this message translates to:
@@ -816,12 +1067,6 @@ abstract class AppLocalizations {
   /// **'Threshold'**
   String get threshold;
 
-  /// No description provided for @unknown.
-  ///
-  /// In en, this message translates to:
-  /// **'Unknown'**
-  String get unknown;
-
   /// No description provided for @notAvailable.
   ///
   /// In en, this message translates to:
@@ -839,6 +1084,978 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Warning'**
   String get warning;
+
+  /// No description provided for @categoryManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'Category Management'**
+  String get categoryManagement;
+
+  /// No description provided for @totalCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Categories'**
+  String get totalCategories;
+
+  /// No description provided for @totalProducts.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Products'**
+  String get totalProducts;
+
+  /// No description provided for @avgProducts.
+  ///
+  /// In en, this message translates to:
+  /// **'Avg Products/Category'**
+  String get avgProducts;
+
+  /// No description provided for @confirmDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Delete'**
+  String get confirmDelete;
+
+  /// No description provided for @deleteConfirmationMsg.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this category? This action cannot be undone.'**
+  String get deleteConfirmationMsg;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// No description provided for @successDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Category deleted successfully'**
+  String get successDelete;
+
+  /// No description provided for @failDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete category'**
+  String get failDelete;
+
+  /// No description provided for @itemsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'items'**
+  String get itemsLabel;
+
+  /// No description provided for @errorDeletingCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Error deleting category: '**
+  String get errorDeletingCategory;
+
+  /// No description provided for @errorLoadingCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading categories:'**
+  String get errorLoadingCategories;
+
+  /// No description provided for @errorLoadingProducts.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading products: '**
+  String get errorLoadingProducts;
+
+  /// No description provided for @thresholdManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'Threshold Management'**
+  String get thresholdManagement;
+
+  /// No description provided for @thresholdSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage low-stock thresholds for products and categories'**
+  String get thresholdSubtitle;
+
+  /// No description provided for @addThreshold.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Threshold'**
+  String get addThreshold;
+
+  /// No description provided for @editThreshold.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Threshold'**
+  String get editThreshold;
+
+  /// No description provided for @thresholdInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Threshold Information'**
+  String get thresholdInfo;
+
+  /// No description provided for @thresholdType.
+  ///
+  /// In en, this message translates to:
+  /// **'Threshold Type'**
+  String get thresholdType;
+
+  /// No description provided for @totalProductThresholds.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Product Thresholds'**
+  String get totalProductThresholds;
+
+  /// No description provided for @noThresholdsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No thresholds found'**
+  String get noThresholdsFound;
+
+  /// No description provided for @search.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get search;
+
+  /// No description provided for @searchPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by product or category name...'**
+  String get searchPlaceholder;
+
+  /// No description provided for @type.
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get type;
+
+  /// No description provided for @productCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Product/Category'**
+  String get productCategory;
+
+  /// No description provided for @thresholdValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Threshold Value'**
+  String get thresholdValue;
+
+  /// No description provided for @createdAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Created At'**
+  String get createdAt;
+
+  /// No description provided for @product.
+  ///
+  /// In en, this message translates to:
+  /// **'Product'**
+  String get product;
+
+  /// No description provided for @setProductThreshold.
+  ///
+  /// In en, this message translates to:
+  /// **'Set threshold for a specific product'**
+  String get setProductThreshold;
+
+  /// No description provided for @setCategoryThreshold.
+  ///
+  /// In en, this message translates to:
+  /// **'Set threshold for all products in category'**
+  String get setCategoryThreshold;
+
+  /// No description provided for @selectProduct.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Product'**
+  String get selectProduct;
+
+  /// No description provided for @chooseProduct.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a product...'**
+  String get chooseProduct;
+
+  /// No description provided for @chooseCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a category...'**
+  String get chooseCategory;
+
+  /// No description provided for @enterThresholdValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter threshold value...'**
+  String get enterThresholdValue;
+
+  /// No description provided for @backToList.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to List'**
+  String get backToList;
+
+  /// No description provided for @saveThreshold.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Threshold'**
+  String get saveThreshold;
+
+  /// No description provided for @deleteThreshold.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Threshold'**
+  String get deleteThreshold;
+
+  /// No description provided for @deleteThresholdConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete the threshold for this item?'**
+  String get deleteThresholdConfirm;
+
+  /// No description provided for @errorLoadingThresholds.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading thresholds:'**
+  String get errorLoadingThresholds;
+
+  /// No description provided for @errorLoadingData.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading data:'**
+  String get errorLoadingData;
+
+  /// No description provided for @errorDeletingThreshold.
+  ///
+  /// In en, this message translates to:
+  /// **'Error deleting threshold:'**
+  String get errorDeletingThreshold;
+
+  /// No description provided for @errorCreatingThreshold.
+  ///
+  /// In en, this message translates to:
+  /// **'Error creating threshold:'**
+  String get errorCreatingThreshold;
+
+  /// No description provided for @thresholdDeleteSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Threshold deleted successfully'**
+  String get thresholdDeleteSuccess;
+
+  /// No description provided for @thresholdCreateSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Threshold created successfully'**
+  String get thresholdCreateSuccess;
+
+  /// No description provided for @thresholdUpdateSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Threshold updated successfully'**
+  String get thresholdUpdateSuccess;
+
+  /// No description provided for @pleaseSelectProduct.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a product'**
+  String get pleaseSelectProduct;
+
+  /// No description provided for @pleaseSelectCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a category'**
+  String get pleaseSelectCategory;
+
+  /// No description provided for @pleaseEnterValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a threshold value'**
+  String get pleaseEnterValue;
+
+  /// No description provided for @pleaseEnterPositive.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid positive number'**
+  String get pleaseEnterPositive;
+
+  /// No description provided for @addThresholdDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a new low-stock threshold for a product or category'**
+  String get addThresholdDescription;
+
+  /// No description provided for @editThresholdDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Modify the low-stock threshold value'**
+  String get editThresholdDescription;
+
+  /// No description provided for @thresholdInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Threshold Information'**
+  String get thresholdInformation;
+
+  /// No description provided for @productThreshold.
+  ///
+  /// In en, this message translates to:
+  /// **'Product Threshold'**
+  String get productThreshold;
+
+  /// No description provided for @categoryThreshold.
+  ///
+  /// In en, this message translates to:
+  /// **'Category Threshold'**
+  String get categoryThreshold;
+
+  /// No description provided for @categoryWarningNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Note: Updating this threshold will apply to all products in this category'**
+  String get categoryWarningNote;
+
+  /// No description provided for @thresholdValueLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Threshold Value'**
+  String get thresholdValueLabel;
+
+  /// No description provided for @thresholdValueHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter threshold value...'**
+  String get thresholdValueHint;
+
+  /// No description provided for @removeThreshold.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Threshold'**
+  String get removeThreshold;
+
+  /// No description provided for @updateThreshold.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Threshold'**
+  String get updateThreshold;
+
+  /// No description provided for @confirmUpdateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Threshold Update'**
+  String get confirmUpdateTitle;
+
+  /// No description provided for @confirmUpdateBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Old threshold'**
+  String get confirmUpdateBody;
+
+  /// No description provided for @newThreshold.
+  ///
+  /// In en, this message translates to:
+  /// **'New threshold'**
+  String get newThreshold;
+
+  /// No description provided for @categoryWarningDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'This will update ALL products in the category: '**
+  String get categoryWarningDetail;
+
+  /// No description provided for @productSuccessDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'This will update the threshold only for: '**
+  String get productSuccessDetail;
+
+  /// No description provided for @removeConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Threshold'**
+  String get removeConfirmTitle;
+
+  /// No description provided for @removeConfirmBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to remove this threshold? \n\nNote: For product thresholds, this will set the threshold to null. For category thresholds, this will set threshold to null for all products under this category.'**
+  String get removeConfirmBody;
+
+  /// No description provided for @successUpdate.
+  ///
+  /// In en, this message translates to:
+  /// **'Threshold updated successfully'**
+  String get successUpdate;
+
+  /// No description provided for @successRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Threshold removed successfully'**
+  String get successRemove;
+
+  /// No description provided for @errorUpdate.
+  ///
+  /// In en, this message translates to:
+  /// **'Error updating threshold: '**
+  String get errorUpdate;
+
+  /// No description provided for @errorLoading.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading threshold: '**
+  String get errorLoading;
+
+  /// No description provided for @validationEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a threshold value'**
+  String get validationEmpty;
+
+  /// No description provided for @validationInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid positive number'**
+  String get validationInvalid;
+
+  /// No description provided for @update.
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get update;
+
+  /// No description provided for @remove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get remove;
+
+  /// No description provided for @userManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'User Management'**
+  String get userManagement;
+
+  /// No description provided for @userManagementDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage system users and their permissions.'**
+  String get userManagementDesc;
+
+  /// No description provided for @addUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Add User'**
+  String get addUser;
+
+  /// No description provided for @filtersAndSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Filters & Search'**
+  String get filtersAndSearch;
+
+  /// No description provided for @userSearchPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by name, email, phone, or role...'**
+  String get userSearchPlaceholder;
+
+  /// No description provided for @filterByRole.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter by Role'**
+  String get filterByRole;
+
+  /// No description provided for @filterByStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter by Status'**
+  String get filterByStatus;
+
+  /// No description provided for @sortBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort By'**
+  String get sortBy;
+
+  /// No description provided for @allRoles.
+  ///
+  /// In en, this message translates to:
+  /// **'All Roles'**
+  String get allRoles;
+
+  /// No description provided for @allStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'All Status'**
+  String get allStatus;
+
+  /// No description provided for @active.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get active;
+
+  /// No description provided for @inactive.
+  ///
+  /// In en, this message translates to:
+  /// **'Inactive'**
+  String get inactive;
+
+  /// No description provided for @sortName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get sortName;
+
+  /// No description provided for @sortDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get sortDate;
+
+  /// No description provided for @fullName.
+  ///
+  /// In en, this message translates to:
+  /// **'Full Name'**
+  String get fullName;
+
+  /// No description provided for @email.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get email;
+
+  /// No description provided for @phone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get phone;
+
+  /// No description provided for @role.
+  ///
+  /// In en, this message translates to:
+  /// **'Role'**
+  String get role;
+
+  /// No description provided for @deleteUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete User'**
+  String get deleteUser;
+
+  /// No description provided for @cannotBeUndone.
+  ///
+  /// In en, this message translates to:
+  /// **'This action cannot be undone.'**
+  String get cannotBeUndone;
+
+  /// No description provided for @userDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'deleted'**
+  String get userDeleted;
+
+  /// No description provided for @name.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get name;
+
+  /// No description provided for @errorLoadingUsers.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load users: '**
+  String get errorLoadingUsers;
+
+  /// No description provided for @errorDeletingUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not delete user. Check your connection.'**
+  String get errorDeletingUser;
+
+  /// No description provided for @errorUnexpected.
+  ///
+  /// In en, this message translates to:
+  /// **'An unexpected error occurred: '**
+  String get errorUnexpected;
+
+  /// No description provided for @noUsersFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No users found matching your criteria.'**
+  String get noUsersFound;
+
+  /// No description provided for @createNewUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Create New User'**
+  String get createNewUser;
+
+  /// No description provided for @addNewUserDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a new user to the system'**
+  String get addNewUserDescription;
+
+  /// No description provided for @backToUserList.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to User List'**
+  String get backToUserList;
+
+  /// No description provided for @basicInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Basic Information'**
+  String get basicInformation;
+
+  /// No description provided for @enterFullName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter full name'**
+  String get enterFullName;
+
+  /// No description provided for @phoneNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone Number'**
+  String get phoneNumber;
+
+  /// No description provided for @emailHint.
+  ///
+  /// In en, this message translates to:
+  /// **'user@example.com'**
+  String get emailHint;
+
+  /// No description provided for @passwordRules.
+  ///
+  /// In en, this message translates to:
+  /// **'Must contain at least 8 characters, one uppercase letter, and one number'**
+  String get passwordRules;
+
+  /// No description provided for @rolePermissions.
+  ///
+  /// In en, this message translates to:
+  /// **'Role & Permissions'**
+  String get rolePermissions;
+
+  /// No description provided for @roleAutoFill.
+  ///
+  /// In en, this message translates to:
+  /// **'Selecting a role will auto-fill default permissions'**
+  String get roleAutoFill;
+
+  /// No description provided for @permissions.
+  ///
+  /// In en, this message translates to:
+  /// **'Permissions'**
+  String get permissions;
+
+  /// No description provided for @createUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Create User'**
+  String get createUser;
+
+  /// No description provided for @usernameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Username is required'**
+  String get usernameRequired;
+
+  /// No description provided for @fullNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Full name is required'**
+  String get fullNameRequired;
+
+  /// No description provided for @phoneRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone number is required'**
+  String get phoneRequired;
+
+  /// No description provided for @passwordRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Password is required'**
+  String get passwordRequired;
+
+  /// No description provided for @emailInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid email address'**
+  String get emailInvalid;
+
+  /// No description provided for @passwordMinLength.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 8 characters'**
+  String get passwordMinLength;
+
+  /// No description provided for @passwordUppercase.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must contain at least one uppercase letter'**
+  String get passwordUppercase;
+
+  /// No description provided for @passwordNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must contain at least one number'**
+  String get passwordNumber;
+
+  /// No description provided for @userCreatedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'User created successfully'**
+  String get userCreatedSuccess;
+
+  /// No description provided for @failedAddUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to add user'**
+  String get failedAddUser;
+
+  /// No description provided for @editUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit User'**
+  String get editUser;
+
+  /// No description provided for @editingUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Editing user:'**
+  String get editingUser;
+
+  /// No description provided for @userInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'User Information'**
+  String get userInformation;
+
+  /// No description provided for @userStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Status: '**
+  String get userStatus;
+
+  /// No description provided for @user_created.
+  ///
+  /// In en, this message translates to:
+  /// **'Created: '**
+  String get user_created;
+
+  /// No description provided for @pleaseEnterUsername.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter username'**
+  String get pleaseEnterUsername;
+
+  /// No description provided for @pleaseEnterFullName.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter full name'**
+  String get pleaseEnterFullName;
+
+  /// No description provided for @pleaseEnterPhoneNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter phone number'**
+  String get pleaseEnterPhoneNumber;
+
+  /// No description provided for @pleaseEnterEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter email'**
+  String get pleaseEnterEmail;
+
+  /// No description provided for @pleaseEnterValidEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid email'**
+  String get pleaseEnterValidEmail;
+
+  /// No description provided for @selectRoleRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a role'**
+  String get selectRoleRequired;
+
+  /// No description provided for @roleResetPermissions.
+  ///
+  /// In en, this message translates to:
+  /// **'Selecting a role will reset permissions to defaults'**
+  String get roleResetPermissions;
+
+  /// No description provided for @userUpdatedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'User updated successfully!'**
+  String get userUpdatedSuccess;
+
+  /// No description provided for @failedLoadUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load user: '**
+  String get failedLoadUser;
+
+  /// No description provided for @failedUpdateUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update user: '**
+  String get failedUpdateUser;
+
+  /// No description provided for @roleAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin'**
+  String get roleAdmin;
+
+  /// No description provided for @roleInventoryManager.
+  ///
+  /// In en, this message translates to:
+  /// **'Inventory Manager'**
+  String get roleInventoryManager;
+
+  /// No description provided for @roleInventoryStaff.
+  ///
+  /// In en, this message translates to:
+  /// **'Inventory Staff'**
+  String get roleInventoryStaff;
+
+  /// No description provided for @rolePOSWorker.
+  ///
+  /// In en, this message translates to:
+  /// **'POS Worker'**
+  String get rolePOSWorker;
+
+  /// No description provided for @salesHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Sales History'**
+  String get salesHistory;
+
+  /// No description provided for @transactionIdHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction ID...'**
+  String get transactionIdHint;
+
+  /// No description provided for @dateHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., 25, Dec, 2025...'**
+  String get dateHint;
+
+  /// No description provided for @mobilePayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Mobile Payment'**
+  String get mobilePayment;
+
+  /// No description provided for @loadMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Load More'**
+  String get loadMore;
+
+  /// No description provided for @noTransactionsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No transactions found'**
+  String get noTransactionsFound;
+
+  /// No description provided for @tableTransactionId.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction ID'**
+  String get tableTransactionId;
+
+  /// No description provided for @tableDateTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Date & Time'**
+  String get tableDateTime;
+
+  /// No description provided for @tableTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get tableTotal;
+
+  /// No description provided for @tablePayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment'**
+  String get tablePayment;
+
+  /// No description provided for @tableCashier.
+  ///
+  /// In en, this message translates to:
+  /// **'Cashier'**
+  String get tableCashier;
+
+  /// No description provided for @tableActions.
+  ///
+  /// In en, this message translates to:
+  /// **'Actions'**
+  String get tableActions;
+
+  /// No description provided for @transactionDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction Details'**
+  String get transactionDetails;
+
+  /// No description provided for @totalAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Amount'**
+  String get totalAmount;
+
+  /// No description provided for @paymentMethodLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Method'**
+  String get paymentMethodLabel;
+
+  /// No description provided for @cashierLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cashier'**
+  String get cashierLabel;
+
+  /// No description provided for @itemsPurchased.
+  ///
+  /// In en, this message translates to:
+  /// **'Items Purchased'**
+  String get itemsPurchased;
+
+  /// No description provided for @noItemsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No items found'**
+  String get noItemsFound;
+
+  /// No description provided for @close.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
+
+  /// No description provided for @errorLoadingTransactions.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading transactions'**
+  String get errorLoadingTransactions;
+
+  /// No description provided for @errorLoadingDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading details'**
+  String get errorLoadingDetails;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

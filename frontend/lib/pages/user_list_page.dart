@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:se_project/l10n/app_localizations.dart';
+import 'package:se_project/l10n/app_localizations_en.dart';
 import '../widgets/page_header.dart';
 import '../widgets/primary_button.dart';
 import '../widgets/search_bar.dart';
@@ -23,9 +25,9 @@ class UserListPage extends StatefulWidget {
 
 class _UserListPageState extends State<UserListPage> {
   String _searchQuery = '';
-  String _selectedRole = 'All Roles';
-  String _selectedStatus = 'All Status';
-  String _sortBy = 'Name';
+  late String _selectedRole;
+  late String _selectedStatus;
+  late String _sortBy;
 
   List<Map<String, dynamic>> _users = [];
   bool _isLoading = true;
@@ -44,7 +46,7 @@ class _UserListPageState extends State<UserListPage> {
         _isLoading = false;
       });
     } catch (e) {
-      print("Error loading users: $e");
+      print(AppLocalizations.of(context)!.errorLoadingUsers + " $e");
       setState(() {
         _isLoading = false;
       });
@@ -80,24 +82,37 @@ class _UserListPageState extends State<UserListPage> {
           .contains(_searchQuery.toLowerCase());
 
       final bool matchesRole =
-          _selectedRole == 'All Roles' || user['role'] == _selectedRole;
+          _selectedRole == AppLocalizations.of(context)!.allRoles ||
+              user['role'] == _selectedRole;
 
-      final bool matchesStatus = _selectedStatus == 'All Status' ||
-          (_selectedStatus == 'Active' && user['is_active'] == 1) ||
-          (_selectedStatus == 'Inactive' && user['is_active'] == 0);
+      final bool matchesStatus =
+          _selectedStatus == AppLocalizations.of(context)!.allStatus ||
+              (_selectedStatus == AppLocalizations.of(context)!.active &&
+                  user['is_active'] == 1) ||
+              (_selectedStatus == AppLocalizations.of(context)!.inactive &&
+                  user['is_active'] == 0);
 
       return matchesSearch && matchesRole && matchesStatus;
     }).toList()
       ..sort((Map<String, dynamic> a, Map<String, dynamic> b) {
         switch (_sortBy) {
-          case 'Name':
+          case 'name':
             return a['full_name'].compareTo(b['full_name']);
-          case 'Date':
+          case 'name':
             return b['created_at'].compareTo(a['created_at']);
           default:
             return 0;
         }
       });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    _selectedRole = AppLocalizations.of(context)!.allRoles;
+    _selectedStatus = AppLocalizations.of(context)!.allStatus;
+    _sortBy = AppLocalizations.of(context)!.name;
   }
 
   void _showDeleteConfirmation(
@@ -124,8 +139,8 @@ class _UserListPageState extends State<UserListPage> {
                 ),
               ),
               const SizedBox(width: 12),
-              const Text(
-                'Delete User',
+              Text(
+                AppLocalizations.of(context)!.deleteUser,
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w600,
@@ -137,8 +152,8 @@ class _UserListPageState extends State<UserListPage> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Are you sure you want to delete this user?',
+              Text(
+                AppLocalizations.of(context)!.deleteConfirmation,
                 style: TextStyle(
                   fontSize: 16,
                   color: AppTheme.textPrimary,
@@ -155,17 +170,20 @@ class _UserListPageState extends State<UserListPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildInfoRow('Username', user['username']),
+                    _buildInfoRow(AppLocalizations.of(context)!.username,
+                        user['username']),
                     const SizedBox(height: 8),
-                    _buildInfoRow('Full Name', user['full_name']),
+                    _buildInfoRow(AppLocalizations.of(context)!.fullName,
+                        user['full_name']),
                     const SizedBox(height: 8),
-                    _buildInfoRow('Role', user['role']),
+                    _buildInfoRow(
+                        AppLocalizations.of(context)!.role, user['role']),
                   ],
                 ),
               ),
               const SizedBox(height: 16),
-              const Text(
-                'This action cannot be undone.',
+              Text(
+                AppLocalizations.of(context)!.cannotBeUndone,
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.red,
@@ -178,7 +196,7 @@ class _UserListPageState extends State<UserListPage> {
             PrimaryButton(
               onPressed: () => Navigator.of(context).pop(),
               variant: ButtonVariant.secondary,
-              child: const Text('Cancel'),
+              child: Text(AppLocalizations.of(context)!.cancel),
             ),
             PrimaryButton(
               onPressed: () async {
@@ -188,7 +206,8 @@ class _UserListPageState extends State<UserListPage> {
 
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text('${user['full_name']} deleted'),
+                    content: Text('${user['full_name']} ' +
+                        AppLocalizations.of(context)!.deleted),
                     backgroundColor: Colors.green.withOpacity(0.8),
                   ),
                 );
@@ -196,7 +215,7 @@ class _UserListPageState extends State<UserListPage> {
                 _fetchUsers(); // Refresh list
               },
               variant: ButtonVariant.danger,
-              child: const Text('Delete User'),
+              child: Text(AppLocalizations.of(context)!.deleteUser),
             ),
           ],
         );
@@ -238,8 +257,8 @@ class _UserListPageState extends State<UserListPage> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         PageHeader(
-          title: 'User Management',
-          description: 'Manage system users and their permissions.',
+          title: AppLocalizations.of(context)!.userManagement,
+          description: AppLocalizations.of(context)!.userManagementDesc,
           actions: [
             PrimaryButton(
               onPressed: widget.onNavigateToCreate,
@@ -272,8 +291,9 @@ class _UserListPageState extends State<UserListPage> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text(
-                                    'Filters & Search',
+                                  Text(
+                                    AppLocalizations.of(context)!
+                                        .filtersAndSearch,
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
@@ -282,8 +302,8 @@ class _UserListPageState extends State<UserListPage> {
                                   ),
                                   const SizedBox(height: 16),
                                   AppSearchBar(
-                                    placeholder:
-                                        'Search by name, email, phone, or role...',
+                                    placeholder: AppLocalizations.of(context)!
+                                        .userSearchPlaceholder,
                                     value: _searchQuery,
                                     onChanged: (value) {
                                       setState(() {
@@ -298,12 +318,19 @@ class _UserListPageState extends State<UserListPage> {
                                         return Column(
                                           children: [
                                             _buildDropdown(
-                                              label: 'Filter by Role',
+                                              label:
+                                                  AppLocalizations.of(context)!
+                                                      .filterByRole,
                                               value: _selectedRole,
-                                              items: const [
-                                                'Admin',
-                                                'Inventory Manager',
-                                                'Sales Clerk'
+                                              items: [
+                                                AppLocalizations.of(context)!
+                                                    .roleAdmin,
+                                                AppLocalizations.of(context)!
+                                                    .roleInventoryManager,
+                                                AppLocalizations.of(context)!
+                                                    .roleInventoryStaff,
+                                                AppLocalizations.of(context)!
+                                                    .rolePOSWorker
                                               ],
                                               onChanged: (value) {
                                                 setState(() {
@@ -313,12 +340,17 @@ class _UserListPageState extends State<UserListPage> {
                                             ),
                                             const SizedBox(height: 12),
                                             _buildDropdown(
-                                              label: 'Filter by Status',
+                                              label:
+                                                  AppLocalizations.of(context)!
+                                                      .filterByStatus,
                                               value: _selectedStatus,
-                                              items: const [
-                                                'All Status',
-                                                'Active',
-                                                'Inactive',
+                                              items: [
+                                                AppLocalizations.of(context)!
+                                                    .allStatus,
+                                                AppLocalizations.of(context)!
+                                                    .active,
+                                                AppLocalizations.of(context)!
+                                                    .inactive,
                                               ],
                                               onChanged: (value) {
                                                 setState(() {
@@ -328,11 +360,15 @@ class _UserListPageState extends State<UserListPage> {
                                             ),
                                             const SizedBox(height: 12),
                                             _buildDropdown(
-                                              label: 'Sort By',
+                                              label:
+                                                  AppLocalizations.of(context)!
+                                                      .sortBy,
                                               value: _sortBy,
-                                              items: const [
-                                                'Name',
-                                                'Date',
+                                              items: [
+                                                AppLocalizations.of(context)!
+                                                    .name,
+                                                AppLocalizations.of(context)!
+                                                    .date,
                                               ],
                                               onChanged: (value) {
                                                 setState(() {
@@ -347,13 +383,21 @@ class _UserListPageState extends State<UserListPage> {
                                         children: [
                                           Expanded(
                                             child: _buildDropdown(
-                                              label: 'Filter by Role',
+                                              label:
+                                                  AppLocalizations.of(context)!
+                                                      .filterByRole,
                                               value: _selectedRole,
-                                              items: const [
-                                                'All Roles',
-                                                'Admin',
-                                                'Stock Manager',
-                                                'POS Worker',
+                                              items: [
+                                                AppLocalizations.of(context)!
+                                                    .allRoles,
+                                                AppLocalizations.of(context)!
+                                                    .roleAdmin,
+                                                AppLocalizations.of(context)!
+                                                    .roleInventoryManager,
+                                                AppLocalizations.of(context)!
+                                                    .roleInventoryStaff,
+                                                AppLocalizations.of(context)!
+                                                    .rolePOSWorker
                                               ],
                                               onChanged: (value) {
                                                 setState(() {
@@ -365,12 +409,17 @@ class _UserListPageState extends State<UserListPage> {
                                           const SizedBox(width: 12),
                                           Expanded(
                                             child: _buildDropdown(
-                                              label: 'Filter by Status',
+                                              label:
+                                                  AppLocalizations.of(context)!
+                                                      .filterByStatus,
                                               value: _selectedStatus,
-                                              items: const [
-                                                'All Status',
-                                                'Active',
-                                                'Inactive',
+                                              items: [
+                                                AppLocalizations.of(context)!
+                                                    .allStatus,
+                                                AppLocalizations.of(context)!
+                                                    .active,
+                                                AppLocalizations.of(context)!
+                                                    .inactive,
                                               ],
                                               onChanged: (value) {
                                                 setState(() {
@@ -382,11 +431,15 @@ class _UserListPageState extends State<UserListPage> {
                                           const SizedBox(width: 12),
                                           Expanded(
                                             child: _buildDropdown(
-                                              label: 'Sort By',
+                                              label:
+                                                  AppLocalizations.of(context)!
+                                                      .sortBy,
                                               value: _sortBy,
-                                              items: const [
-                                                'Name',
-                                                'Date',
+                                              items: [
+                                                AppLocalizations.of(context)!
+                                                    .name,
+                                                AppLocalizations.of(context)!
+                                                    .date,
                                               ],
                                               onChanged: (value) {
                                                 setState(() {
@@ -452,16 +505,28 @@ class _UserListPageState extends State<UserListPage> {
                                                         AppTheme.borderColor),
                                               ),
                                             ),
-                                            children: const [
-                                              _TableHeaderCell(
-                                                  Text('Username')),
-                                              _TableHeaderCell(
-                                                  Text('Full Name')),
-                                              _TableHeaderCell(Text('Email')),
-                                              _TableHeaderCell(Text('Phone')),
-                                              _TableHeaderCell(Text('Role')),
-                                              _TableHeaderCell(Text('Status')),
-                                              _TableHeaderCell(Text('Actions')),
+                                            children: [
+                                              _TableHeaderCell(Text(
+                                                  AppLocalizations.of(context)!
+                                                      .username)),
+                                              _TableHeaderCell(Text(
+                                                  AppLocalizations.of(context)!
+                                                      .fullName)),
+                                              _TableHeaderCell(Text(
+                                                  AppLocalizations.of(context)!
+                                                      .email)),
+                                              _TableHeaderCell(Text(
+                                                  AppLocalizations.of(context)!
+                                                      .phone)),
+                                              _TableHeaderCell(Text(
+                                                  AppLocalizations.of(context)!
+                                                      .role)),
+                                              _TableHeaderCell(Text(
+                                                  AppLocalizations.of(context)!
+                                                      .status)),
+                                              _TableHeaderCell(Text(
+                                                  AppLocalizations.of(context)!
+                                                      .actions)),
                                             ],
                                           ),
                                           ..._filteredUsers.map((user) =>
@@ -508,7 +573,10 @@ class _UserListPageState extends State<UserListPage> {
                                                           },
                                                           color: AppTheme
                                                               .primaryBlue,
-                                                          tooltip: 'Edit',
+                                                          tooltip:
+                                                              AppLocalizations.of(
+                                                                      context)!
+                                                                  .edit,
                                                           padding:
                                                               const EdgeInsets
                                                                   .all(4),
@@ -526,7 +594,10 @@ class _UserListPageState extends State<UserListPage> {
                                                                   context,
                                                                   user),
                                                           color: Colors.red,
-                                                          tooltip: 'Delete',
+                                                          tooltip:
+                                                              AppLocalizations.of(
+                                                                      context)!
+                                                                  .delete,
                                                           padding:
                                                               const EdgeInsets
                                                                   .all(4),

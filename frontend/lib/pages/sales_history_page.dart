@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:se_project/l10n/app_localizations.dart';
 import '../widgets/primary_button.dart';
 import '../services/api_service.dart';
 
@@ -12,8 +13,8 @@ class SalesHistoryPage extends StatefulWidget {
 class _SalesHistoryPageState extends State<SalesHistoryPage> {
   final _searchController = TextEditingController();
   final _dateController = TextEditingController();
-  String _selectedPaymentMethod = 'All Methods';
-  String _selectedCashier = 'All Cashiers';
+  String? _selectedPaymentMethod;
+  String? _selectedCashier;
 
   List<Map<String, dynamic>> _transactions = [];
   bool _isLoading = false;
@@ -28,23 +29,28 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
     _loadTransactions();
   }
 
+  @override
   void dispose() {
     _searchController.dispose();
     _dateController.dispose();
     super.dispose();
   }
 
-  // Client-side filtering - same pattern as product list page
+  /// HELPER: Safely parse any dynamic value into double
+  double parseDouble(dynamic value) {
+    if (value is double) return value;
+    if (value is int) return value.toDouble();
+    if (value is String) return double.tryParse(value) ?? 0.0;
+    return 0.0;
+  }
+
   List<Map<String, dynamic>> get _filteredTransactions {
     return _transactions.where((transaction) {
-      // Search filter - match transaction ID (contains search term)
       final bool matchesSearch = _searchController.text.isEmpty ||
           transaction['transaction_id']
               .toString()
               .contains(_searchController.text);
 
-      // Date filter - flexible substring matching on full datetime
-      // Supports: "25", "Dec", "25 Dec", "2025", "Thu", etc.
       final bool matchesDate = _dateController.text.isEmpty ||
           (transaction['transaction_date'] != null &&
               transaction['transaction_date']
@@ -52,35 +58,35 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
                   .toLowerCase()
                   .contains(_dateController.text.toLowerCase()));
 
-      // Payment method filter - exact match
-      final bool matchesPayment = _selectedPaymentMethod == 'All Methods' ||
+      final bool matchesPayment = _selectedPaymentMethod == null ||
+          _selectedPaymentMethod == 'All Methods' ||
+          _selectedPaymentMethod == AppLocalizations.of(context)!.allMethods ||
           (transaction['payment_method'] != null &&
               transaction['payment_method'].toString().toLowerCase() ==
-                  _selectedPaymentMethod.toLowerCase());
+                  _selectedPaymentMethod!.toLowerCase());
 
-      // Cashier filter - match worker name
-      final bool matchesCashier = _selectedCashier == 'All Cashiers' ||
+      final bool matchesCashier = _selectedCashier == null ||
+          _selectedCashier == 'All Cashiers' ||
+          _selectedCashier == AppLocalizations.of(context)!.allCashiers ||
           (transaction['worker_name'] != null &&
-              transaction['worker_name'].toString().toLowerCase().contains(
-                  _selectedCashier.toLowerCase()));
+              transaction['worker_name']
+                  .toString()
+                  .toLowerCase()
+                  .contains(_selectedCashier!.toLowerCase()));
 
       return matchesSearch && matchesDate && matchesPayment && matchesCashier;
     }).toList();
   }
 
-  // Helper to convert datetime to dd-mm-yyyy format
   String _formatDateToDDMMYYYY(String datetime) {
     try {
-      // Remove any time component and get just the date part
-      String datePart = datetime.split(' ')[0].split('T')[0]; // Handle both "2025-12-23 14:30" and "2025-12-23T14:30"
-      
-      // Split yyyy-mm-dd
+      String datePart = datetime.split(' ')[0].split('T')[0];
       final parts = datePart.split('-');
       if (parts.length == 3) {
         final year = parts[0];
         final month = parts[1];
         final day = parts[2];
-        return '$day-$month-$year'; // Return dd-mm-yyyy
+        return '$day-$month-$year';
       }
       return datetime;
     } catch (e) {
@@ -89,7 +95,6 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
     }
   }
 
-  // Get unique cashier names from transactions
   List<String> get _cashierOptions {
     final cashiers = _transactions
         .map((t) => t['worker_name']?.toString() ?? '')
@@ -97,22 +102,17 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
         .toSet()
         .toList();
     cashiers.sort();
-    return ['All Cashiers', ...cashiers];
+    return [AppLocalizations.of(context)!.allCashiers, ...cashiers];
   }
 
   Future<void> _loadTransactions({bool loadMore = false}) async {
     if (_isLoading) return;
-
     setState(() => _isLoading = true);
 
     try {
       final page = loadMore ? _currentPage + 1 : 1;
-      
-      // Load ALL transactions without filters (filters applied client-side)
-      final response = await ApiService.getTransactions(
-        page: page,
-        limit: _limit,
-      );
+      final response =
+          await ApiService.getTransactions(page: page, limit: _limit);
 
       final List<dynamic> transactions = response['transactions'] ?? [];
       final int total = response['total'] ?? 0;
@@ -133,7 +133,9 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
       setState(() => _isLoading = false);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error loading transactions: $e'), backgroundColor: Colors.red),
+          SnackBar(
+              content: Text('Error loading transactions: $e'),
+              backgroundColor: Colors.red),
         );
       }
     }
@@ -161,7 +163,7 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
                   const SizedBox(height: 16),
                   PrimaryButton(
                     onPressed: () => _loadTransactions(loadMore: true),
-                    child: const Text('Load More'),
+                    child: Text(AppLocalizations.of(context)!.loadMore),
                   ),
                 ],
                 if (_isLoading && _transactions.isNotEmpty)
@@ -184,9 +186,14 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Sales History', style: TextStyle(fontSize: 28, fontWeight: FontWeight.w600, color: Color(0xFFB87653))),
+          Text(AppLocalizations.of(context)!.salesHistory,
+              style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFFB87653))),
           const SizedBox(height: 4),
-          Text('View all completed transactions', style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+          Text(AppLocalizations.of(context)!.salesHistorySubtitle,
+              style: TextStyle(fontSize: 14, color: Colors.grey[600])),
         ],
       ),
     );
@@ -199,17 +206,45 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Filters', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.grey[800])),
+          Text('Filters',
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.grey[800])),
           const SizedBox(height: 20),
           Row(
             children: [
-               Expanded(child: _buildTextField('Search Transaction', _searchController, 'Transaction ID...', Icons.search, onChanged: (v) => setState(() {}))),
+              Expanded(
+                  child: _buildTextField(
+                      AppLocalizations.of(context)!.searchTransaction,
+                      _searchController,
+                      AppLocalizations.of(context)!.transactionId + '...',
+                      Icons.search,
+                      onChanged: (v) => setState(() {}))),
               const SizedBox(width: 16),
-               Expanded(child: _buildTextField('Date', _dateController, 'e.g., 25, Dec, 2025...', null, onChanged: (v) => setState(() {}))),
+              Expanded(
+                  child: _buildTextField(AppLocalizations.of(context)!.date,
+                      _dateController, 'e.g., 25, Dec, 2025...', null,
+                      onChanged: (v) => setState(() {}))),
               const SizedBox(width: 16),
-              Expanded(child: _buildDropdown('Payment Method', _selectedPaymentMethod, ['All Methods', 'Cash', 'Card', 'Mobile Payment'], (v) => setState(() => _selectedPaymentMethod = v!))),
+              Expanded(
+                  child: _buildDropdown(
+                      AppLocalizations.of(context)!.paymentMethod,
+                      _selectedPaymentMethod,
+                      [
+                        AppLocalizations.of(context)!.allMethods,
+                        AppLocalizations.of(context)!.cash,
+                        AppLocalizations.of(context)!.card
+                      ],
+                      (v) => setState(() => _selectedPaymentMethod = v))),
               const SizedBox(width: 16),
-              Expanded(child: _buildDropdown('Cashier', _selectedCashier, _cashierOptions, (v) => setState(() => _selectedCashier = v!), highlight: true)),
+              Expanded(
+                  child: _buildDropdown(
+                      AppLocalizations.of(context)!.cashier,
+                      _selectedCashier,
+                      _cashierOptions,
+                      (v) => setState(() => _selectedCashier = v),
+                      highlight: true)),
             ],
           ),
         ],
@@ -217,7 +252,9 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController controller, String hint, IconData? icon, {Function(String)? onChanged}) {
+  Widget _buildTextField(String label, TextEditingController controller,
+      String hint, IconData? icon,
+      {Function(String)? onChanged}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -229,10 +266,17 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: TextStyle(color: Colors.grey[400]),
-            prefixIcon: icon != null ? Icon(icon, color: Colors.grey[400]) : null,
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: Colors.grey[300]!)),
-            enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: Colors.grey[300]!)),
-            focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: Colors.blue)),
+            prefixIcon:
+                icon != null ? Icon(icon, color: Colors.grey[400]) : null,
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: Colors.grey[300]!)),
+            enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: Colors.grey[300]!)),
+            focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: Colors.blue)),
             contentPadding: EdgeInsets.symmetric(vertical: 14, horizontal: 16),
           ),
         ),
@@ -240,7 +284,12 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
     );
   }
 
-  Widget _buildDropdown(String label, String value, List<String> items, Function(String?) onChanged, {bool highlight = false}) {
+  Widget _buildDropdown(String label, String? value, List<String> items,
+      Function(String?) onChanged,
+      {bool highlight = false}) {
+    // Ensure value is either null or exists in items list
+    final validValue = (value != null && items.contains(value)) ? value : null;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -249,14 +298,19 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
         Container(
           padding: EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(
-            border: Border.all(color: highlight ? Colors.blue : Colors.grey[300]!, width: highlight ? 2 : 1),
+            border: Border.all(
+                color: highlight ? Colors.blue : Colors.grey[300]!,
+                width: highlight ? 2 : 1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: DropdownButton<String>(
-            value: value,
+            value: validValue,
             isExpanded: true,
             underline: SizedBox(),
-            items: items.map((v) => DropdownMenuItem(value: v, child: Text(v))).toList(),
+            hint: Text(items.isNotEmpty ? items[0] : ''),
+            items: items
+                .map((v) => DropdownMenuItem(value: v, child: Text(v)))
+                .toList(),
             onChanged: onChanged,
           ),
         ),
@@ -266,19 +320,28 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
 
   Widget _buildSummaryCards() {
     final totalSales = _transactions.fold<double>(0, (sum, txn) {
-      final amount = txn['total_amount'];
-      final doubleAmount = amount is String ? double.tryParse(amount) ?? 0.0 : (amount ?? 0.0);
-      return sum + doubleAmount;
+      return sum + parseDouble(txn['total_amount']);
     });
-    final avgTransaction = _transactions.isNotEmpty ? totalSales / _transactions.length : 0.0;
+    final avgTransaction =
+        _transactions.isNotEmpty ? totalSales / _transactions.length : 0.0;
 
     return Row(
       children: [
-        Expanded(child: _SummaryCard(title: 'Total Transactions', value: '$_totalTransactions')),
+        Expanded(
+            child: _SummaryCard(
+                title: AppLocalizations.of(context)!.totalTransactions,
+                value: '$_totalTransactions')),
         const SizedBox(width: 16),
-        Expanded(child: _SummaryCard(title: 'Total Sales', value: '\$${totalSales.toStringAsFixed(2)}')),
+        Expanded(
+            child: _SummaryCard(
+                title: AppLocalizations.of(context)!.totalSales,
+                value: '${totalSales.toStringAsFixed(2)} DA')),
         const SizedBox(width: 16),
-        Expanded(child: _SummaryCard(title: 'Average Transaction', value: '\$${avgTransaction.toStringAsFixed(2)}', valueColor: Color(0xFFB87653))),
+        Expanded(
+            child: _SummaryCard(
+                title: AppLocalizations.of(context)!.averageTransaction,
+                value: '${avgTransaction.toStringAsFixed(2)} DA',
+                valueColor: Color(0xFFB87653))),
       ],
     );
   }
@@ -289,7 +352,8 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
         padding: const EdgeInsets.all(48),
         decoration: _cardDecoration(),
         child: Center(
-          child: Text('No transactions found', style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+          child: Text(AppLocalizations.of(context)!.noTransactionsFound,
+              style: TextStyle(fontSize: 16, color: Colors.grey[600])),
         ),
       );
     }
@@ -303,7 +367,8 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             itemCount: _filteredTransactions.length,
-            itemBuilder: (context, index) => _buildTableRow(_filteredTransactions[index], index),
+            itemBuilder: (context, index) =>
+                _buildTableRow(_filteredTransactions[index], index),
           ),
         ],
       ),
@@ -311,38 +376,55 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
   }
 
   Widget _buildTableHeader() {
-    final headers = ['Transaction ID', 'Date & Time', 'Total', 'Payment', 'Cashier', 'Actions'];
+    final headers = [
+      AppLocalizations.of(context)!.tableTransactionId,
+      AppLocalizations.of(context)!.tableDateTime,
+      AppLocalizations.of(context)!.tableTotal,
+      AppLocalizations.of(context)!.tablePayment,
+      AppLocalizations.of(context)!.tableCashier,
+      AppLocalizations.of(context)!.tableActions
+    ];
     final flex = [1, 2, 1, 1, 1, 0];
-    
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-      decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.grey[200]!))),
+      decoration: BoxDecoration(
+          border: Border(bottom: BorderSide(color: Colors.grey[200]!))),
       child: Row(
-        children: List.generate(headers.length, (i) => 
-          i == 5 
-            ? SizedBox(width: 80, child: Text(headers[i], style: _headerStyle()))
-            : Expanded(flex: flex[i], child: Text(headers[i], style: _headerStyle()))
-        ),
+        children: List.generate(
+            headers.length,
+            (i) => i == 5
+                ? SizedBox(
+                    width: 80, child: Text(headers[i], style: _headerStyle()))
+                : Expanded(
+                    flex: flex[i],
+                    child: Text(headers[i], style: _headerStyle()))),
       ),
     );
   }
 
   Widget _buildTableRow(Map<String, dynamic> txn, int index) {
-    final transactionId = txn['transaction_id']?.toString() ?? 'N/A';
-    final dateTime = txn['transaction_date']?.toString() ?? 'N/A';
-    final totalAmount = txn['total_amount'];
-    final total = totalAmount is String ? double.tryParse(totalAmount) ?? 0.0 : (totalAmount ?? 0.0);
-    final payment = txn['payment_method'] ?? 'N/A';
-    final cashier = txn['worker_name'] ?? 'N/A';
-
+    final transactionId = txn['transaction_id']?.toString() ??
+        AppLocalizations.of(context)!.notAvailable;
+    final dateTime = txn['transaction_date']?.toString() ??
+        AppLocalizations.of(context)!.notAvailable;
+    final totalAmount = parseDouble(txn['total_amount']);
+    final payment =
+        txn['payment_method'] ?? AppLocalizations.of(context)!.notAvailable;
+    final cashier =
+        txn['worker_name'] ?? AppLocalizations.of(context)!.notAvailable;
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-      decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.grey[100]!))),
+      decoration: BoxDecoration(
+          border: Border(bottom: BorderSide(color: Colors.grey[100]!))),
       child: Row(
         children: [
           Expanded(flex: 1, child: Text(transactionId, style: _cellStyle())),
           Expanded(flex: 2, child: Text(dateTime, style: _cellStyle())),
-          Expanded(flex: 1, child: Text('\$${total.toStringAsFixed(2)}', style: _cellStyle())),
+          Expanded(
+              flex: 1,
+              child: Text('${totalAmount.toStringAsFixed(2)} DA',
+                  style: _cellStyle())),
           Expanded(flex: 1, child: Text(payment, style: _cellStyle())),
           Expanded(flex: 1, child: Text(cashier, style: _cellStyle())),
           SizedBox(width: 80, child: _buildActions(txn)),
@@ -355,27 +437,32 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _iconButton(Icons.visibility_outlined, Colors.grey[600]!, () => _showViewDialog(context, txn)),
+        _iconButton(Icons.visibility_outlined, Colors.grey[600]!,
+            () => _showViewDialog(context, txn)),
       ],
     );
   }
 
   Widget _iconButton(IconData icon, Color color, VoidCallback onPressed) {
-    return IconButton(icon: Icon(icon, size: 20), onPressed: onPressed, color: color, padding: EdgeInsets.zero, constraints: BoxConstraints());
+    return IconButton(
+        icon: Icon(icon, size: 20),
+        onPressed: onPressed,
+        color: color,
+        padding: EdgeInsets.zero,
+        constraints: BoxConstraints());
   }
 
   void _showViewDialog(BuildContext context, Map<String, dynamic> txn) async {
-    // Fetch full transaction details
     try {
       final transactionId = txn['transaction_id'];
       final details = await ApiService.getTransactionDetails(transactionId);
-      
       if (!mounted) return;
 
       showDialog(
         context: context,
         builder: (context) => Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           child: Container(
             width: 500,
             padding: EdgeInsets.all(24),
@@ -383,28 +470,50 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _dialogHeader('Transaction Details'),
+                _dialogHeader(AppLocalizations.of(context)!.transactionDetails),
                 Divider(height: 32),
-                ...[ 
-                  ('Transaction ID:', details['transaction_id']?.toString() ?? 'N/A'),
-                  ('Date & Time:', details['transaction_date']?.toString() ?? 'N/A'),
-                  ('Total Amount:', () {
-                    final amount = details['total_amount'];
-                    final doubleAmount = amount is String ? double.tryParse(amount) ?? 0.0 : (amount ?? 0.0);
-                    return '\$${doubleAmount.toStringAsFixed(2)}';
-                  }()),
-                  ('Payment Method:', details['payment_method'] ?? 'N/A'),
-                  ('Cashier:', details['worker_name'] ?? 'N/A'),
+                ...[
+                  (
+                    AppLocalizations.of(context)!.transactionId,
+                    details['transaction_id']?.toString() ??
+                        AppLocalizations.of(context)!.notAvailable
+                  ),
+                  (
+                    AppLocalizations.of(context)!.tableDateTime,
+                    details['transaction_date']?.toString() ??
+                        AppLocalizations.of(context)!.notAvailable
+                  ),
+                  (
+                    AppLocalizations.of(context)!.totalAmount,
+                    '${AppLocalizations.of(context)!.totalAmount}: ${parseDouble(details['total_amount']).toStringAsFixed(2)} DA'
+                  ),
+                  (
+                    AppLocalizations.of(context)!.paymentMethod,
+                    details['payment_method'] ??
+                        AppLocalizations.of(context)!.notAvailable
+                  ),
+                  (
+                    AppLocalizations.of(context)!.cashier,
+                    details['worker_name'] ??
+                        AppLocalizations.of(context)!.notAvailable
+                  ),
                 ].map((e) => _detailRow(e.$1, e.$2)),
                 SizedBox(height: 24),
-                Text('Items Purchased:', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.grey[700])),
+                Text(AppLocalizations.of(context)!.itemsPurchased,
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.grey[700])),
                 SizedBox(height: 12),
                 _buildItemsList(details['items'] ?? []),
                 SizedBox(height: 24),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    PrimaryButton(onPressed: () => Navigator.pop(context), variant: ButtonVariant.secondary, child: const Text('Close')),
+                    PrimaryButton(
+                        onPressed: () => Navigator.pop(context),
+                        variant: ButtonVariant.secondary,
+                        child: Text(AppLocalizations.of(context)!.close)),
                   ],
                 ),
               ],
@@ -415,7 +524,10 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error loading details: $e'), backgroundColor: Colors.red),
+          SnackBar(
+              content: Text(
+                  AppLocalizations.of(context)!.errorLoadingDetails + ' $e'),
+              backgroundColor: Colors.red),
         );
       }
     }
@@ -425,8 +537,16 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(title, style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Color(0xFFB87653))),
-        IconButton(icon: Icon(Icons.close), onPressed: () => Navigator.pop(context), padding: EdgeInsets.zero, constraints: BoxConstraints()),
+        Text(title,
+            style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+                color: Color(0xFFB87653))),
+        IconButton(
+            icon: Icon(Icons.close),
+            onPressed: () => Navigator.pop(context),
+            padding: EdgeInsets.zero,
+            constraints: BoxConstraints()),
       ],
     );
   }
@@ -437,8 +557,16 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(width: 140, child: Text(label, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.grey[600]))),
-          Expanded(child: Text(value, style: TextStyle(fontSize: 14, color: Colors.grey[800]))),
+          SizedBox(
+              width: 140,
+              child: Text(label,
+                  style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey[600]))),
+          Expanded(
+              child: Text(value,
+                  style: TextStyle(fontSize: 14, color: Colors.grey[800]))),
         ],
       ),
     );
@@ -448,24 +576,32 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
     if (items.isEmpty) {
       return Container(
         padding: EdgeInsets.all(16),
-        decoration: BoxDecoration(color: Colors.grey[50], borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.grey[200]!)),
-        child: Text('No items found', style: TextStyle(color: Colors.grey[600])),
+        decoration: BoxDecoration(
+            color: Colors.grey[50],
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Colors.grey[200]!)),
+        child:
+            Text('No items found', style: TextStyle(color: Colors.grey[600])),
       );
     }
 
     return Container(
       padding: EdgeInsets.all(16),
-      decoration: BoxDecoration(color: Colors.grey[50], borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.grey[200]!)),
+      decoration: BoxDecoration(
+          color: Colors.grey[50],
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.grey[200]!)),
       child: Column(
         children: List.generate(
           items.length * 2 - 1,
-          (i) => i.isEven 
-            ? _itemRow(
-                items[i ~/ 2]['product_name'] ?? 'Unknown',
-                items[i ~/ 2]['quantity'] ?? 0,
-                items[i ~/ 2]['selling_price'] ?? 0.0,
-              )
-            : Divider(height: 16),
+          (i) => i.isEven
+              ? _itemRow(
+                  items[i ~/ 2]['product_name'] ??
+                      AppLocalizations.of(context)!.unknown,
+                  items[i ~/ 2]['quantity'] ?? 0,
+                  parseDouble(items[i ~/ 2]['selling_price']),
+                )
+              : Divider(height: 16),
         ),
       ),
     );
@@ -475,16 +611,33 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Expanded(child: Text(name, style: TextStyle(fontSize: 14, color: Colors.grey[800]))),
+        Expanded(
+            child: Text(name,
+                style: TextStyle(fontSize: 14, color: Colors.grey[800]))),
         Text('x$qty', style: TextStyle(fontSize: 14, color: Colors.grey[600])),
         SizedBox(width: 24),
-        Text('\$${(price * qty).toStringAsFixed(2)}', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.grey[800])),
+        Text('${(price * qty).toStringAsFixed(2)} DA',
+            style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: Colors.grey[800])),
       ],
     );
   }
 
-  BoxDecoration _cardDecoration() => BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12), boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: Offset(0, 2))]);
-  TextStyle _headerStyle() => TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.grey[700]);
+  BoxDecoration _cardDecoration() => BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 10,
+                offset: Offset(0, 2))
+          ]);
+
+  TextStyle _headerStyle() => TextStyle(
+      fontSize: 13, fontWeight: FontWeight.w600, color: Colors.grey[700]);
+
   TextStyle _cellStyle() => TextStyle(fontSize: 14, color: Colors.grey[800]);
 }
 
@@ -492,19 +645,32 @@ class _SummaryCard extends StatelessWidget {
   final String title, value;
   final Color? valueColor;
 
-  const _SummaryCard({required this.title, required this.value, this.valueColor});
+  const _SummaryCard(
+      {required this.title, required this.value, this.valueColor});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12), boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: Offset(0, 2))]),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 10,
+                offset: Offset(0, 2))
+          ]),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(title, style: TextStyle(fontSize: 14, color: Colors.grey[600])),
           const SizedBox(height: 8),
-          Text(value, style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600, color: valueColor ?? Colors.grey[800])),
+          Text(value,
+              style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.w600,
+                  color: valueColor ?? Colors.grey[800])),
         ],
       ),
     );
