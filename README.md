@@ -1,4 +1,5 @@
 ![Uploading modern home for.png…]()
+
 # 📦 Stockify - Stock Management Application
 
 Stockify is a desktop stock management application designed for stores and supermarkets. It helps store owners and staff organize and manage their inventories efficiently through product management, category organization, and sales transaction tracking. The application supports four types of users, low-stock alerts, and offers localization in both English and French.
@@ -163,9 +164,9 @@ flutter run
 ---
 
 ## 🎬 Demo Video
-
+<div align="center">
 [![Watch Demo](https://img.youtube.com/vi/9_Fb54MZqCE/hqdefault.jpg)](https://youtu.be/9_Fb54MZqCE)
-
+</div>
 
 --- 
 
