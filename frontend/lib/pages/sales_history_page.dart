@@ -58,12 +58,20 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
                   .toLowerCase()
                   .contains(_dateController.text.toLowerCase()));
 
+      // map UI labels (localized) -> DB values
+      final Map<String, String> paymentMethodMap = {
+        AppLocalizations.of(context)!.cash: 'cash',
+        AppLocalizations.of(context)!.card: 'card',
+        'Cash': 'cash',
+        'Card': 'card',
+      };
+
       final bool matchesPayment = _selectedPaymentMethod == null ||
           _selectedPaymentMethod == 'All Methods' ||
           _selectedPaymentMethod == AppLocalizations.of(context)!.allMethods ||
           (transaction['payment_method'] != null &&
               transaction['payment_method'].toString().toLowerCase() ==
-                  _selectedPaymentMethod!.toLowerCase());
+                  paymentMethodMap[_selectedPaymentMethod]?.toLowerCase());
 
       final bool matchesCashier = _selectedCashier == null ||
           _selectedCashier == 'All Cashiers' ||
@@ -409,8 +417,14 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
     final dateTime = txn['transaction_date']?.toString() ??
         AppLocalizations.of(context)!.notAvailable;
     final totalAmount = parseDouble(txn['total_amount']);
-    final payment =
-        txn['payment_method'] ?? AppLocalizations.of(context)!.notAvailable;
+    var payment = '';
+    if (txn['payment_method'] == 'card') {
+      payment = AppLocalizations.of(context)!.card;
+    } else if (txn['payment_method'] == 'cash') {
+      payment = AppLocalizations.of(context)!.cash;
+    } else {
+      payment = AppLocalizations.of(context)!.notAvailable;
+    }
     final cashier =
         txn['worker_name'] ?? AppLocalizations.of(context)!.notAvailable;
     return Container(

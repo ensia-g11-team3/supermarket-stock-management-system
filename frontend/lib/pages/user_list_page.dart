@@ -262,12 +262,12 @@ class _UserListPageState extends State<UserListPage> {
           actions: [
             PrimaryButton(
               onPressed: widget.onNavigateToCreate,
-              child: const Row(
+              child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.add, size: 20),
-                  SizedBox(width: 8),
-                  Text('Add User'),
+                  const Icon(Icons.add, size: 20),
+                  const SizedBox(width: 8),
+                  Text(AppLocalizations.of(context)!.addUser),
                 ],
               ),
             ),
