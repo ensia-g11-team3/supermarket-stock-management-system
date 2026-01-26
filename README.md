@@ -151,7 +151,7 @@ flutter run
 
 | Role | Name | GitHub |
 |:----:|------|:------:|
-| 👨‍💼 **Team Lead** | NOUR MALEK YAHIAOUI | [![GitHub](https://img.shields.io/badge/GitHub-100000?style=flat&logo=github&logoColor=white)](https://github.com/nour-malek-yahiaoui |
+| 👨‍💼 **Team Lead** | NOUR MALEK YAHIAOUI | [![GitHub](https://img.shields.io/badge/GitHub-100000?style=flat&logo=github&logoColor=white)](https://github.com/nour-malek-yahiaoui) |
 | 👩‍💻 **Developer** | BENMAKHLOUF LERYEME | [![GitHub](https://img.shields.io/badge/GitHub-100000?style=flat&logo=github&logoColor=white)](https://github.com/leryeme17) |
 | 👨‍💻 **Developer** | BOULEFA MUSTAPHA | [![GitHub](https://img.shields.io/badge/GitHub-100000?style=flat&logo=github&logoColor=white)](https://github.com/Mustapha-bf) |
 | 👨‍💻 **Developer** | MOHAMED ANIS CHEHILI | [![GitHub](https://img.shields.io/badge/GitHub-100000?style=flat&logo=github&logoColor=white)](https://github.com/mohamed-anis-chehili) |
