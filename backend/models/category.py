@@ -1,3 +1,4 @@
+from multiprocessing import connection
 from db import get_connection, close_connection
 from mysql.connector import Error
 
@@ -30,19 +31,35 @@ class Category:
 
     @staticmethod
     def get_all():
-        connection = get_connection()
-        if not connection:
-            return False, "Database connection failed", 500
-        try:
-            cursor = connection.cursor(dictionary=True)
-            cursor.execute("SELECT * FROM categories ORDER BY category_name")
-            categories = cursor.fetchall()
-            cursor.close()
-            return True, categories, 200
-        except Error as e:
-            return False, f"Database error: {str(e)}", 500
-        finally:
-            close_connection(connection)
+      connection = get_connection()
+      if not connection:
+        return False, "Database connection failed", 500
+      try:
+         cursor = connection.cursor(dictionary=True)
+   
+         query = """
+              SELECT 
+            c.category_id,
+            c.category_name,
+            c.category_description,
+            COUNT(p.product_id) AS product_count
+        FROM categories c
+        LEFT JOIN products p
+            ON p.category_id = c.category_id
+        GROUP BY c.category_id
+        ORDER BY c.category_name
+        """
+         cursor.execute(query)
+         categories = cursor.fetchall()
+
+         cursor.close()
+         return True, categories, 200
+
+      except Error as e:
+        return False, f"Database error: {str(e)}", 500
+      finally:
+        close_connection(connection)
+
 
     @staticmethod
     def get_by_id(category_id):
