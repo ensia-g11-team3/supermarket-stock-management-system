@@ -53,12 +53,12 @@ class Layout extends StatelessWidget {
                   child: ListView(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     children: [
-                      _NavItem(
+                      /*_NavItem(
                         icon: Icons.dashboard,
                         label: AppLocalizations.of(context)!.navDashboard,
                         isSelected: currentPage == 'dashboard',
                         onTap: () => onNavigate('dashboard'),
-                      ),
+                      ),*/
                       _NavItem(
                         icon: Icons.point_of_sale,
                         label: AppLocalizations.of(context)!.navPos,
