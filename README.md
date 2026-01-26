@@ -165,7 +165,10 @@ flutter run
 
 ## 🎬 Demo Video
 <div align="center">
-[![Watch Demo](https://img.youtube.com/vi/9_Fb54MZqCE/hqdefault.jpg)](https://youtu.be/9_Fb54MZqCE)
+
+  [![Watch Demo](https://img.youtube.com/vi/9_Fb54MZqCE/hqdefault.jpg)](https://youtu.be/9_Fb54MZqCE)
+
+
 </div>
 
 --- 
