@@ -177,3 +177,14 @@ flutter run
 
 This project is licensed under the [MIT License](LICENSE).
 
+
+---
+
+<div align="center">
+
+**Made with ❤️ by the Stockify Team**
+
+⭐ Star us on GitHub if you find this project helpful!
+
+</div>
+
